@@ -1,5 +1,14 @@
 :root{
-    --color-purple:#6C63FF
+  --color-white:#FCFCFC;
+  --color-black:#0F0F0F;
+  --color-darkPurple:#211F47;
+   --color-purple:#6C63FF;
+  --color-light:#E3E1EA;
+  --color-grey:#8D99AE;
+  --color-red:#B20000;
+  --color-green:#2B9348;
+  --color-text:#343A40;
+  --color-dark-text:"#505962"
 }
 
 *{

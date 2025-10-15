@@ -57,7 +57,7 @@ export default function Login() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button onClick={()=>navigate('/users')} type="submit" className="w-full">
+        <Button onClick={()=>navigate('/Dashboard')} type="submit" className="w-full">
           Login
         </Button>
         <Button variant="outline" className="w-full">

@@ -14,7 +14,7 @@ function AppRouter() {
             <Route path='/' element={<Login/>} />
 
             <Route path='/Dashboard' element={<DashboardLayout><DashboardHome/></DashboardLayout>}/>
-            <Route path='/users' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>
+            <Route path='/taskers' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>
         </Routes>
     </div>

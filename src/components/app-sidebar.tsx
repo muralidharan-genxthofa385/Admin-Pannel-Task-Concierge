@@ -20,8 +20,8 @@ const navItems = [
     icon:LayoutDashboard
   },
   {
-    title: "Users",
-    url: "/users",
+    title: "Taskers",
+    url: "/taskers",
     icon: User,
   },
   {
