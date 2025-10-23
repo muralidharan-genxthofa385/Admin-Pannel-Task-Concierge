@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, UserCheck, Users,BanknoteArrowDown } from 'lucide-react'
+import { UserCheck, Users,BanknoteArrowDown, ToolCase } from 'lucide-react'
 import React from 'react'
 import DashboardGraph from '@/components/DashboardGraph';
 import Barchart from '@/components/BarChart';
@@ -7,7 +7,6 @@ import Barchart from '@/components/BarChart';
 interface props {
     icon: any,
     title: 'Taskers' | 'Customers' | 'Tasks' | 'Revenue',
-   
     count:any
 }
 
@@ -54,7 +53,7 @@ function DashboardHome() {
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
                     <RUDashBoardCard count={100} icon={UserCheck} title='Taskers' />
                     <RUDashBoardCard count={122} icon={Users} title='Customers'  />
-                    <RUDashBoardCard count={178} icon={BriefcaseBusiness} title='Tasks' />
+                    <RUDashBoardCard count={178} icon={ToolCase} title='Tasks' />
                     <RUDashBoardCard count={`$ ${1234454}`} title='Revenue' icon={BanknoteArrowDown} />
                 </div>
             <div className='flex flex-wrap justify-between gap-3 md:gap-0' >

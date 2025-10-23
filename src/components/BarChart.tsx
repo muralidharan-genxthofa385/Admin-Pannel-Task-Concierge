@@ -3,7 +3,7 @@ import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer }
 import { CardDescription, CardTitle } from './ui/card';
 
 
-const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
+const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink','blue'];
 
 const data = [
   {
@@ -48,6 +48,12 @@ const data = [
     pv: 4300,
     amt: 2100,
   },
+  {
+    name: 'Page h',
+    uv: 3240,
+    pv: 4300,
+    amt: 2100,
+  },
 ];
 
 const getPath = (x:any, y:any, width:any, height:any) => {
@@ -69,7 +75,7 @@ export default function Barchart() {
           <div className=' w-full flex flex-col justify-start pl-7'>
             <CardTitle >Services</CardTitle>
             <CardDescription>
-            Showing total Taskers and Customers for the last 3 months
+            Showing total Task Categories And their Analysis
           </CardDescription>
           </div>
 

@@ -3,11 +3,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Flame, User, UserRoundMinusIcon } from 'lucide-react'
+import { Bolt, Ellipsis,  Flame, User, UserRoundMinusIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import Paper from '@mui/material/Paper';
-import { get } from '@/Service/Apiservice';
+import {  getRequest } from '@/Service/Apiservice';
+import { Card } from '@/components/ui/card';
 
 interface props {
     icon: any,
@@ -25,17 +25,19 @@ function UserScreen() {
 
   const [loading,setLoading]=useState(false)
   const [taskerData,setTaskerData]=useState<taskerData[]>([])
-  const [namesearch,setNamesearch]=useState('')
-  const [Skillsearch,setSkillsearch]=useState('')
+  // const [namesearch,setNamesearch]=useState('')
+  // const [Skillsearch,setSkillsearch]=useState('')
+  const [SelectedJobFil, setSelectedJobFil] = useState('')
   const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
   
+  console.log(SelectedJobFil)
 
   useEffect(()=>{
     setLoading(true)
-get('/userData')
+getRequest('/userData')
 .then((res)=>{
-console.log(res.data)
-setTaskerData(res.data)
+console.log(res)
+setTaskerData(res)
 })
 .catch((err)=>console.log('error at fetching taskdata',err))
 .finally(()=>setLoading(false))
@@ -64,18 +66,23 @@ else{
   {field:"mobile",headerName:'Phone',width:240},
   {field:"skills",headerName:'Skills',width:190},
   {field:'place',headerName:"Place",width:200},
-  {field:"joinedDate",headerName:'Joined',width:190,renderCell:(params:any)=>{
+  {field:"joinedDate",headerName:'Joined',width:160,renderCell:(params:any)=>{
      const date = params.value ? new Date(params.value) : null;
       return <span>{date ? date.toISOString().slice(0, 10) : '—'}</span>;
   }},
-  {field:"status",headerName:'Status',width:190 , renderCell:(params)=>(
+  {field:"status",headerName:'Status',width:100 , renderCell:(params)=>(
  <span style={params.value?{color:"green"}:{color:"red"}}>
   {params.value==false?"🔴 Inactive":"🟢 Active"}</span>
+  )
+},
+{field:'',headerName:"Actions",width:100,
+  renderCell:(params)=>(
+    <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>
   )
 }
 
 ];
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 7 };
 
 // const filtered_Data=taskerData.map((data)=>{
 
@@ -127,31 +134,30 @@ const paginationModel = { page: 0, pageSize: 5 };
 <MenuItem value="All">All</MenuItem>
 <MenuItem value="true">Active</MenuItem>
 <MenuItem value="false">Inactive</MenuItem>
-</Select> </FormControl>
+</Select>
+ </FormControl>
 
 <FormControl className='w-1/4' >
-  <InputLabel>Search by Jobs</InputLabel>
-  <Select label="Search by Jobs">
-    {taskerData.map((data,index)=><MenuItem key={index}>{data.skills}</MenuItem>)}
+  <InputLabel>Search by Skills</InputLabel>
+  <Select label="Search by Jobs" value={SelectedJobFil} onChange={(e)=>setSelectedJobFil(e.target.value as string)}>
+    {taskerData.map((data,index)=><MenuItem key={index}  >{data.skills}</MenuItem>)}
   </Select>
 </FormControl>
 
         </div>{/**----- Filters Section------ */} 
 
-        <div className='overflow-x-auto'>{/**----- Data Table Section------ */}
- <Paper sx={{ height: 400, width: '100%', overflowX: 'auto' }}>
+       <div>
+    <Card className='md:w-full w-[17%] h-131'>
       <DataGrid
         rows={taskerData}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
-        sx={{ border: 0,width:"100%",minWidth:800 }}
+        sx={{ border: 0,width:{md:"100%"} }}
         loading={loading}
-        
       />
-    </Paper>
-
-        </div>{/**----- Data Table Section------ */}
+    </Card>
+</div>{/**----- Data Table Section------ */}
 
       </div>
       </div>

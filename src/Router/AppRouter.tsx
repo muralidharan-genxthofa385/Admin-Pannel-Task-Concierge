@@ -1,11 +1,13 @@
 import { Route } from 'react-router-dom'
 import React from 'react'
 import { Routes } from 'react-router-dom'
-import UserScreen from '@/resources/js/Screens/UserScreen'
+import UserScreen from '@/resources/js/Screens/Taskers screens/UserScreen'
 import DashboardLayout from '@/resources/js/Screens/Layouts/DashboardLayout'
 import Login from '@/resources/js/Pages/Login'
-import CustomersScreen from '@/resources/js/Screens/CustomersScreen'
-import DashboardHome from '@/resources/js/Screens/DashboardHome'
+import CustomersScreen from '@/resources/js/Screens/CustomersScreens/CustomersScreen'
+import DashboardHome from '@/resources/js/Screens/Dashboard Home/DashboardHome'
+import TaskServices from '@/resources/js/Screens/Services Screens/TaskServices'
+import QuestionsScreen from '@/resources/js/Screens/Questions Screens/QuestionsScreen'
 
 function AppRouter() {
   return (
@@ -16,6 +18,8 @@ function AppRouter() {
             <Route path='/Dashboard' element={<DashboardLayout><DashboardHome/></DashboardLayout>}/>
             <Route path='/taskers' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>
+            <Route path='/services' element={<DashboardLayout><TaskServices/></DashboardLayout>}/>
+            <Route path='/questions' element={<DashboardLayout><QuestionsScreen/></DashboardLayout>}  />
         </Routes>
     </div>
   )
