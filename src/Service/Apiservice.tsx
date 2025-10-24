@@ -27,14 +27,42 @@ if(token){
 return config
 })
 
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        const isLoginEndpoint = error.config?.url?.includes('/auth/login');
+        
+        if (!isLoginEndpoint && (error.response?.status === 401 || 
+            error.response?.status === 403 || 
+            (error.response?.data?.message && 
+             (error.response.data.message.toLowerCase().includes('unauthenticated') || 
+              error.response.data.message.toLowerCase().includes('unauthorized'))))) {
+            logout();
+        }
+        
+        return Promise.reject(error);
+    }
+);
+
 export const getRequest=(url:string,{params}:{params?:any}={})=>{
 return api.get(url,{params}).then((res)=>res.data)
 }
 
-export const postRequest=(url:string,payload:any)=>{
-    return api.post(url,payload).then((res)=>res.data)
-}
+export const postRequest=(url:string,data:any, isMultipart: boolean = false)=>{
+const config = isMultipart ? {
+     headers: {
+       'Content-Type': 'multipart/form-data'
+     }
+   } : {};
+   return api.post(url,data, config).then((res)=>res.data)}
 
 export const PutRequest=(url:string,payload:any)=>{
     return api.put(url,payload).then((res)=>res.data)
+}
+
+export const deleteRequest=(url:string)=>{
+    return api.delete(url).then((res)=>res.data)
+
 }

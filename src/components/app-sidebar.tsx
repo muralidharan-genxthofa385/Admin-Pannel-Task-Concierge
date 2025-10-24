@@ -35,7 +35,7 @@ const navItems = [
     icon:Settings
   },
   {
-    title:"Questions  Creation",
+    title:"Service Questions",
     url:"/questions",
     icon:SquarePen
   }
@@ -60,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <div className="flex flex-col p-3 space-y-4">
           {navItems.map((item) =>{
-          const isActive=pathname===item.url
+          const isActive=pathname.startsWith(item.url)
           return (
             <NavLink
               key={item.title}

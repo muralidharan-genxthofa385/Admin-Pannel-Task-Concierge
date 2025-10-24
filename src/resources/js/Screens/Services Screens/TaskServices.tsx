@@ -4,61 +4,99 @@ import { themes } from '@/Themes'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
+import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import { Ellipsis, Settings, X } from 'lucide-react'
+import { Ellipsis, FilePen, Settings, Trash2, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-interface taskerData{
+interface serviceData{
    id: number;
-  name: string;
-  email: string;
-  mobile: string;
-  skills: string;
-  place: string;
-  joinedDate?: string;
-  status?: boolean;
+   base_price:number;
+  category: {name:string};
+   name:string
 }
+
 const TaskServices:React.FC = () => {
 
     const [Category, setCategory] = useState('')
   const [loading,setLoading]=useState(false)
-  const [serviceData,setserviceData]=useState<taskerData[]>([])
+  const [serviceData,setserviceData]=useState<serviceData[]>([])
   const [search,setSearch]=useState('')
+
+   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
 
       useEffect(()=>{
         setLoading(true)
-    getRequest('/userData')
+            // getRequest(`/services?category_id=1&search=cleaning&sort_by=created_at&sort_order=desc&per_page=10&page=1`)
+    getRequest('/services')
     .then((res)=>{
-    console.log(res)
-    setserviceData(res)
+    setserviceData(res.data.items)
+    console.log(res.data.items)
     })
     .catch((err)=>console.log('error at fetching taskdata',err))
     .finally(()=>setLoading(false))
-    
       },[])
+
+      
+const categoryMap: Record<number, string> = {
+  1: 'Skilled',
+  2: 'UnSkilled',
+  3: 'Business & Events',
+};
+
     
      const columns: GridColDef[] = [
-     { field: 'name', headerName: 'Name', width: 240 },
-     { field: 'email', headerName: 'EMail', width: 280 },
-     {field:"mobile",headerName:'Phone',width:240},
-     {field:"skills",headerName:'Skills',width:190},
-     {field:'place',headerName:"Place",width:200},
-     {field:"joinedDate",headerName:'Joined',width:160,renderCell:(params:any)=>{
-        const date = params.value ? new Date(params.value) : null;
-         return <span>{date ? date.toISOString().slice(0, 10) : '—'}</span>;
-     }},
-     {field:"status",headerName:'Status',width:100 , renderCell:(params)=>(
-    <span style={params.value?{color:"green"}:{color:"red"}}>
-     {params.value==false?"🔴 Inactive":"🟢 Active"}</span>
-     )
-   },
+     { field: 'name', headerName: 'Name', width: 510 },
+     {
+  field: 'category_id',
+    headerName: 'Category Name',
+    width: 500,
+    renderCell: (params) => (<span>{categoryMap[params.row.category_id] || 'Unknown'}</span>), },
+     {field:"base_price",headerName:'Base Price',width:390},
+
    {field:'',headerName:"Actions",width:100,
      renderCell:(params)=>(
-       <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>
+         <div>
+      <Button
+        id="demo-positioned-button"
+        aria-controls={open ? 'demo-positioned-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+       <Ellipsis/>
+      </Button>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={handleClose} className='flex gap-3 '><FilePen className='w-4 h-4 text-[var(--color-purple)]'/> <Typography className='text-[var(--color-purple)]'> Edit</Typography></MenuItem>
+        <MenuItem onClick={handleClose} className='flex gap-3'><Trash2 className='w-4 h-4 text-red-500'/> <Typography className='text-[var(--color-purple)]'> Delete</Typography></MenuItem>
+      </Menu>
+    </div>
      )
    }
    ];
@@ -68,7 +106,7 @@ const TaskServices:React.FC = () => {
     
     const filteredData=serviceData.filter((data)=>{
         const nameMatch=data.name.toLowerCase().includes(search.toLowerCase())
-        const categoryMatch=Category===''||Category.toLowerCase()===data.skills.toLowerCase()
+        const categoryMatch=Category===''||Category.toLowerCase()===data.category?.name?.toLowerCase()
         
         return nameMatch&&categoryMatch
     })
@@ -79,7 +117,7 @@ const TaskServices:React.FC = () => {
 
     <>
 <div className='flex flex-col gap-10'>
-<h1 className='sm:text-4xl md:text-4xl flex items-center gap-3'><Settings className='w-8 h-8'/> Services</h1>
+<h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings className='w-6 h-6'/> Services</h1>
 
 {/**---------- Filter Section---------- */}
 <div className='flex flex-col gap-5 md:flex-row w-[100%]'>
@@ -96,7 +134,7 @@ const TaskServices:React.FC = () => {
         {Category&&<MenuItem className='flex gap-2' value=""><em>Clear </em> <X className='w-5'/></MenuItem>}
     <MenuItem value="Skilled">Skilled</MenuItem>
      <MenuItem value="UnSkilled">UnSkilled</MenuItem>
-      <MenuItem value="business&events">Business & Events</MenuItem>
+      <MenuItem value="Business & Events">Business & Events</MenuItem>
 
 </Select>
 </FormControl>

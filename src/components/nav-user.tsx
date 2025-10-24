@@ -29,6 +29,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { logout } from "@/Service/Apiservice"
 
 export function NavUser({
   user,
@@ -102,7 +103,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>{logout;window.location.href='/'}}>
               <LogOut />
               Log out
             </DropdownMenuItem>

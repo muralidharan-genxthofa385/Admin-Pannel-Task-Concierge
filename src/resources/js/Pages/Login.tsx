@@ -3,7 +3,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -12,10 +11,34 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import taskconciergeLogo from '../../../assets/images/taskconciegeLogo.svg'
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { LoginPost } from "@/Service/AuthService"
+import { toast } from "react-toastify"
 
 
 
 export default function Login() {
+
+  const [Email, setEmail] = useState('')
+  const [Password, setPassword] = useState('')
+
+
+
+  const handleLogin=()=>{
+    const payload={
+      email:Email,
+      password:Password
+
+    }
+    LoginPost(payload)
+    .then((res)=>{
+      localStorage.setItem('accessToken',res.data.token)
+      toast.success('welcome back ...!')
+      navigate('/Dashboard')
+    })
+
+
+  }
 
     const navigate=useNavigate()
 
@@ -35,6 +58,7 @@ export default function Login() {
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
+              onChange={(e)=>setEmail(e.target.value)}
                 id="email"
                 type="email"
                 placeholder="m@example.com"
@@ -51,13 +75,13 @@ export default function Login() {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" onChange={(e)=>setPassword(e.target.value)} value={Password} required />
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button onClick={()=>navigate('/Dashboard')} type="submit" className="w-full">
+        <Button onClick={handleLogin}  type="submit" className="w-full">
           Login
         </Button>
         <Button variant="outline" className="w-full">

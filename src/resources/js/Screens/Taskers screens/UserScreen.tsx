@@ -113,7 +113,7 @@ const paginationModel = { page: 0, pageSize: 7 };
   return (
     <>
     <div>
-      <h1 className='sm:text-4xl md:text-4xl flex items-center gap-3'><User className='w-8 h-8'/> View Users !</h1>
+      <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><User className='w-6 h-6'/> View Users !</h1>
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>

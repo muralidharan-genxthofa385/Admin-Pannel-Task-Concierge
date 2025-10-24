@@ -24,15 +24,13 @@ interface taskerData{
 
 const CustomersScreen:React.FC = () => {
 
-
-    const [Category, setCategory] = useState('')
+  const [Category, setCategory] = useState('')
   const [loading,setLoading]=useState(false)
   const [serviceData,setserviceData]=useState<taskerData[]>([])
   const [search,setSearch]=useState('')
 
-
-      useEffect(()=>{
-        setLoading(true)
+    useEffect(()=>{
+    setLoading(true)
     getRequest('/userData')
     .then((res)=>{
     console.log(res)
@@ -40,7 +38,7 @@ const CustomersScreen:React.FC = () => {
     })
     .catch((err)=>console.log('error at fetching taskdata',err))
     .finally(()=>setLoading(false))
-    
+
       },[])
     
   const columns: GridColDef[] = [
@@ -59,17 +57,15 @@ const CustomersScreen:React.FC = () => {
   )
 },
 {field:'',headerName:"Actions",width:100,
-  renderCell:(params)=>(
-    <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>
-  )
+  renderCell:(_params)=>( <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>)
 }
 ];
-    const paginationModel = { page: 0, pageSize: 7 };
-    
+
+    const paginationModel = { page: 0, pageSize: 7 };    
+
     const filteredData=serviceData.filter((data)=>{
         const nameMatch=data.name.toLowerCase().includes(search.toLowerCase())
         const categoryMatch=Category===''||Category.toLowerCase()===data.skills.toLowerCase()
-        
         return nameMatch&&categoryMatch
     })
 
@@ -80,7 +76,7 @@ const CustomersScreen:React.FC = () => {
   return (
     <>
 <div className='flex flex-col gap-10'>
-<h1 className='sm:text-4xl md:text-4xl flex items-center gap-3'><Users className='w-8 h-8'/> Customers</h1>
+<h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> Customers</h1>
 
 {/**---------- Filter Section---------- */}
 <div className='flex flex-col gap-5 md:flex-row w-[100%]'>
