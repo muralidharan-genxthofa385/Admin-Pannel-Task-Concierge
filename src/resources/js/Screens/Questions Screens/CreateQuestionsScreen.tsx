@@ -32,7 +32,7 @@ const QuestionsScreen:React.FC = () => {
   const [checkboxOption,setCheckboxOption]=useState<string[]>([])
   
   const [checkboxOptiontext,setCheckboxOptiontext]=useState('')
-  const [is_required,setIsRequired]=useState<'yes'|'no'>('yes')
+  const [is_required,setIsRequired]=useState<boolean>(false)
 
  
 
@@ -111,7 +111,7 @@ else if(!is_required){  toast.error('please select if the question is Required o
   question_type: questionType=="text"?"text":questionType=="radio"?"single_select":"multi_select",
   options_json: 
     questionType=="radio"?radioOptions:questionType=="checkbox"?checkboxOption:null,
-  is_required: is_required=="yes"?true:false
+  is_required: is_required
 
   }
   console.log(  ",payload data",payload)
@@ -224,17 +224,17 @@ renderInput={(params)=>(
 <div className='flex flex-col gap-3'>
  <h1 className='text-2xl flex gap-1 items-center'>{questionType=="text"?4:5}<ChevronRight className='text-[var(--color-purple)]'/> Is your Question is Madnatory and to be filled ?</h1>
    <FormControl onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-setIsRequired(e.target.value as 'yes'|'no')
+setIsRequired(e.target.value ==='true')
    }}>
-    <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="text" name="radio-buttons-group" value={is_required} >
-        <FormControlLabel sx={{...radiostyles.radioLabel}} value="yes" control={<Radio sx={{...radiostyles.radioButton}} />} label="Yes" />
-                <FormControlLabel sx={{...radiostyles.radioLabel}} value="no" control={<Radio sx={{...radiostyles.radioButton}} />} label="No" />
+    <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="text" name="radio-buttons-group" value={is_required.toString()} >
+        <FormControlLabel sx={{...radiostyles.radioLabel}} value={`true`} control={<Radio sx={{...radiostyles.radioButton}} />} label="Yes" />
+                <FormControlLabel sx={{...radiostyles.radioLabel}} value={`false`} control={<Radio sx={{...radiostyles.radioButton}} />} label="No" />
       </RadioGroup>
       </FormControl>
 </div>
 
 <div className='flex gap-2'>
-  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}}>Discard</Button>
+  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} onClick={()=>navigate(-1)}>Discard</Button>
   <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} onClick={handleSaveQuestion}>Save</Button>
 </div>
 </Card>

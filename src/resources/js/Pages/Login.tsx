@@ -36,6 +36,9 @@ export default function Login() {
       toast.success('welcome back ...!')
       navigate('/Dashboard')
     })
+    .catch(()=>{
+      toast.error('Invalid Credentials')
+    })
 
 
   }

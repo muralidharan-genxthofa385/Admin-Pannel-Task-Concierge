@@ -66,7 +66,7 @@ const categoryMap: Record<number, string> = {
     renderCell: (params) => (<span>{categoryMap[params.row.category_id] || 'Unknown'}</span>), },
      {field:"base_price",headerName:'Base Price',width:390},
 
-   {field:'',headerName:"Actions",width:100,
+   {field:'actions',headerName:"Actions",width:100,
      renderCell:(params)=>(
          <div>
       <Button

@@ -6,8 +6,9 @@ import TextField from '@mui/material/TextField';
 import { Bolt, Ellipsis,  Flame, User, UserRoundMinusIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import {  getRequest } from '@/Service/Apiservice';
 import { Card } from '@/components/ui/card';
+import { getAllTaskers } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
+import { themes } from '@/Themes';
 
 interface props {
     icon: any,
@@ -16,9 +17,21 @@ interface props {
 }
 
 interface taskerData{
-  name:string,
-  place:string,
-  skills:string
+  first_name:string,
+  last_name:string,
+ email:string,
+ role:string, 
+phone:string,
+profile_pic_url:string,
+skills:{
+  name:string
+}
+user_details:{
+  date_of_birth:string,  
+profile_completed:boolean,
+apartment:string,
+}
+
 }
 
 function UserScreen() {
@@ -29,20 +42,34 @@ function UserScreen() {
   // const [Skillsearch,setSkillsearch]=useState('')
   const [SelectedJobFil, setSelectedJobFil] = useState('')
   const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
+  const [PaginationModel,setPaginationModel]=useState({page:0,per_page:10})
+
+const [params, setParams] = useState({
+    search: "",
+    // min_rating: 0,
+    // max_rating: 5,
+    is_available: false,
+    is_verified: false,
+    sort_by: "",
+    sort_order: "asc",
+    per_page: 10,
+    page: 1,
+  })
   
   console.log(SelectedJobFil)
 
   useEffect(()=>{
     setLoading(true)
-getRequest('/userData')
+getAllTaskers(params.search,params.is_available,params.is_verified,params.sort_by,params.sort_order,params.per_page,params.page)
 .then((res)=>{
-console.log(res)
-setTaskerData(res)
+setTaskerData(res.data)
+console.log(taskerData)
+
 })
 .catch((err)=>console.log('error at fetching taskdata',err))
 .finally(()=>setLoading(false))
 
-  },[])
+  },[params])
 
 
   const handleStatusChange=(event:SelectChangeEvent)=>{
@@ -61,22 +88,31 @@ else{
 
 
   const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 240 },
-  { field: 'email', headerName: 'EMail', width: 280 },
-  {field:"mobile",headerName:'Phone',width:240},
-  {field:"skills",headerName:'Skills',width:190},
-  {field:'place',headerName:"Place",width:200},
-  {field:"joinedDate",headerName:'Joined',width:160,renderCell:(params:any)=>{
-     const date = params.value ? new Date(params.value) : null;
-      return <span>{date ? date.toISOString().slice(0, 10) : '—'}</span>;
+  { field: 'first_name', headerName: 'Name', width: 180,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
+  { field: 'email', headerName: 'EMail', width: 260 },
+  {field:"phone",headerName:'Phone',width:240},
+  {field:"name",headerName:'Skills',width:190,renderCell:(d)=>(<>{d.row.skills?.name||'N/A'}</>)},
+  {field:'place',headerName:"Place",width:200,
+   renderCell:(p)=>(
+    <>{p.row.user_details?.apartment || 'N/A'}</>
+   )
+  },
+  {field:"user_details",headerName:'Date of Birth',width:160,renderCell:(params:any)=>{
+const dob=params.row.user_details?.date_of_birth.slice(0,10)
+    return (<>{dob}
+    </>)
   }},
   {field:"status",headerName:'Status',width:100 , renderCell:(params)=>(
- <span style={params.value?{color:"green"}:{color:"red"}}>
+ <span style={{color:params?"green":"red"}}>
   {params.value==false?"🔴 Inactive":"🟢 Active"}</span>
   )
 },
-{field:'',headerName:"Actions",width:100,
-  renderCell:(params)=>(
+  {field:'profile_pic_url',headerName:"Picture",width:100,
+    renderCell:(p)=>(<div className='flex items-center justify-center p-1'><img className='w-10 h-10 rounded-full' src={p.row.profile_pic_url} /></div>)
+  },
+
+{field:'actions',headerName:"Actions",width:100,
+  renderCell:()=>(
     <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>
   )
 }
@@ -124,7 +160,7 @@ const paginationModel = { page: 0, pageSize: 7 };
 
       {/**----- Filters Section------ */} 
        <div className='w-full flex gap-7'>
-<TextField label="Search By Name" className='w-3/4' />
+<TextField label="Search By Name" className='w-3/4' sx={themes.textFieldStyle} value={params.search} onChange={(e)=>setParams(prev=>({...prev,search:e.target.value}))} />
 
 <FormControl className='w-1/4'>
   <InputLabel>Search By Status</InputLabel>
@@ -140,7 +176,7 @@ const paginationModel = { page: 0, pageSize: 7 };
 <FormControl className='w-1/4' >
   <InputLabel>Search by Skills</InputLabel>
   <Select label="Search by Jobs" value={SelectedJobFil} onChange={(e)=>setSelectedJobFil(e.target.value as string)}>
-    {taskerData.map((data,index)=><MenuItem key={index}  >{data.skills}</MenuItem>)}
+    {/* {taskerData.map((data,index)=><MenuItem key={index}  >{data.skills}</MenuItem>)} */}
   </Select>
 </FormControl>
 
