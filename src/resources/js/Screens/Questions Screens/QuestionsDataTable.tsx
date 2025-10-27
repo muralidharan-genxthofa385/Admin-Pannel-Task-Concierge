@@ -172,7 +172,7 @@ const QuestionsDataTable: React.FC = () => {
                   toast.error("Service ID not found for this question");
                 }
               }}
-                className='flex gap-3'><Eye className='w-4 h-5 text-[var(--color-purple)]' /> <Typography > View</Typography></MenuItem>
+                className='flex gap-3'><Eye className='w-4 h-5 text-[var(--color-purple)]'/> <Typography> View</Typography></MenuItem>
               <MenuItem onClick={() => {
                 handleClose;
                 if (selectedrowid !== null) { navigate(`/questions/edit/${selectedrowid}`) }
@@ -242,7 +242,7 @@ const QuestionsDataTable: React.FC = () => {
 
       {/**---------- View individual question------------- */}
       <div>
-        <Button onClick={() => setOpenmodal(false)}>Open modal</Button>
+        {/* <Button onClick={() => setOpenmodal(false)}>Open modal</Button> */}
         <Modal
           className='flex justify-center items-center'
           open={openmodal}
@@ -251,7 +251,7 @@ const QuestionsDataTable: React.FC = () => {
           aria-describedby="modal-modal-description"
         >
           <Card className='w-[60%] h-[70vh] p-5'>
-            <Typography sx={{ ...themes.largeHeading, display: "flex", alignItems: "center", gap: 2, fontWeight: 500 }}><Settings className='w-10 h-10' /> Service name</Typography>
+            <Typography sx={{ ...themes.largeHeading, display: "flex", alignItems: "center", gap: 2, fontWeight: 500 }}><Settings className='w-10 h-10' /> {}</Typography>
 
             <Card className='w-[100%] h-[70vh] p-5 overflow-auto'>
 
@@ -260,6 +260,7 @@ const QuestionsDataTable: React.FC = () => {
               </div>)}
 
             </Card>
+            <Button sx={themes.OutlinedButtonStyle} onClick={()=>navigate(`/questions/edit/${selectedrowid}`)}>Edit This Question</Button>
           </Card>
         </Modal>
       </div>

@@ -3,18 +3,17 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Ellipsis,  Flame, User, UserRoundMinusIcon } from 'lucide-react'
+import { Bolt, Ellipsis,  Eye,  Flame, ShieldAlert, User, UserRoundMinusIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Card } from '@/components/ui/card';
 import { getAllTaskers } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
 import { themes } from '@/Themes';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
+import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 
-interface props {
-    icon: any,
-    title: string,
-    count:number
-}
 
 interface taskerData{
   first_name:string,
@@ -33,22 +32,32 @@ apartment:string,
 }
 
 }
+interface taskerCount{
+  total:number,
+  active: number,
+   inactive: number
+}
 
 function UserScreen() {
+
+  const navigate=useNavigate()
 
   const [loading,setLoading]=useState(false)
   const [taskerData,setTaskerData]=useState<taskerData[]>([])
   // const [namesearch,setNamesearch]=useState('')
   // const [Skillsearch,setSkillsearch]=useState('')
   const [SelectedJobFil, setSelectedJobFil] = useState('')
-  const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
-  const [PaginationModel,setPaginationModel]=useState({page:0,per_page:10})
+  // const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
+const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
+const [totalCount,setTotalCount]=useState(0)
+  const [taskercount,setTaskercount]=useState<taskerCount|null>(null)
+  const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
 
 const [params, setParams] = useState({
     search: "",
     // min_rating: 0,
     // max_rating: 5,
-    is_available: false,
+    pause_account: null as boolean | null,
     is_verified: false,
     sort_by: "",
     sort_order: "asc",
@@ -56,14 +65,27 @@ const [params, setParams] = useState({
     page: 1,
   })
   
-  console.log(SelectedJobFil)
+ const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,rowId:number) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRowid(rowId)
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
 
   useEffect(()=>{
     setLoading(true)
-getAllTaskers(params.search,params.is_available,params.is_verified,params.sort_by,params.sort_order,params.per_page,params.page)
+getAllTaskers(params.search,params.pause_account,params.is_verified,params.sort_by,params.sort_order,params.per_page,params.page)
 .then((res)=>{
 setTaskerData(res.data)
-console.log(taskerData)
+setTotalCount(res.meta.total)
+setTaskercount(res.counts)
+console.log(res)
+console.log('count :',taskercount)
 
 })
 .catch((err)=>console.log('error at fetching taskdata',err))
@@ -71,34 +93,47 @@ console.log(taskerData)
 
   },[params])
 
+  useEffect(()=>{
+setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.pageSize}))
+  },[PaginationModel])
 
-  const handleStatusChange=(event:SelectChangeEvent)=>{
-const value=event.target.value
-
-if(value==="true"){
-  setStatusFilter(true)
-}
-else if(value=="false"){
-  setStatusFilter(false)
-}
-else{
-  setStatusFilter(null)
-}   
+const handleStatusChange = (e: SelectChangeEvent) => {
+  const value = e.target.value;
+  if (value === "All") {
+    setParams(prev => ({ ...prev, pause_account: null }));
+  } else if (value === "Active") {
+    setParams(prev => ({ ...prev, pause_account: false }));
+  } else if (value === "Inactive") {
+    setParams(prev => ({ ...prev, pause_account: true }));
   }
+};
+
 
 
   const columns: GridColDef[] = [
   { field: 'first_name', headerName: 'Name', width: 180,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
   { field: 'email', headerName: 'EMail', width: 260 },
   {field:"phone",headerName:'Phone',width:240},
-  {field:"name",headerName:'Skills',width:190,renderCell:(d)=>(<>{d.row.skills?.name||'N/A'}</>)},
+{
+  field: "skills",
+  headerName: "Skills",
+  width: 220,
+  renderCell: (params) => {
+    const skillsArray = params.row.skills;
+    if (!skillsArray || skillsArray.length === 0) return "N/A";
+    const skillNames = skillsArray.map((skill: any) => skill.name).join(", ");
+    return <>{skillNames}</>;
+  },
+},
+
+
   {field:'place',headerName:"Place",width:200,
    renderCell:(p)=>(
     <>{p.row.user_details?.apartment || 'N/A'}</>
    )
   },
   {field:"user_details",headerName:'Date of Birth',width:160,renderCell:(params:any)=>{
-const dob=params.row.user_details?.date_of_birth.slice(0,10)
+const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_of_birth.slice(0,10):'-'
     return (<>{dob}
     </>)
   }},
@@ -112,38 +147,43 @@ const dob=params.row.user_details?.date_of_birth.slice(0,10)
   },
 
 {field:'actions',headerName:"Actions",width:100,
-  renderCell:()=>(
-    <span style={{width:"100%",height:"100%",display:"flex",justifyContent:"center",cursor:"pointer",alignItems:"center"}}><Ellipsis/></span>
+  renderCell:(d)=>(
+ <div>
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={(e)=>handleClick(e,d.row.id)}
+      ><Ellipsis/> </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'basic-button',
+          },
+        }}
+      >
+        <MenuItem  onClick={()=>{
+          navigate(`/taskers/view/${selectedrowid}`)
+          handleClose}}
+           className='flex gap-1'><Eye className='text-[var(--color-purple)]'/> View in Detail</MenuItem>
+        <MenuItem onClick={handleClose} className='flex gap-1'><ShieldAlert className='text-[var(--color-red)]' /> Restrict</MenuItem>
+      </Menu>
+    </div>
   )
 }
 
 ];
-const paginationModel = { page: 0, pageSize: 7 };
 
 // const filtered_Data=taskerData.map((data)=>{
 
 // })
 
   
-  {/**------------------------------------------------------------------------- Reuseable Card ---------------------------------------------------------------------------------------- */}
-    const RUDashBoardCard: React.FC<props> = ({ icon: Icon, title, count }) => {
-      return (
-        <div   className="p-4 sm:p-6 lg:p-9 flex justify-between rounded-xl  bg-white/10 backdrop-blur-md  shadow-[0_0_5px_var(--color-purple)]
-                 border border-white/20">
-          <h1>
-            <Icon className="text-[var(--color-purple)] w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />
-          </h1>
-          <div className="flex flex-col items-end">
-            <h2 className="text-sm sm:text-lg lg:text-2xl text-[var(--color-purple)]">
-              {title}
-            </h2>
-            <h2 className="text-xs sm:text-base lg:text-lg">{count}</h2>
-          </div>
-        </div>
-      );
-    };
-  
-  {/**------------------------------------------------------------------------- Reuseable Card ---------------------------------------------------------------------------------------- */}
   
 
   return (
@@ -153,9 +193,9 @@ const paginationModel = { page: 0, pageSize: 7 };
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <RUDashBoardCard title='Taskers' icon={Bolt} count={200}/>
-                    <RUDashBoardCard title='Active Taskers' icon={Flame} count={200}/>
-          <RUDashBoardCard title='Inactive Taskers' icon={UserRoundMinusIcon} count={200}/>
+          <HighlightStatsBox color='var(--color-purple)' title='Taskers' icon={Bolt} count={Number(taskercount?.total)}/>
+                    <HighlightStatsBox color='var(--color-purple)' title='Active Taskers' icon={Flame} count={Number(taskercount?.active)}/>
+          <HighlightStatsBox color='var(--color-purple)' title='Inactive Taskers' icon={UserRoundMinusIcon} count={Number(taskercount?.inactive)}/>
         </div>
 
       {/**----- Filters Section------ */} 
@@ -165,11 +205,18 @@ const paginationModel = { page: 0, pageSize: 7 };
 <FormControl className='w-1/4'>
   <InputLabel>Search By Status</InputLabel>
   <Select 
-  onChange={handleStatusChange} value={statusFilter===null?"All":statusFilter.toString()}
+  onChange={handleStatusChange} 
+ value={
+      params.pause_account === null
+        ? "All"
+        : params.pause_account
+        ? "Inactive"
+        : "Active"
+    }
   label='Search By Status' className='w-full'>
 <MenuItem value="All">All</MenuItem>
-<MenuItem value="true">Active</MenuItem>
-<MenuItem value="false">Inactive</MenuItem>
+<MenuItem value="Active">Active</MenuItem>
+<MenuItem value="Inactive">Inactive</MenuItem>
 </Select>
  </FormControl>
 
@@ -184,14 +231,19 @@ const paginationModel = { page: 0, pageSize: 7 };
 
        <div>
     <Card className='md:w-full w-[17%] h-131'>
-      <DataGrid
-        rows={taskerData}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-        sx={{ border: 0,width:{md:"100%"} }}
-        loading={loading}
-      />
+<DataGrid
+  rows={taskerData}
+  columns={columns}
+  paginationMode="server"
+  paginationModel={PaginationModel}
+  onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
+  pageSizeOptions={[5, 10, 15]}
+  rowCount={totalCount}
+  loading={loading}
+  getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
+  sx={{ border: 0, width: "100%" }}
+/>
+
     </Card>
 </div>{/**----- Data Table Section------ */}
 

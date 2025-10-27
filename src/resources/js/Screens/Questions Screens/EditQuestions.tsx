@@ -167,7 +167,7 @@ options_json:dataQuestionByID.options_json,
 <Card className='flex flex-col gap-10 shadow rounded-2xl p-6'>
 
   <div className='flex flex-col gap-3'>
-    <h1 className='text-2xl flex gap-1 items-center'>1<ChevronRight className='text-[var(--color-purple)]'/>Select a service to Create a Question</h1>
+    <h1 className='text-2xl flex gap-1 items-center'>1<ChevronRight className='text-[var(--color-purple)]'/>Service Name</h1>
 
 
   <TextField sx={themes.textFieldStyle} value={dataQuestionByID.service_name} label="Service Name" />

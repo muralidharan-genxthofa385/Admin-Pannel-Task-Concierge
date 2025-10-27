@@ -4,22 +4,30 @@ export const themes = {
     fontWeight: 600,
     fontSize: {xs:'24px',md:"32px"},
     color: "var(--color-black)",
+        fontFamily: "Sora, sans-serif",
+
   },
   lightFont:{
     fontWeight: 400,
     fontSize: {xs:"15px",md:"16px"},
     color: "var(--color-grey)",
+        fontFamily: "Sora, sans-serif",
+
   },
   mediumSizedFont:{
      fontWeight: 600,
     fontSize: "19px",
     color: "var(--color-black)",
+        fontFamily: "Sora, sans-serif",
+
   },
 ButtonStyle:{
   backgroundColor:'var(--color-purple)',
   color:"var(--color-white)",
       fontWeight: 600,
 fontSize:'18px',
+    fontFamily: "Sora, sans-serif",
+
 borderRadius:"10px",
  textTransform: "none",
 // "&:hover": {
