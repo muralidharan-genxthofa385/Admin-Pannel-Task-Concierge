@@ -13,17 +13,13 @@ function DashboardLayout({ children }: layoutProps) {
   return (
     <SidebarProvider
       style={{
-        // Prevent body scroll when sidebar is open
         '--sidebar-width': '16rem',
       } as React.CSSProperties}
     >
       <div className="h-screen w-full flex overflow-hidden bg-gray-50">
-        {/* Sidebar - Fixed, overlay on mobile */}
         <AppSidebar />
 
-        {/* Main Layout */}
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Header */}
           <header className="border-b bg-white p-3 md:p-5 flex items-center gap-3 sticky top-0 z-10">
             <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg
@@ -37,7 +33,6 @@ function DashboardLayout({ children }: layoutProps) {
               </svg>
             </SidebarTrigger>
 
-            {/* Mobile Logo - Centered */}
             <div className="md:hidden flex-1 flex justify-center">
               <img
                 src={headderTCLOGO}
@@ -45,21 +40,15 @@ function DashboardLayout({ children }: layoutProps) {
                 className="h-7 w-auto max-w-[120px]"
               />
             </div>
-
-            {/* Desktop Logo */}
-            <div className="hidden md:flex flex-1 items-center">
-              <img src={headderTCLOGO} alt="Task Concierge" className="h-8 w-auto" />
-            </div>
           </header>
 
-          {/* Main Content */}
           <main className="flex-1 p-4 md:p-3 w-full lg:p-8 overflow-y-auto bg-white overflow-x-hidden">
             <div className=" mx-auto w-full">
               {children}
             </div>
           </main>
 
-          {/* Footer */}
+          {/*---------------- Footer */}
           <footer className="border-t bg-white p-4 md:p-5">
             <div className="flex flex-col md:flex-row justify-between items-center gap-2 text-xs md:text-sm text-gray-600">
               <Typography
