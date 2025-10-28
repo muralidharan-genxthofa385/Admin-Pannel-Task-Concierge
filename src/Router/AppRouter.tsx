@@ -1,5 +1,4 @@
 import { Route } from 'react-router-dom'
-import React from 'react'
 import { Routes } from 'react-router-dom'
 import UserScreen from '@/resources/js/Screens/Taskers screens/UserScreen'
 import DashboardLayout from '@/resources/js/Screens/Layouts/DashboardLayout'
@@ -12,7 +11,6 @@ import QuestionsDataTable from '@/resources/js/Screens/Questions Screens/Questio
 import EditQuestions from '@/resources/js/Screens/Questions Screens/EditQuestions'
 import TaskerViewScreen from '@/resources/js/Screens/Taskers screens/TaskerViewScreen'
 import ViewCustomer from '@/resources/js/Screens/CustomersScreens/ViewCustomer'
-import CreateNewService from '@/resources/js/Screens/Services Screens/CreateNewService'
 
 function AppRouter() {
   return (
@@ -32,7 +30,6 @@ function AppRouter() {
             
 
             <Route path='/services' element={<DashboardLayout><TaskServices/></DashboardLayout>}/>
-            <Route path='/services/Create' element={<DashboardLayout><CreateNewService/></DashboardLayout>}/>
             
 
             <Route path='/questions/creation' element={<DashboardLayout><QuestionsScreen/></DashboardLayout>}  />

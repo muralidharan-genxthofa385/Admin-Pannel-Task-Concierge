@@ -1,40 +1,91 @@
-import { AppSidebar } from '@/components/app-sidebar'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import headderTCLOGO from '../../../../assets/images/taskconciegeLogo.svg'
-import React from 'react'
-import Typography from '@mui/material/Typography'
-import { themes } from '@/Themes'
+import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import headderTCLOGO from '../../../../assets/images/taskconciegeLogo.svg';
+import React from 'react';
+import Typography from '@mui/material/Typography';
+import { themes } from '@/Themes';
 
+type layoutProps = {
+  children: React.ReactNode;
+};
 
-type layoutProps={
-children:React.ReactNode
-}
-
-function DashboardLayout({children}:layoutProps) {
+function DashboardLayout({ children }: layoutProps) {
   return (
-    <>
-    <SidebarProvider>
-    <div className='h-screen flex w-full'>
-<AppSidebar/>
-<div className='flex-1 flex flex-col'>
-    <header className='p-3 border w-full flex'>
-<SidebarTrigger className="hover:bg-gray-100 bg-white w-10 h-10 cursor-pointer [&_svg]:w-30 [&_svg]:h-30"/>
-<div className=' md:hidden flex justify-center w-[70%]'> <img src={headderTCLOGO} className='w-30' /></div>
-</header>
+    <SidebarProvider
+      style={{
+        // Prevent body scroll when sidebar is open
+        '--sidebar-width': '16rem',
+      } as React.CSSProperties}
+    >
+      <div className="h-screen w-full flex overflow-hidden bg-gray-50">
+        {/* Sidebar - Fixed, overlay on mobile */}
+        <AppSidebar />
 
-<main className="flex-1 p-7 md:p-8 w-full box-border overflow-y-auto overflow-x-hidden " style={{msOverflowX:"hidden"}}>{children}</main>
+        {/* Main Layout */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Header */}
+          <header className="border-b bg-white p-3 md:p-5 flex items-center gap-3 sticky top-0 z-10">
+            <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </SidebarTrigger>
 
-<footer className='p-6 border-t w-full flex justify-between'>
-  <Typography sx={{...themes.mediumSizedFont,fontSize:"15px",fontWeight:600}}>Task Concierge © 2025. All rights reserved.</Typography>
-    <Typography sx={{...themes.mediumSizedFont,fontSize:"15px",fontWeight:600}}>Made with ❤️ by GenX Thofa Technologies</Typography>
+            {/* Mobile Logo - Centered */}
+            <div className="md:hidden flex-1 flex justify-center">
+              <img
+                src={headderTCLOGO}
+                alt="Task Concierge"
+                className="h-7 w-auto max-w-[120px]"
+              />
+            </div>
 
-  
-</footer>
-</div>
-    </div>
-</SidebarProvider>
-    </>
-  )
+            {/* Desktop Logo */}
+            <div className="hidden md:flex flex-1 items-center">
+              <img src={headderTCLOGO} alt="Task Concierge" className="h-8 w-auto" />
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex-1 p-4 md:p-3 w-full lg:p-8 overflow-y-auto bg-white overflow-x-hidden">
+            <div className=" mx-auto w-full">
+              {children}
+            </div>
+          </main>
+
+          {/* Footer */}
+          <footer className="border-t bg-white p-4 md:p-5">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-2 text-xs md:text-sm text-gray-600">
+              <Typography
+                sx={{
+                  ...themes.mediumSizedFont,
+                  fontSize: { xs: '12px', md: '14px' },
+                  fontWeight: 600,
+                }}
+              >
+                Task Concierge © 2025. All rights reserved.
+              </Typography>
+              <Typography
+                sx={{
+                  ...themes.mediumSizedFont,
+                  fontSize: { xs: '12px', md: '14px' },
+                  fontWeight: 600,
+                }}
+              >
+                Made with ❤️ by GenX Thofa Technologies
+              </Typography>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
 }
 
-export default DashboardLayout
+export default DashboardLayout;

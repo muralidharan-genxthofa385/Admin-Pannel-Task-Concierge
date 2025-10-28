@@ -1,191 +1,570 @@
 import { Card } from '@/components/ui/card'
-import { getAllServices } from '@/Service/TaskServicePage/TaskServices_service'
+import { Create_new_service, delete_a_service, Edit_service, getAllServices, getServiceById } from '@/Service/TaskServicePage/TaskServices_service'
 import { themes } from '@/Themes'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import Modal from '@mui/material/Modal'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import { Ellipsis, FilePen, Settings, Trash2} from 'lucide-react'
+import { CheckCircle, Ellipsis, FilePen, PencilIcon, Settings, Trash2, Upload } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
+import { styled } from '@mui/material/styles';
+import { toast } from 'react-toastify'
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
-interface serviceData{
-   id: number;
-   base_price:number;
-  category: {name:string,id:number};
-   name:string
+interface serviceData {
+  id: number;
+  base_price: number;
+  category: { name: string, id: number };
+  name: string
 }
 
-const TaskServices:React.FC = () => {
-  const navigate=useNavigate()
+interface payloadtype {
+  category_id: null | number,
+  serviceName: string,
+  description: string,
+  basePrice: number,
+  image: File | null
 
-  const [loading,setLoading]=useState(false)
-  const [serviceData,setserviceData]=useState<serviceData[]>([])
-  const [totalCount,setTotalcount]=useState(0)
-  const [paginationModel,setPaginationmodel]=useState({page:0,pageSize:10})
+}
 
-  const [params,setParams]=useState({
-    category_id:0,
-    search:"",
-    sort_by:"",
-    sort_order:"",
-    per_page:10,
-    page:0
+const TaskServices: React.FC = () => {
+  // const navigate=useNavigate()
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
+  const [loading, setLoading] = useState(false)
+  const [serviceData, setserviceData] = useState<serviceData[]>([])
+  const [selectedRowId, setSelectedRowId] = useState(0)
+  const [totalCount, setTotalcount] = useState(0)
+  const [paginationModel, setPaginationmodel] = useState({ page: 0, pageSize: 10 })
+  const [openmodal, setOpenmodal] = React.useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false)
+
+
+  const [params, setParams] = useState({
+    category_id: 0,
+    search: "",
+    sort_by: "",
+    sort_order: "",
+    per_page: 10,
+    page: 0
   })
 
-   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const [createServiceFormData, setcreateServiceFormData] = useState<payloadtype>({
+    category_id: null,
+    serviceName: "",
+    description: "",
+    basePrice: 0,
+    image: null
+  })
+
+  const [editServicebyid,setEditServicebyid]=useState<payloadtype>({
+     category_id: null,
+    serviceName: "",
+    description: "",
+    basePrice: 0,
+    image: null
+  })
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>, rowid: number) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRowId(rowid)
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const fetchAllservices = () => {
+    setLoading(true)
+    getAllServices(params.category_id, params.search, params.sort_by, params.sort_order, params.per_page, params.page)
+      .then((res) => {
+        setserviceData(res.data.items)
+        setTotalcount(res.data.pagination.total)
+        console.log(res)
+        console.log("pagination :", res.data.pagination.total)
+      })
+      .catch((err) => console.log('error at fetching taskdata', err))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchAllservices()
+  }, [params])
 
 
-      useEffect(()=>{
-        setLoading(true)
-   getAllServices(params.category_id,params.search,params.sort_by,params.sort_order,params.per_page,params.page)
+    const getIndservicebyid=(id:number)=>{
+          getServiceById(Number(id))
     .then((res)=>{
-    setserviceData(res.data.items)
-    setTotalcount(res.data.pagination.total)
-    console.log(res)
-    console.log("pagination :",res.data.pagination.total)
+      console.log("ind",res.data.service)
+      const servicedata=res.data.service
+      setEditServicebyid({
+        category_id:servicedata.category_id,
+        serviceName:servicedata?.name,
+        description:servicedata.description,
+        basePrice:servicedata?.base_price,
+        image:servicedata?.image_url
+      })
     })
-    .catch((err)=>console.log('error at fetching taskdata',err))
-    .finally(()=>setLoading(false))
-      },[params])
-
-      
-
-    
-     const columns: GridColDef[] = [
-     { field: 'name', headerName: 'Name', width: 510 },
-     {
-  field: 'category_id',
-    headerName: 'Category Name',
-    width: 500,
-    renderCell: (params) => (<span>{params.row.category.name || 'Unknown'}</span>), },
-     {field:"base_price",headerName:'Base Price',width:390},
-
-   {field:'actions',headerName:"Actions",width:100,
-     renderCell:(_params)=>(
-         <div>
-      <Button
-        id="demo-positioned-button"
-        aria-controls={open ? 'demo-positioned-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-       <Ellipsis/>
-      </Button>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <MenuItem onClick={handleClose} className='flex gap-3 '><FilePen className='w-4 h-4 text-[var(--color-purple)]'/> <Typography className='text-[var(--color-purple)]'> Edit</Typography></MenuItem>
-        <MenuItem onClick={handleClose} className='flex gap-3'><Trash2 className='w-4 h-4 text-red-500'/> <Typography className='text-[var(--color-purple)]'> Delete</Typography></MenuItem>
-      </Menu>
-    </div>
-     )
-   }
-   ];
 
 
-    
-    // const filteredData=serviceData.filter((data)=>{
-    //     const nameMatch=data.name.toLowerCase().includes(search.toLowerCase())
-    //     const categoryMatch=Category===''||Category.toLowerCase()===data.category?.name?.toLowerCase()
-        
-    //     return nameMatch&&categoryMatch
-    // })
+    }
+console.log("row id",selectedRowId)
+
+
+  const addNewService = (e: React.FormEvent) => {
+    e.preventDefault()
+    const payload = {
+      category_id: createServiceFormData.category_id,
+      name: createServiceFormData.serviceName,
+      description: createServiceFormData.description,
+      base_price: createServiceFormData.basePrice,
+      image_url: createServiceFormData.image
+    }
+    Create_new_service(payload)
+      .then(() => {
+        toast.success('Service Added Successfully')
+        setOpenmodal(false)
+        setcreateServiceFormData({
+          category_id: null,
+          serviceName: "",
+          description: "",
+          basePrice: 0,
+          image: null
+        })
+      })
+      .catch((_err) => {
+        toast.error('Failed to add a service')
+      })
+
+  }
+
+  const handleEdit_service=async(e:React.FormEvent)=>{
+    e.preventDefault()
+    const payload={
+  category_id: editServicebyid.category_id,
+      name: editServicebyid.serviceName,
+      description: editServicebyid.description,
+      base_price: editServicebyid.basePrice,
+      image_url: editServicebyid.image
+    }
+        console.log("edited",payload)
+
+
+    try{
+     await Edit_service(selectedRowId,payload)
+     toast.success('Service Edited Successfully')
+    }
+
+    catch{
+toast.error('Failed to edit this service')
+    }
+
+  }
+
+
+  const handledeleteservice = async (id: number | string) => {
+    try {
+      await delete_a_service(Number(id))
+      fetchAllservices()
+      toast.success('Service Deleted Successfully')
+    }
+    catch {
+      toast.error('Failed to delete an Error')
+    }
+  }
+
+
+
+  const columns: GridColDef[] = [
+    { field: 'name', headerName: 'Name', width: 510 },
+    {
+      field: 'category_id',
+      headerName: 'Category Name',
+      width: 500,
+      renderCell: (params) => (<span>{params.row.category.name || 'Unknown'}</span>),
+    },
+    { field: "base_price", headerName: 'Base Price', width: 390 },
+
+    {
+      field: 'actions', headerName: "Actions", width: 100,
+      renderCell: (p) => (
+        <div>
+          <Button
+            id="demo-positioned-button"
+            aria-controls={open ? 'demo-positioned-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={(e) => handleClick(e, p.row.id)}
+          >
+            <Ellipsis />
+          </Button>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <MenuItem onClick={() => {
+              setOpenEditModal(true)
+              getIndservicebyid(selectedRowId)
+              handleClose()
+            }} className='flex gap-3 '><FilePen className='w-4 h-4 text-[var(--color-purple)]' /> <Typography className='text-[var(--color-purple)]'> Edit</Typography></MenuItem>
+            <MenuItem onClick={() => { handledeleteservice(Number(selectedRowId)); handleClose() }} className='flex gap-3'><Trash2 className='w-4 h-4 text-red-500' /> <Typography className='text-[var(--color-purple)]'> Delete</Typography></MenuItem>
+          </Menu>
+        </div>
+      )
+    }
+  ];
+
+
+
 
 
 
   return (
 
     <>
-<div className='flex flex-col gap-10'>
-<h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings className='w-6 h-6'/> Services</h1>
+      <div className='flex flex-col gap-10'>
+        <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings className='w-6 h-6' /> Services</h1>
 
-{/**---------- Filter Section---------- */}
-<div className='flex flex-col gap-5 md:flex-row w-[100%]'>
-  <TextField
-    label="Search By Name"
-    className="md:w-3/4 w-[22%]"
-    value={params.search}
-    onChange={(e) => setParams(prev => ({ ...prev, search: e.target.value, page: 0 }))}
-    variant="outlined"
-    sx={themes.textFieldStyle}
-  />
+        {/**---------- Filter Section---------- */}
+        <div className='flex flex-col gap-5 md:flex-row w-[100%]'>
+          <TextField
+            label="Search By Name"
+            className="md:w-3/4 w-[100%]"
+            value={params.search}
+            onChange={(e) => setParams(prev => ({ ...prev, search: e.target.value, page: 0 }))}
+            variant="outlined"
+            sx={themes.textFieldStyle}
+          />
 
-  <FormControl className="md:w-1/4 w-[22%]" sx={themes.textFieldStyle}>
-    <InputLabel>Search By Category</InputLabel>
-    <Select
-      value={params.category_id || ""}
-      label="Search By Category"
-      onChange={(e) => {
-        const selectedId = Number(e.target.value);
-        setParams(prev => ({
-          ...prev,
-          category_id: selectedId,
-          page: 0,
-        }));
-      }}
-    >
-      <MenuItem value="">
-        <em>All Categories</em>
-      </MenuItem>
-      <MenuItem value={1}>Skilled</MenuItem>
-      <MenuItem value={2}>UnSkilled</MenuItem>
-      <MenuItem value={3}>Business & Events</MenuItem>
-    </Select>
-  </FormControl>
+          <FormControl className="md:w-1/4 [100%]" sx={themes.textFieldStyle}>
+            <InputLabel>Search By Category</InputLabel>
+            <Select
+              value={params.category_id || ""}
+              label="Search By Category"
+              onChange={(e) => {
+                const selectedId = Number(e.target.value);
+                setParams(prev => ({
+                  ...prev,
+                  category_id: selectedId,
+                  page: 0,
+                }));
+              }}
+            >
+              <MenuItem value="">
+                <em>All Categories</em>
+              </MenuItem>
+              <MenuItem value={1}>Skilled</MenuItem>
+              <MenuItem value={2}>UnSkilled</MenuItem>
+              <MenuItem value={3}>Business & Events</MenuItem>
+            </Select>
+          </FormControl>
 
-  <Button className='w-[10%]' sx={{ ...themes.OutlinedButtonStyle }} onClick={()=>navigate(`/services/Create`)}>
-    Add +
-  </Button>
-</div>
-{/**---------- Filter Section---------- */}
+          <Button className='md:w-[10%]' size='small' sx={{ ...themes.OutlinedButtonStyle }} onClick={() => setOpenmodal(true)}>
+            Add +
+          </Button>
+        </div>
+        {/**---------- Filter Section---------- */}
 
-<div>
-    <Card className='md:w-full w-[17%] h-131'>
-      <DataGrid
-        rows={serviceData}
-        paginationMode='server'
-        rowCount={totalCount}
-        paginationModel={{page:params.page,pageSize:params.per_page}}
-        onPaginationModelChange={(model)=>{
-          setPaginationmodel(model)
-          setParams(prev=>({...prev,page:model.page,per_page:model.pageSize}))
-        }}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10,20]}
-        sx={{ border: 0,width:{md:"100%"} }}
-        loading={loading}
-      />
-    </Card>
-</div>
-</div>
+        <div>
+          <Card className='md:w-full w-[100%] h-131'>
+            <DataGrid
+              rows={serviceData}
+              paginationMode='server'
+              rowCount={totalCount}
+              paginationModel={{ page: params.page, pageSize: params.per_page }}
+              onPaginationModelChange={(model) => {
+                setPaginationmodel(model)
+                setParams(prev => ({ ...prev, page: model.page, per_page: model.pageSize }))
+              }}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10, 20]}
+              sx={{ border: 0, width: { md: "100%" } }}
+              loading={loading}
+            />
+          </Card>
+        </div>
+      </div>
+
+
+      {/**------------------------------------------------Service creation form------------- */}
+      <div className='w-100'>
+        <Modal
+          className='flex justify-center items-center'
+          open={openmodal}
+          onClose={() => { setOpenmodal(false); handleClose() }}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+            <h2 className="text-2xl font-semibold mb-6">Create New Service</h2>
+
+            <form className="flex flex-col gap-5" onSubmit={addNewService}>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="category_id" className="text-sm font-medium">
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <FormControl sx={themes.textFieldStyle}>
+                  <Select
+                    id="category_id"
+                    name="category_id"
+                    sx={themes.textFieldStyle}
+                    value={createServiceFormData.category_id}
+                    onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, category_id: Number(e.target.value) }))}
+                  >
+                    <MenuItem value={1}>Skilled</MenuItem>
+                    <MenuItem value={2}>Unskilled</MenuItem>
+                    <MenuItem value={3}>Business & Events</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-sm font-medium">
+                  Service Name <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  value={createServiceFormData.serviceName}
+                  onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, serviceName: e.target.value }))}
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="e.g., Web Development"
+                  sx={themes.textFieldStyle}
+
+                />
+              </div>
+
+              {/* Description */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="description" className="text-sm font-medium">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  id="description"
+                  onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, description: e.target.value }))}
+                  value={createServiceFormData.description}
+                  name="description"
+                  placeholder="Provide a detailed description of the service..."
+                  sx={themes.textFieldStyle}
+                  maxRows={4}
+                  minRows={1}
+                  rows={5}
+                />
+              </div>
+
+              {/* Base Price */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="base_price" className="text-sm font-medium">
+                  Base Price <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, basePrice: Number(e.target.value) }))}
+                  value={createServiceFormData.basePrice}
+                  type="number"
+                  id="base_price"
+                  name="base_price"
+                  placeholder="e.g., 50.00"
+                  sx={themes.textFieldStyle}
+                />
+              </div>
+
+              {/* Image URL */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="image_url" className="text-sm font-medium">
+                  Upload Image
+                </label>
+
+
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  className='flex gap-3 items-center rounded'
+                  sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
+                >
+                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image.name}
+                    <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setcreateServiceFormData(prev => ({ ...prev, image: null })) }} /></>
+                    : <><Upload /> Upload files</>}
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept='image/*'
+                    onChange={(event) => {
+                      const files = event.target.files?.[0] || null
+                      setcreateServiceFormData(prev => ({ ...prev, image: files }))
+                    }}
+                  />
+                </Button>
+              </div>
+
+              <Button type='submit' sx={themes.ButtonStyle}>
+                Create Service
+              </Button>
+            </form>
+          </Card>
+
+        </Modal>
+      </div>
+      {/**---------- Service creation form------------- */}
+
+
+
+
+      {/**------------------------------------------------✏️✏️✏️✏️✏️✏️✏️✏️Service EDIT form------------- */}
+      <div>
+        <Modal
+          className='flex justify-center items-center'
+          open={openEditModal}
+          onClose={() => { setOpenEditModal(false); handleClose() }}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+            <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon />Edit</span>  <span style={{color:"var(--color-purple)"}}>{editServicebyid.serviceName}</span></h2>
+
+            <form className="flex flex-col gap-5" onSubmit={handleEdit_service}>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="category_id" className="text-sm font-medium">
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <FormControl sx={themes.textFieldStyle}>
+                  <Select
+                    id="category_id"
+                    name="category_id"
+                    sx={themes.textFieldStyle}
+                    value={editServicebyid.category_id}
+                    onChange={(e) => setEditServicebyid(prev => ({ ...prev, category_id: Number(e.target.value) }))}
+                  >
+                    <MenuItem value={1}>Skilled</MenuItem>
+                    <MenuItem value={2}>Unskilled</MenuItem>
+                    <MenuItem value={3}>Business & Events</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-sm font-medium">
+                  Service Name <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  value={editServicebyid.serviceName}
+                  onChange={(e) => setEditServicebyid(prev => ({ ...prev, serviceName: e.target.value }))}
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="e.g., Web Development"
+                  sx={themes.textFieldStyle}
+
+                />
+              </div>
+
+              {/* Description */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="description" className="text-sm font-medium">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  id="description"
+                  onChange={(e) => setEditServicebyid(prev => ({ ...prev, description: e.target.value }))}
+                  value={editServicebyid.description}
+                  name="description"
+                  placeholder="Provide a detailed description of the service..."
+                  sx={themes.textFieldStyle}
+                  maxRows={4}
+                  minRows={1}
+                  rows={5}
+                />
+              </div>
+
+              {/* Base Price */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="base_price" className="text-sm font-medium">
+                  Base Price <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  onChange={(e) => setEditServicebyid(prev => ({ ...prev, basePrice: Number(e.target.value) }))}
+                  value={editServicebyid.basePrice}
+                  type="number"
+                  id="base_price"
+                  name="base_price"
+                  placeholder="e.g., 50.00"
+                  sx={themes.textFieldStyle}
+                />
+              </div>
+
+              {/* Image URL */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="image_url" className="text-sm font-medium">
+                  Upload Image
+                </label>
+
+
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  className='flex gap-3 items-center rounded'
+                  sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
+                >
+                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image.name}
+                    <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></>
+                    : <><Upload /> Upload files</>}
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept='image/*'
+                    onChange={(event) => {
+                      const files = event.target.files?.[0] || null
+                      setEditServicebyid(prev => ({ ...prev, image: files }))
+                    }}
+                  />
+                </Button>
+              </div>
+
+              <Button type='submit' sx={themes.ButtonStyle}>
+                Create Service
+              </Button>
+            </form>
+          </Card>
+
+        </Modal>
+      </div>
+      {/**----------✏️✏️✏️✏️ Service Edit form------------- */}
+
+
     </>
   )
 }

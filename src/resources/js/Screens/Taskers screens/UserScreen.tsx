@@ -160,6 +160,7 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
+         PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
         onClose={handleClose}
         slotProps={{
           list: {

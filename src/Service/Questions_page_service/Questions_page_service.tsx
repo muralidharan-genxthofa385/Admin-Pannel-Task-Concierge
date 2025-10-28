@@ -6,7 +6,7 @@ export const getAllServicess=()=>{
 }
 
 export const getQuestionByServiceID=(id:number)=>{
-    return getRequest(`/services/${id}/questions`)
+    return getRequest(`/services/${Number(id)}/questions`)
 }
 
 export const getAllQuestions=(service_id:any,search:string,sort_by:any,sort_order:any,per_page:any,page:any)=>{

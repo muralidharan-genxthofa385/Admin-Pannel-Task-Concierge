@@ -137,6 +137,7 @@ const handleStatusChange = (event: SelectChangeEvent) => {
       ><Ellipsis/> </Button>
       <Menu
         id="basic-menu"
+         PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}

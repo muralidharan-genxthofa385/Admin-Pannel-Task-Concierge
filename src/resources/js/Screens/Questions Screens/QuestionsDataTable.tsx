@@ -99,6 +99,8 @@ const QuestionsDataTable: React.FC = () => {
   }, [paginationModel]);
 
 
+
+
   const ViewIndividualQuestions = async (serviceId: number) => {
     try {
       const res = await getQuestionByServiceID(serviceId);
@@ -153,6 +155,7 @@ const QuestionsDataTable: React.FC = () => {
               aria-labelledby="demo-positioned-button"
               anchorEl={anchorEl}
               open={open}
+               PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
               onClose={handleClose}
               anchorOrigin={{
                 vertical: 'top',
@@ -192,10 +195,10 @@ const QuestionsDataTable: React.FC = () => {
     <>
       <div className='flex flex-col gap-10'>
         <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><SquarePen className='w-6 h-6' /> Service Questions</h1>
-        <div className='flex w-full justify-between'>
-          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: "76%" }} />
+        <div className='flex md:gap-0 xs:gap-10 md:flex-row flex-col w-full justify-between'>
+          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: {md:"76%",xs:"100%"} }} />
 
-          <FormControl sx={{ ...themes.textFieldStyle, width: "11%" }} >
+          <FormControl sx={{ ...themes.textFieldStyle, width: {md:"11%",xs:"100%"},mt:{xs:3,md:0} }} >
             <InputLabel>filter by category</InputLabel>
             <Select label='filter by category'
               value={params.category_id}
@@ -209,15 +212,16 @@ const QuestionsDataTable: React.FC = () => {
             </Select>
           </FormControl>
 
-          <Button sx={{ ...themes.OutlinedButtonStyle, width: "10%" }} onClick={() => window.location.href = '/questions/creation'}>+Add</Button>
+          <Button sx={{ ...themes.OutlinedButtonStyle,width: {md:"11%",xs:"100%"},mt:{xs:3,md:0}  }} onClick={() => window.location.href = '/questions/creation'}>+Add</Button>
 
         </div>
 
         <div>
-          <Card className='md:w-full w-[17%] h-131'>
+          <Card className='md:w-full w-[100%] h-141'>
 <DataGrid
   rows={questions || []}
   columns={columns}
+  className='rounded border-0'
   paginationMode="server"
   rowCount={totalCount}
   pageSizeOptions={[5, 10, 15]}
@@ -250,12 +254,14 @@ const QuestionsDataTable: React.FC = () => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='w-[60%] h-[70vh] p-5'>
-            <Typography sx={{ ...themes.largeHeading, display: "flex", alignItems: "center", gap: 2, fontWeight: 500 }}><Settings className='w-10 h-10' /> {}</Typography>
+          <Card className='w-[40%]  p-5'>
+            <Typography sx={{ ...themes.largeHeading, display: "flex", alignItems: "center", gap: 2, fontWeight: 500 }}><Settings className='w-10 h-10' />Service Questions</Typography>
 
-            <Card className='w-[100%] h-[70vh] p-5 overflow-auto'>
+            <Card className='w-[100%]  p-5 overflow-auto'>
 
-              {viewQuestions == undefined ? <Typography>Failed to Fetch...!</Typography> : viewQuestions.map((data, ind) => <div><Typography>{ind + 1}{".)"} {data.question_text}</Typography>
+              {viewQuestions == undefined ? <Typography>Failed to Fetch...!</Typography> : viewQuestions.map((data, ind) => <div>
+                
+               <Typography className='flex items-center gap-3 border-b-1 pb-2'> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text}</span></Typography>
 
               </div>)}
 
