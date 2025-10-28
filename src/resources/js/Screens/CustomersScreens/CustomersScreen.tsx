@@ -39,13 +39,12 @@ const CustomersScreen:React.FC = () => {
 
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
-  // const [namesearch,setNamesearch]=useState('')
-  // const [Skillsearch,setSkillsearch]=useState('')
+  
   const [SelectedJobFil, setSelectedJobFil] = useState('')
   const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 15,});
 const [totalCount,setTotalCount]=useState(0)
-  const [customercount,setCustomercount]=useState<taskerCount|null>(null)
+  // const [customercount,setCustomercount]=useState<taskerCount|null>(null)
   const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
 
 const [params, setParams] = useState({
