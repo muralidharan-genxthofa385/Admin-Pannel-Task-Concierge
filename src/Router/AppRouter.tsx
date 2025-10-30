@@ -11,6 +11,7 @@ import QuestionsDataTable from '@/resources/js/Screens/Questions Screens/Questio
 import EditQuestions from '@/resources/js/Screens/Questions Screens/EditQuestions'
 import TaskerViewScreen from '@/resources/js/Screens/Taskers screens/TaskerViewScreen'
 import ViewCustomer from '@/resources/js/Screens/CustomersScreens/ViewCustomer'
+import TaskTable from '@/resources/js/Screens/Task Screens/TaskTable'
 
 function AppRouter() {
   return (
@@ -19,6 +20,8 @@ function AppRouter() {
             <Route path='/' element={<Login/>} />
 
             <Route path='/Dashboard' element={<DashboardLayout><DashboardHome/></DashboardLayout>}/>
+
+            <Route path='/tasks' element={<DashboardLayout><TaskTable/></DashboardLayout>} />
             
 
             <Route path='/taskers' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>

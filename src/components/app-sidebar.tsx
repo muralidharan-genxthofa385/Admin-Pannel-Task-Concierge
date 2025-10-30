@@ -1,5 +1,5 @@
 import * as React from "react"
-import { LayoutDashboard, Settings, SquarePen, User, Users } from "lucide-react"
+import { LayoutDashboard, Settings, SquarePen, ToolCase, User, Users } from "lucide-react"
 import taskconciergelogo from "../assets/images/taskconciegeLogo.svg"
 import taskconciregelogoCollapsed from '../assets/images/taskconciregelogoCollapsed.svg'
 import { NavLink, useLocation } from "react-router-dom"
@@ -19,6 +19,12 @@ const navItems = [
     url:"/Dashboard",
     icon:LayoutDashboard
   },
+{
+  title:"Tasks",
+    url:"/tasks",
+    icon:ToolCase
+  }
+  ,
   {
     title: "Taskers",
     url: "/taskers",
@@ -38,7 +44,8 @@ const navItems = [
     title:"Service Questions",
     url:"/questions",
     icon:SquarePen
-  }
+  },
+  
   
 ]
 

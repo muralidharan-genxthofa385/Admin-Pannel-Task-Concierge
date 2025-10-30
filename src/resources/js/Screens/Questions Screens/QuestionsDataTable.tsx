@@ -203,8 +203,8 @@ const QuestionsDataTable: React.FC = () => {
             <Select label='filter by category'
               value={params.category_id}
               onChange={(e) => setparams(prev => ({ ...prev, category_id: Number(e.target.value), page: 0 }))}
-
             >
+              
               <MenuItem className='flex gap-2' value={""}>Clear <X className='w-4 h-4' /></MenuItem>
               <MenuItem value={1}>Skilled</MenuItem>
               <MenuItem value={2}>UnSkilled</MenuItem>
@@ -213,8 +213,9 @@ const QuestionsDataTable: React.FC = () => {
           </FormControl>
 
           <Button sx={{ ...themes.OutlinedButtonStyle,width: {md:"11%",xs:"100%"},mt:{xs:3,md:0}  }} onClick={() => window.location.href = '/questions/creation'}>+Add</Button>
-
         </div>
+
+
 
         <div>
           <Card className='md:w-full w-[100%] h-141'>
@@ -224,6 +225,7 @@ const QuestionsDataTable: React.FC = () => {
   className='rounded border-0'
   paginationMode="server"
   rowCount={totalCount}
+  sx={{border:"none"}}
   pageSizeOptions={[5, 10, 15]}
   paginationModel={paginationModel}
   onPaginationModelChange={(newModel) => {

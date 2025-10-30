@@ -140,7 +140,7 @@ console.log("row id",selectedRowId)
       base_price: createServiceFormData.basePrice,
       image_url: createServiceFormData.image
     }
-    Create_new_service(payload)
+    Create_new_service(payload,true)
       .then(() => {
         toast.success('Service Added Successfully')
         setOpenmodal(false)
@@ -171,7 +171,7 @@ console.log("row id",selectedRowId)
 
 
     try{
-     await Edit_service(selectedRowId,payload)
+     await Edit_service(selectedRowId,payload,true)
      toast.success('Service Edited Successfully')
     }
 
@@ -424,6 +424,18 @@ toast.error('Failed to edit this service')
                     accept='image/*'
                     onChange={(event) => {
                       const files = event.target.files?.[0] || null
+                      
+                      if(!files) return;
+                      const allowedtype=['image/png','image/jpeg','image/webp']
+                      if(!allowedtype.includes(files.type)){
+                         toast.error('Only PNG, JPG, or WEBP images are allowed!');
+                        return;}
+                         const maxSize = 5 * 1024 * 1024;
+    if (files.size > maxSize) {
+      toast.error('File size must be below 5 MB!');
+      return;
+    }
+
                       setcreateServiceFormData(prev => ({ ...prev, image: files }))
                     }}
                   />
@@ -540,7 +552,7 @@ toast.error('Failed to edit this service')
                   className='flex gap-3 items-center rounded'
                   sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
                 >
-                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image.name}
+                  {editServicebyid.image !== null ? <> <CheckCircle className='text-green-500' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name}
                     <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></>
                     : <><Upload /> Upload files</>}
                   <VisuallyHiddenInput
@@ -548,6 +560,16 @@ toast.error('Failed to edit this service')
                     accept='image/*'
                     onChange={(event) => {
                       const files = event.target.files?.[0] || null
+                       if(!files) return;
+                      const allowedtype=['image/png','image/jpeg','image/webp']
+                      if(!allowedtype.includes(files.type)){
+                         toast.error('Only PNG, JPG, or WEBP images are allowed!');
+                        return;}
+                         const maxSize = 5 * 1024 * 1024;
+    if (files.size > maxSize) {
+      toast.error('File size must be below 5 MB!');
+      return;
+    }
                       setEditServicebyid(prev => ({ ...prev, image: files }))
                     }}
                   />

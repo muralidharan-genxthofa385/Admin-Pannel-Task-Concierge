@@ -72,6 +72,8 @@ console.log('service fetch error',err)
 }
 fetchServices()
   },[])
+
+
  const fetchQuestionsbyId=async()=>{
 
 try{
@@ -190,8 +192,8 @@ renderInput={(params)=>(
                 
               <div className='flex w-full border-b-1 py-2 pb-2'> <Typography className='flex w-full items-center gap-3 '> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text}</span></Typography>
 <div className='flex justify-end gap-4 w-[50%]'>
-  <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"30%"}} onClick={()=>navigate(`/questions/edit/${data.id}`)}>Edit <Pencil className='w-4 h-4 ml-2' /></Button>
-  <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"30%"}} onClick={()=>deleteQuestion(data.id)}> Delete <Trash2 className='w-4 h-4 ml-2 text-red-500' /></Button>
+  <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"20%",fontSize:"14px"}} onClick={()=>navigate(`/questions/edit/${data.id}`)}>Edit <Pencil className='w-4 h-4 ml-2' /></Button>
+  <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"20%",fontSize:"14px"}} onClick={()=>deleteQuestion(data.id)}> Delete <Trash2 className='w-4 h-4 ml-2 text-red-500' /></Button>
 </div>
 </div>
               </div>)}

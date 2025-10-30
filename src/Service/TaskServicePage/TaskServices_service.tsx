@@ -15,12 +15,12 @@ export const getServiceById=(id:number)=>{
     return getRequest(`/services/${id}`)
 }
 
-export const Create_new_service=(data:any)=>{
-    return postRequest(`/services`,data)
+export const Create_new_service=(data:any,isMultipart = false)=>{
+    return postRequest(`/services`,data,isMultipart)
 }
 
-export const Edit_service=(id:number,payload:any)=>{
-    return postRequest(`/services/${id}`,payload)
+export const Edit_service=(id:number,payload:any,isMultipart = false)=>{
+    return postRequest(`/services/${id}`,payload,isMultipart)
 }
 
 

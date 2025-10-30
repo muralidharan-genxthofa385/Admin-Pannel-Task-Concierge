@@ -166,9 +166,9 @@ const handleStatusChange = (event: SelectChangeEvent) => {
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox title='Customers' icon={Bolt} color='var(--color-purple)' count={Number(customerData.length)}/>
-          <HighlightStatsBox title='Active' icon={LucideActivitySquare} color='var(--color-purple)' count={Number(10)}/>
-          <HighlightStatsBox title='Inactive' icon={UserRoundMinusIcon} color='var(--color-purple)' count={Number(4)}/>
+          <HighlightStatsBox title='Customers' icon={Bolt}  count={Number(customerData.length)}/>
+          <HighlightStatsBox title='Active' icon={LucideActivitySquare}  count={Number(10)}/>
+          <HighlightStatsBox title='Inactive' icon={UserRoundMinusIcon}  count={Number(4)}/>
         </div>
 
       {/**----- Filters Section------ */} 

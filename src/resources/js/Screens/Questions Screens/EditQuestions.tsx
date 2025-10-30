@@ -1,4 +1,4 @@
-import { EditQuestion, getAllServicess, getQuestionByID } from '@/Service/Questions_page_service/Questions_page_service'
+import { EditQuestion, getAllServicess, getQuestionByID, getQuestionByServiceID } from '@/Service/Questions_page_service/Questions_page_service'
 import { themes } from '@/Themes'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
@@ -13,11 +13,27 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
+import Typography from '@mui/material/Typography'
+
+
 interface servicedata{
   name:string,
   id:number
+}
+
+interface questions {
+  id: number
+  input_type: string,
+  options_json: string[],
+  question_text: string,
+  service: {
+    category: { name: string },
+    name: string,
+    id: number
+  }
 
 }
+
 
 const EditQuestions:React.FC = () => {
 
@@ -30,6 +46,7 @@ const EditQuestions:React.FC = () => {
       const [question_text,setQuestion_text]=useState('')
       const [radioOptiontext,setradioOptiontext]=useState('')
       const [checkboxOptiontext,setCheckboxOptiontext]=useState('')
+      const [serviceQuestion,setServiceQuestion]=useState<questions[]>([])
 
       const [dataQuestionByID,setDataQuestionByID]=useState({
         setvice_id:selectedService,
@@ -110,8 +127,18 @@ const handleAddOption = () => {
 };
 
     
+     const fetchQuestionsbyId=async()=>{
     
-
+    try{
+      const res=await getQuestionByServiceID(Number(id))
+    setServiceQuestion(res.data)
+    console.log('service question',res.data)
+    }
+    catch(err){
+    console.log("service question by id error",err)
+    }
+      }
+useEffect(()=>{fetchQuestionsbyId()},[])
 
     
     const handleSaveQuestion=async()=>{
@@ -158,11 +185,7 @@ options_json:dataQuestionByID.options_json,
 <div className='flex flex-col gap-10 '>
   <div><h1 className='sm:text-2xl md:text-2xl flex items-center gap-3 cursor-pointer w-max' onClick={()=>navigate(-1)}><ChevronLeft className='w-6 h-6'/>Edit Questions</h1></div>
 
-  <div>
-    
-    </div>{/**----Questions display */}
-
-
+ 
 
 <Card className='flex flex-col gap-10 shadow rounded-2xl p-6'>
 

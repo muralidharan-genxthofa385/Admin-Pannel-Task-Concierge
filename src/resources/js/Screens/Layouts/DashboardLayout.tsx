@@ -21,10 +21,10 @@ function DashboardLayout({ children }: layoutProps) {
 
         <div className="flex-1 flex flex-col min-w-0">
           <header className="border-b bg-white p-3 md:p-5 flex items-center gap-3 sticky top-0 z-10">
-            <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <SidebarTrigger className="p-2  hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
+                className="h-9 w-9 text-gray-600"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
