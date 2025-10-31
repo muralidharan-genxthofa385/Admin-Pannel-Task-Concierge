@@ -156,7 +156,7 @@ function DashboardHome() {
             </p>
           </div>
           <div className="grid grid-flow-col gap-6 items-end justify-items-center mt-6 h-40">
-            {dashboardDetails?.services.slice(0, 5).map((service, i) => {
+            {dashboardDetails?.services.slice(0, 3).map((service, i) => {
               const heights = [100, 30, 75, 50, 20];
               return (
                 <div key={service.name} className="flex flex-col items-center gap-2">

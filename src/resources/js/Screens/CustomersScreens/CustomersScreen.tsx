@@ -3,7 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, ShieldAlert, User, UserRoundMinusIcon, Users } from 'lucide-react'
+import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, ShieldAlert,  UserRoundMinusIcon, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Card } from '@/components/ui/card';
@@ -26,11 +26,11 @@ interface Customer {
   created_at: string; 
 }
 
-interface taskerCount{
-  total:number,
-  active: number,
-   inactive: number
-}
+// interface taskerCount{
+//   total:number,
+//   active: number,
+//    inactive: number
+// }
 
 
 const CustomersScreen:React.FC = () => {
@@ -207,7 +207,7 @@ const handleStatusChange = (event: SelectChangeEvent) => {
   pageSizeOptions={[5, 10, 15]}
   rowCount={totalCount}
   loading={loading}
-  getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
+  getRowId={(row) => row.id || `${row.email}-${row.phone}`}  
   sx={{ border: 0, width: { xs:"100%",md:"100%"} }}
 />
 
