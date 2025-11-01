@@ -165,10 +165,10 @@ setParams(prev=>({...prev,page:paginationModel.page+1,per_page:paginationModel.p
  <div className=' flex flex-col gap-10'>
 
  <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-4'>
-    <HighlightStatsBox icon={Calendar1Icon} title='Scheduled' count={2034}  />
-        <HighlightStatsBox icon={RefreshCcw} title='Inprogress' color='#1C96E8' count={2034}  />
-    <HighlightStatsBox icon={CircleCheckBig} title='Completed' count={2034} color='green'  />
-    <HighlightStatsBox icon={CircleX} title='Cancelled' color='#EB2626' count={2034}  />
+    <HighlightStatsBox icon={Calendar1Icon} title='Scheduled' count={ taskDetails.filter(d=>d.status=="accepted").length}  />
+        <HighlightStatsBox icon={RefreshCcw} title='Inprogress' color='#1C96E8' count={taskDetails.filter(d=>d.status=="in_progress").length}  />
+    <HighlightStatsBox icon={CircleCheckBig} title='Completed' count={taskDetails.filter(d=>d.status=="completed").length} color='green'  />
+    <HighlightStatsBox icon={CircleX} title='Cancelled' color='#EB2626' count={taskDetails.filter(d=>d.status=="cancelled").length}  />
 
  </div>
 

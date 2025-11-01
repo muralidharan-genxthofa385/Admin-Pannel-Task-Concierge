@@ -207,7 +207,7 @@ renderInput={(params)=>(
    <h1 className='text-xl md:text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Create your Question</h1>
    <TextField  label="" sx={{...themes.inputFeildActions.active}}
    value={question_text} onChange={(e)=>setQuestion_text(e.target.value)}
-   inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} variant="standard" fullWidth />
+   inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} placeholder='enter here' variant="standard" fullWidth />
 
 </div>
 

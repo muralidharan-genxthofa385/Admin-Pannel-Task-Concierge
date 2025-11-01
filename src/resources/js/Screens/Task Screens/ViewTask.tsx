@@ -141,9 +141,9 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
 
                 <div className='p-4'>
 <div className='flex gap-8 items-center border-b-2 pb-6'>
-    <Box component={'img'} className='w-[79px] h-[79px]'
-    //  src={taskDetails?.selected_tasker.profile_pic_url} 
-    src={noProfile}
+    <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
+     src={taskDetails?.selected_tasker.profile_pic_url} 
+    //src={noProfile}
      />
      <div>
         <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.selected_tasker.name}</Typography>
@@ -178,7 +178,7 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
 
                 <div className='p-4'>
 <div className='flex gap-8 items-center border-b-2 pb-6'>
-    <Box component={'img'} className='w-[79px] h-[79px]'
+    <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
     //  src={taskDetails?.customer.profile_pic_url} 
     src={noProfile}
      />
