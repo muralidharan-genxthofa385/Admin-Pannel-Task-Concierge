@@ -1,4 +1,4 @@
-import { getRequest } from "../Apiservice"
+import { deleteRequest, getRequest, PutRequest } from "../Apiservice"
 
 export const getAllTaskers=(
     search:string,
@@ -18,4 +18,12 @@ export const getAllTaskers=(
 
 export const getTaskerById=(id:number)=>{
     return getRequest(`admin/taskers/${id}`)
+}
+
+export const delete_Tasker=(id:number)=>{
+    return deleteRequest(`/admin/taskers/${id}`)
+}
+
+export const edit_tasker=(id:number,payload:any)=>{
+    return PutRequest(`/admin/taskers/${id}`,payload)
 }

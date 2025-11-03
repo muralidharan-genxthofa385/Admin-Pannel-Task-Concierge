@@ -4,7 +4,7 @@ import { themes } from '@/Themes';
 import  noProfile from '../../../../assets/images/noProfilepic.svg'
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import { ChevronLeft,CircleDot, Mail, Phone, Star } from 'lucide-react';
+import { ChevronLeft,CircleDot, ClipboardClock, Mail, Phone, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -139,24 +139,31 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
     <Card className=' w-full lg:w-[28%]'>
                 <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Tasker Info</Typography>
 
-                <div className='p-4'>
+                {!taskDetails?.selected_tasker?.name?<>
+                
+                <div className='w-full flex flex-col items-center gap-3'>
+                  <ClipboardClock className='w-30 h-30 font-light text-[var(--color-grey)]'/>
+Tasker not assigned yet
+
+                </div>
+                </> :<div className='p-4'>
 <div className='flex gap-8 items-center border-b-2 pb-6'>
     <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
-     src={taskDetails?.selected_tasker.profile_pic_url} 
+     src={taskDetails?.selected_tasker?.profile_pic_url} 
     //src={noProfile}
      />
      <div>
-        <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.selected_tasker.name}</Typography>
+        <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.selected_tasker?.name}</Typography>
         <Typography className='text-yellow-400 flex gap-2 items-center'><Star/> 4.9</Typography>
      </div>
 </div>
 <div className='p-5 flex flex-col gap-3'>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.selected_tasker.phone}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.selected_tasker?.phone}</Typography>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.selected_tasker?.email}</Typography>
 
 </div>
 
-</div>
+</div>}
     </Card>
     </div>
 
@@ -179,8 +186,8 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
                 <div className='p-4'>
 <div className='flex gap-8 items-center border-b-2 pb-6'>
     <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
-    //  src={taskDetails?.customer.profile_pic_url} 
-    src={noProfile}
+      src={taskDetails?.customer.profile_pic_url}  alt={noProfile}
+    // src={noProfile}
      />
      <div>
         <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.customer.name}</Typography>

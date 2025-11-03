@@ -3,16 +3,18 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Ellipsis,  Eye,  Flame, ShieldAlert, User, UserRoundMinusIcon } from 'lucide-react'
+import { Bolt, Ellipsis,  Eye,  Flame, Pencil,Trash, User, UserRoundMinusIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Card } from '@/components/ui/card';
-import { getAllTaskers } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
+import { delete_Tasker, getAllTaskers } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
 import { themes } from '@/Themes';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
+import { toast } from 'react-toastify';
+import Chip from '@mui/material/Chip';
 
 
 interface taskerData{
@@ -75,10 +77,8 @@ const [params, setParams] = useState({
     setAnchorEl(null);
   };
 
-
-
-  useEffect(()=>{
-    setLoading(true)
+const fetchAll_taskers=()=>{
+   setLoading(true)
 getAllTaskers(params.search,params.pause_account,params.is_verified,params.sort_by,params.sort_order,params.per_page,params.page)
 .then((res)=>{
 setTaskerData(res.data)
@@ -90,7 +90,11 @@ console.log('count :',taskercount)
 })
 .catch((err)=>console.log('error at fetching taskdata',err))
 .finally(()=>setLoading(false))
+}
 
+  useEffect(()=>{
+   
+fetchAll_taskers()
   },[params])
 
   useEffect(()=>{
@@ -108,6 +112,18 @@ const handleStatusChange = (e: SelectChangeEvent) => {
   }
 };
 
+const deleteTasker=(taskerid:number)=>{
+
+  delete_Tasker(taskerid)
+  .then((res)=>{
+console.log(res)
+setTaskerData((prev) => prev.filter((t: any) => t.id !== taskerid));
+toast.success('Tasker Deleted Successfully')
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+}
 
 
   const columns: GridColDef[] = [
@@ -138,8 +154,8 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
     </>)
   }},
   {field:"status",headerName:'Status',width:100 , renderCell:(params)=>(
- <span style={{color:params?"green":"red"}}>
-  {params.value==false?"🔴 Inactive":"🟢 Active"}</span>
+ <span style={{color:!params.row.pause_account?"green":"red"}}>
+  {params.row.pause_account==true?<Chip className='' color='error' label="Inactive" />:<Chip className='' color='success' label="Active" />}</span>
   )
 },
   {field:'profile_pic_url',headerName:"Picture",width:100,
@@ -170,9 +186,11 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
       >
         <MenuItem  onClick={()=>{
           navigate(`/taskers/view/${selectedrowid}`)
-          handleClose}}
-           className='flex gap-1'><Eye className='text-[var(--color-purple)]'/> View in Detail</MenuItem>
-        <MenuItem onClick={handleClose} className='flex gap-1'><ShieldAlert className='text-[var(--color-red)]' /> Restrict</MenuItem>
+          handleClose()}}
+           className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View </MenuItem>
+        <MenuItem onClick={()=>{navigate(`/taskers/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
+        <MenuItem onClick={()=>{deleteTasker(d.row.id);handleClose();}} className='flex gap-2'><Trash className='text-[var(--color-red)]' /> Delete</MenuItem>
+
       </Menu>
     </div>
   )

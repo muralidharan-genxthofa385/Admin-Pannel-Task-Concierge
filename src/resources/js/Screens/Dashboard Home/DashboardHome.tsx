@@ -140,7 +140,6 @@ function DashboardHome() {
             </div>
           </div>
         </div>
-
        
         <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
           <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
@@ -157,16 +156,22 @@ function DashboardHome() {
           </div>
           <div className="grid grid-flow-col gap-6 items-end justify-items-center mt-6 h-40">
             {dashboardDetails?.services.slice(0, 3).map((service, i) => {
-              const heights = [100, 30, 75, 50, 20];
+             const heights = [150, 100, 60];
               return (
                 <div key={service.name} className="flex flex-col items-center gap-2">
                   <div
                     className="rounded-t-sm w-full transition-all"
-                    style={{
-                      height: `${heights[i]}%`,
-                      backgroundColor: 'rgba(108, 99, 255, 0.2)', 
-                    }}
+                    
                   />
+                  <div
+                  style={{
+            height: `${heights[i]}px`,
+            backgroundColor: 'var(--color-purple)',
+            borderRadius: '4px 4px 0 0',
+            width: '50%',
+            transition: 'height 0.3s ease',
+          }}
+                  ></div>
                   <p
                     className="text-xs font-bold truncate  text-center"
                     style={{ color: 'var(--color-grey)' }}

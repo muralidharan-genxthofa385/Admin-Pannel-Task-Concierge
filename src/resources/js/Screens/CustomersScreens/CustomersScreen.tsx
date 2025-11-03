@@ -3,7 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, ShieldAlert,  UserRoundMinusIcon, Users } from 'lucide-react'
+import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, Pencil, ShieldAlert,  Trash2,  UserRoundMinusIcon, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Card } from '@/components/ui/card';
@@ -12,7 +12,10 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
-import { GetAllCustomers } from '@/Service/Customer Page API Service/Customers_Api_service';
+import { delete_Customer, GetAllCustomers } from '@/Service/Customer Page API Service/Customers_Api_service';
+import { delete_Tasker } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
+import { toast } from 'react-toastify';
+import  Chip from '@mui/material/Chip';
 
 
 interface Customer {
@@ -24,13 +27,19 @@ interface Customer {
   profile_pic_url: string | null;
   rating: number | null;
   created_at: string; 
+  business_details:{
+    entity_name:string,
+    city:string,
+    state:string
+
+  }
 }
 
-// interface taskerCount{
-//   total:number,
-//   active: number,
-//    inactive: number
-// }
+interface taskerCount{
+  total:number,
+  active: number,
+   inactive: number
+}
 
 
 const CustomersScreen:React.FC = () => {
@@ -40,11 +49,10 @@ const CustomersScreen:React.FC = () => {
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
   
-  const [SelectedJobFil, setSelectedJobFil] = useState('')
   const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 15,});
 const [totalCount,setTotalCount]=useState(0)
-  // const [customercount,setCustomercount]=useState<taskerCount|null>(null)
+   const [customercount,setCustomercount]=useState<taskerCount|null>(null)
   const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
 
 const [params, setParams] = useState({
@@ -67,13 +75,12 @@ const [params, setParams] = useState({
     setAnchorEl(null);
   };
 
-
-
-  useEffect(()=>{
-    setLoading(true)
+const fetchallcustomers=()=>{
+  setLoading(true)
 GetAllCustomers(params.search,params.sort_by,params.sort_order,params.per_page,params.page)
 .then((res)=>{
 setCustomerData(res.data)
+setCustomercount(res.counts)
 setTotalCount(res.meta.total)
 console.log(res)
 console.log('count :')
@@ -82,6 +89,10 @@ console.log('count :')
 .catch((err)=>console.log('error at fetching taskdata',err))
 .finally(()=>setLoading(false))
 
+}
+
+  useEffect(()=>{
+    fetchallcustomers()
   },[params])
 
   useEffect(()=>{
@@ -104,20 +115,35 @@ const handleStatusChange = (event: SelectChangeEvent) => {
   }
 };
 
+const deleteCustomer=(taskerid:number)=>{
+
+  delete_Customer(taskerid)
+  .then(()=>{
+  fetchallcustomers()
+toast.success('Customer Deleted Successfully')
+
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+}
+
+
   const columns: GridColDef[] = [
-  { field: 'first_name', headerName: 'Name', width: 180,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
+  { field: 'first_name', headerName: 'Name', width: 210,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
+   { field: 'entiyy_name', headerName: 'Entity Name', width: 190,renderCell:(p)=>(<>{p.row.business_details?.entity_name||"-"}</>) },
   { field: 'email', headerName: 'EMail', width: 260 },
   {field:"phone",headerName:'Phone',width:240},
 
   {field:'place',headerName:"Place",width:200,
    renderCell:(p)=>(
-    <>{p.row.user_details?.apartment || 'N/A'}</>
+    <>{p.row.business_details?.city} {p.row.business_details?.state}</>
    )
   },
   {field:"created_at",headerName:'Joined By',width:160,renderCell:(d)=>(<>{d.row.created_at.slice(0,10)}</>)},
   {field:"status",headerName:'Status',width:100 , renderCell:(params)=>(
- <span style={{color:params?"green":"red"}}>
-  {params.value==false?"🔴 Inactive":"🟢 Active"}</span>
+ <span style={{color:!params.row.pause_account?"green":"red"}}>
+  {params.row.pause_account==true?<Chip className='' color='error' label="Inactive" />:<Chip className='' color='success' label="Active" />}</span>
   )
 },
   {field:'profile_pic_url',headerName:"Picture",width:100,
@@ -149,8 +175,9 @@ const handleStatusChange = (event: SelectChangeEvent) => {
         <MenuItem  onClick={()=>{
           navigate(`/customers/view/${selectedrowid}`)
           handleClose}}
-           className='flex gap-1'><Eye className='text-[var(--color-purple)]'/> View in Detail</MenuItem>
-        <MenuItem onClick={handleClose} className='flex gap-1'><ShieldAlert className='text-[var(--color-red)]' /> Restrict</MenuItem>
+           className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View</MenuItem>
+ <MenuItem onClick={()=>{navigate(`/customers/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
+        <MenuItem onClick={()=>{deleteCustomer(d.row.id);handleClose();}} className='flex gap-2'><Trash2 className='text-[var(--color-red)]' /> Delete</MenuItem>
       </Menu>
     </div>
   )
@@ -166,9 +193,9 @@ const handleStatusChange = (event: SelectChangeEvent) => {
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox title='Customers' icon={Bolt}  count={Number(customerData.length)}/>
-          <HighlightStatsBox title='Active' icon={LucideActivitySquare}  count={Number(10)}/>
-          <HighlightStatsBox title='Inactive' icon={UserRoundMinusIcon}  count={Number(4)}/>
+          <HighlightStatsBox title='Customers' color='var(--color-purple)' icon={Bolt}  count={customercount?.total}/>
+          <HighlightStatsBox title='Active' color='var(--color-purple)' icon={LucideActivitySquare}  count={customercount?.active}/>
+          <HighlightStatsBox title='Inactive' color='var(--color-purple)' icon={UserRoundMinusIcon}  count={customercount?.inactive}/>
         </div>
 
       {/**----- Filters Section------ */} 
@@ -187,12 +214,11 @@ const handleStatusChange = (event: SelectChangeEvent) => {
 </Select>
  </FormControl>
 
-<FormControl className='w-1/4' >
+{/* <FormControl className='w-1/4' >
   <InputLabel>Search by Skills</InputLabel>
   <Select label="Search by Jobs" value={SelectedJobFil} onChange={(e)=>setSelectedJobFil(e.target.value as string)}>
-    {/* {taskerData.map((data,index)=><MenuItem key={index}  >{data.skills}</MenuItem>)} */}
   </Select>
-</FormControl>
+</FormControl> */}
 
         </div>{/**----- Filters Section------ */} 
 

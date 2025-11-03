@@ -13,6 +13,8 @@ import TaskerViewScreen from '@/resources/js/Screens/Taskers screens/TaskerViewS
 import ViewCustomer from '@/resources/js/Screens/CustomersScreens/ViewCustomer'
 import TaskTable from '@/resources/js/Screens/Task Screens/TaskTable'
 import ViewTask from '@/resources/js/Screens/Task Screens/ViewTask'
+import TaskersEdit from '@/resources/js/Screens/Taskers screens/TaskersEdit'
+import CustomerEdit from '@/resources/js/Screens/CustomersScreens/CustomerEdit'
 
 function AppRouter() {
   return (
@@ -28,10 +30,14 @@ function AppRouter() {
 
             <Route path='/taskers' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>
             <Route path='/taskers/view/:id' element={<DashboardLayout><TaskerViewScreen/></DashboardLayout>} />
+            <Route path='/taskers/edit/:id' element={<DashboardLayout><TaskersEdit/></DashboardLayout>} />
+
 
 
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>
             <Route path='/customers/view/:id' element={<DashboardLayout><ViewCustomer/></DashboardLayout>}/>
+            <Route path='/customers/edit/:id' element={<DashboardLayout><CustomerEdit/></DashboardLayout>}/>
+
             
 
             <Route path='/services' element={<DashboardLayout><TaskServices/></DashboardLayout>}/>

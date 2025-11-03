@@ -57,6 +57,7 @@ OutlinedButtonStyle:{
 },
 
 textFieldStyle:{
+  fontFamily: "Sora, sans-serif",
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: "#ccc", 

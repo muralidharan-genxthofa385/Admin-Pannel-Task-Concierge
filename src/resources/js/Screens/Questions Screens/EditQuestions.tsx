@@ -2,7 +2,7 @@ import { EditQuestion, getAllServicess, getQuestionByID, getQuestionByServiceID 
 import { themes } from '@/Themes'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import { ChevronLeft, ChevronRight, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Save, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -275,8 +275,9 @@ setDataQuestionByID(prev=>({...prev,is_required:e.target.value==='true'}))
 </div>
 
 <div className='flex gap-2'>
-  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} onClick={()=>navigate(-1)}>Discard</Button>
-  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} onClick={handleSaveQuestion}>Save</Button>
+  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} className='flex items-center gap-2' onClick={()=>navigate(-1)}><ChevronLeft/> Discard</Button>
+  
+  <Button sx={{...themes.OutlinedButtonStyle,width:"10%"}} className='flex items-center gap-2' onClick={handleSaveQuestion}><Save/> Save</Button>
 </div>
 </Card>
 

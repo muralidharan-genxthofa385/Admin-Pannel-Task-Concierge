@@ -1,4 +1,4 @@
-import { getRequest } from "../Apiservice"
+import { deleteRequest, getRequest, PutRequest } from "../Apiservice"
 
 export const GetAllCustomers=(
      search:string,
@@ -15,4 +15,12 @@ export const GetAllCustomers=(
 
 export const getCustomerById=(id:number)=>{
     return getRequest(`/admin/customers/${id}`)
+}
+
+export const delete_Customer=(id:number)=>{
+    return deleteRequest(`/admin/customers/${id}`)
+}
+
+export const edit_customer=(id:number,payload:any)=>{
+    return PutRequest(`/admin/customers/${id}`,payload)
 }

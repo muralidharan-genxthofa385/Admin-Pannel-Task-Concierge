@@ -42,7 +42,7 @@ function DashboardLayout({ children }: layoutProps) {
             </div>
           </header>
 
-          <main className="flex-1 p-4 md:p-3 w-full lg:p-8 overflow-y-auto bg-white overflow-x-hidden">
+          <main className="flex-1 p-4 md:p-3 w-full lg:p-8 overflow-y-auto  overflow-x-hidden bg-gray-30">
             <div className=" mx-auto w-full">
               {children}
             </div>
