@@ -165,7 +165,7 @@ options_json:dataQuestionByID.options_json,
     toast.success('Question Created Successfully')
         setSelectedService(null)
     setQuestion_text('')
-    // navigate(-1)
+     navigate(-1)
       }
       catch{
     alert('err')

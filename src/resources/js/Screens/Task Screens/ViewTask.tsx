@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { getRequest } from '@/Service/Apiservice';
+import { getRequest, PutRequest } from '@/Service/Apiservice';
 import { themes } from '@/Themes';
 import  noProfile from '../../../../assets/images/noProfilepic.svg'
 import Typography from '@mui/material/Typography';
@@ -7,6 +7,11 @@ import Box from '@mui/material/Box'
 import { ChevronLeft,CircleDot, ClipboardClock, Mail, Phone, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import { toast } from 'react-toastify';
 
 
 interface bookingdetailstype {
@@ -86,6 +91,8 @@ useEffect(()=>{
 
 const taskstatus=taskDetails?.status
 
+console.log("taskdetails",taskstatus)
+
 const convert_time_format=(time:any)=>{
       if (!time || typeof time !== "string") return "";
     const [hours,minutes,_seconds]=time?.split(":").map(Number);
@@ -94,6 +101,21 @@ const convert_time_format=(time:any)=>{
 return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
 
 }
+
+// const updateTaskStatus=(  )=>{
+//   PutRequest(`/admin/bookings/${id}/status`, { status: taskstatus })
+//     .then((res) => {
+//       console.log("Status updated", res.data);
+//       toast.success('Task status updated successfully')
+//     })
+//     .catch((err) => {
+//       console.log("Error updating status", err);
+//       const error_msg = err.response?.data?.message || 'An error occurred';
+//       console.log(error_msg);
+//       toast.error(error_msg)
+//     });
+// }
+
 
   return (
     <div>
@@ -110,9 +132,44 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
             <div className='flex items-center justify-between'>
             <div>
                 <Typography sx={{...themes.lightFont}}>Status</Typography>
-               <Typography className={`flex justify-center text-white items-center gap-1
+              <div className='flex items-center gap-4'> <Typography className={`flex justify-center text-white items-center gap-1
              ${taskstatus=="pending"?"bg-yellow-500":taskstatus=="completed"?"bg-green-500":taskstatus=="in_progress"?"bg-amber-500":taskstatus=="accepted"?"bg-purple-500" :"bg-red-500"}`}
              sx={{  fontFamily: "Sora, sans-serif",width:"max-content",p:0.5,borderRadius:"14px",fontSize:"small"}}><CircleDot className='w-4 h-4' /> {taskstatus}</Typography>
+<FormControl className="w-[8vw]">
+  <InputLabel shrink>Update Status</InputLabel>
+  <Select
+    sx={themes.textFieldStyle}
+    className="w-[100%] h-[3vh]"
+    label="Update Status"
+    value={taskDetails?.status || ""}
+    onChange={async (e) => {
+      const newStatus = e.target.value;
+
+      // update UI immediately
+      setTaskdetails((prev) =>
+        prev ? { ...prev, status: newStatus } : prev
+      );
+
+      try {
+        const res = await PutRequest(`/admin/bookings/${id}/status`, { status: newStatus });
+        console.log("Status updated:", res.data);
+        toast.success("Task status updated successfully");
+      } catch (err: any) {
+        console.error("Error updating status:", err);
+        const error_msg = err.response?.data?.message || "An error occurred";
+        toast.error(error_msg);
+      }
+    }}
+  >
+    <MenuItem value="pending">Pending</MenuItem>
+    <MenuItem value="in_progress">In Progress</MenuItem>
+    <MenuItem value="completed">Completed</MenuItem>
+    <MenuItem value="accepted">Accepted</MenuItem>
+    <MenuItem value="rejected">Rejected</MenuItem>
+  </Select>
+</FormControl>
+
+             </div>
             </div>
             <div className='w-[40%]'>
                 <Typography sx={{...themes.lightFont}}>Task Date</Typography>

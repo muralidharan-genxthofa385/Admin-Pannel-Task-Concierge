@@ -142,6 +142,9 @@ else if(is_required==''){  toast.error('please select if the question is Require
 toast.success('Question Created Successfully')
 setQuestion_text('')
 setQuestionType('text')
+setRadioOptions([])
+setCheckboxOption([])
+setIsRequired('') 
 fetchQuestionsbyId()
   }
   catch{
@@ -276,7 +279,7 @@ setIsRequired(e.target.value ==='true')
 </div>
 
 <div className='flex gap-2'>
-  <Button sx={{...themes.OutlinedButtonStyle,width:{md:"10%",xs:"40%"}}} className='flex items-center gap-2' onClick={()=>navigate(-1)}><ChevronLeft/> Discard</Button>
+  <Button sx={{...themes.OutlinedButtonStyle,width:{md:"10%",xs:"40%"}}} className='flex items-center gap-2' onClick={()=>navigate(-1)}><ChevronLeft/> Back</Button>
   <Button sx={{...themes.OutlinedButtonStyle,width:{md:"10%",xs:"40%"}}} className='flex items-center gap-2' onClick={handleSaveQuestion}><Save/> Save</Button>
 </div>
 </Card>
