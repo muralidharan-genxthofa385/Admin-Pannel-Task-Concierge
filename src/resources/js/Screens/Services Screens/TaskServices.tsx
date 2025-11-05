@@ -174,6 +174,7 @@ console.log("row id",selectedRowId)
     try{
      await Edit_service(selectedRowId,payload,true)
      toast.success('Service Edited Successfully')
+      setOpenEditModal(false)
     }
 
     catch{
@@ -553,8 +554,8 @@ toast.error('Failed to edit this service')
                   className='flex gap-3 items-center rounded'
                   sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
                 >
-                  {editServicebyid.image !== null ? <> <CheckCircle className='text-green-500' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name}
-                    <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></>
+                  {editServicebyid.image !== null ? <Typography sx={{display:"flex",justifyContent:"center",overflow:"hidden"}} width={"80%"}> <CheckCircle className='text-green-500' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name.slice(0,20)}
+                    <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></Typography>
                     : <><Upload /> Upload files</>}
                   <VisuallyHiddenInput
                     type="file"
@@ -578,7 +579,7 @@ toast.error('Failed to edit this service')
               </div>
 
               <Button type='submit' sx={themes.ButtonStyle}>
-                Create Service
+                Edit Service
               </Button>
             </form>
           </Card>
