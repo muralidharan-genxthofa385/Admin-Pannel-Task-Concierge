@@ -250,9 +250,6 @@ toast.error('Failed to edit this service')
 
 
 
-
-
-
   return (
 
     <>
@@ -320,31 +317,27 @@ toast.error('Failed to edit this service')
         </div>
       </div>
 
-
       {/**------------------------------------------------Service creation form------------- */}
+
       <div className='w-100'>
         <Modal
           className='flex justify-center items-center'
           open={openmodal}
-          onClose={() => { setOpenmodal(false); handleClose() }}
+          onClose={() => { setOpenmodal(false); handleClose()}}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
             <h2 className="text-2xl font-semibold mb-6">Create New Service</h2>
-
             <form className="flex flex-col gap-5" onSubmit={addNewService}>
               <div className="flex flex-col gap-2">
                 <label htmlFor="category_id" className="text-sm font-medium">
                   Category <span className="text-red-500">*</span>
                 </label>
                 <FormControl sx={themes.textFieldStyle}>
-                  <Select
-                    id="category_id"
-                    name="category_id"
-                    sx={themes.textFieldStyle}
-                    value={createServiceFormData.category_id}
-                    onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, category_id: Number(e.target.value) }))}
+                  <Select id="category_id" name="category_id" sx={themes.textFieldStyle}
+                   value={createServiceFormData.category_id}
+                   onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, category_id: Number(e.target.value) }))}
                   >
                     <MenuItem value={1}>Skilled</MenuItem>
                     <MenuItem value={2}>Unskilled</MenuItem>
@@ -554,8 +547,8 @@ toast.error('Failed to edit this service')
                   className='flex gap-3 items-center rounded'
                   sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
                 >
-                  {editServicebyid.image !== null ? <Typography sx={{display:"flex",justifyContent:"center",overflow:"hidden"}} width={"80%"}> <CheckCircle className='text-green-500' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name.slice(0,20)}
-                    <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></Typography>
+                  {editServicebyid.image !== null ? <Typography sx={{display:"flex",justifyContent:"space-between",gap:"2rem",wordBreak:"break-all"}} width={"80%"}> <CheckCircle className='text-green-500 w-10 h-10' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name.slice(0,20)}
+                    <Trash2 className='text-red-500 w-10 h-10' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></Typography>
                     : <><Upload /> Upload files</>}
                   <VisuallyHiddenInput
                     type="file"
@@ -579,7 +572,7 @@ toast.error('Failed to edit this service')
               </div>
 
               <Button type='submit' sx={themes.ButtonStyle}>
-                Edit Service
+                Save Service
               </Button>
             </form>
           </Card>

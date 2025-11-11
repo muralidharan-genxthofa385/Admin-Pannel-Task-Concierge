@@ -163,6 +163,7 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
   >
     <MenuItem value="pending">Pending</MenuItem>
     <MenuItem value="in_progress">In Progress</MenuItem>
+    <MenuItem value="paused">Paused</MenuItem>
     <MenuItem value="completed">Completed</MenuItem>
     <MenuItem value="accepted">Accepted</MenuItem>
     <MenuItem value="rejected">Rejected</MenuItem>
@@ -254,19 +255,10 @@ Tasker not assigned yet
 <div className='p-5 flex flex-col gap-3'>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.customer.phone}</Typography>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.customer?.email}</Typography>
-
 </div>
-
-                </div>
-
-
-
+</div>
     </Card>
     </div>
-
-
-
-
 
 </div>
 

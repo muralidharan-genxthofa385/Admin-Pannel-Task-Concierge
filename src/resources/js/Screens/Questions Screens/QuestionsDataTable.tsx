@@ -200,22 +200,17 @@ const QuestionsDataTable: React.FC = () => {
 
           <FormControl sx={{ ...themes.textFieldStyle, width: {md:"11%",xs:"100%"},mt:{xs:3,md:0} }} >
             <InputLabel>filter by category</InputLabel>
-            <Select label='filter by category'
-              value={params.category_id}
+            <Select label='filter by category' value={params.category_id}
               onChange={(e) => setparams(prev => ({ ...prev, category_id: Number(e.target.value), page: 0 }))}
             >
-              
               <MenuItem className='flex gap-2' value={""}>Clear <X className='w-4 h-4' /></MenuItem>
               <MenuItem value={1}>Skilled</MenuItem>
               <MenuItem value={2}>UnSkilled</MenuItem>
               <MenuItem value={3}>Business & Events</MenuItem>
             </Select>
           </FormControl>
-
           <Button sx={{ ...themes.OutlinedButtonStyle,width: {md:"8%",xs:"100%"},mt:{xs:3,md:0} ,fontWeight:400 }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
         </div>
-
-
 
         <div>
           <Card className='md:w-full w-[100%] h-141'>
@@ -256,7 +251,7 @@ const QuestionsDataTable: React.FC = () => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='w-[40%]  p-5'>
+          <Card className='w-[90%] md:w-[40%]  p-5'>
             <Typography sx={{ ...themes.largeHeading, display: "flex", alignItems: "center", gap: 2, fontWeight: 500 }}><Settings className='w-10 h-10' />Service Questions</Typography>
 
             <Card className='w-[100%]  p-5 overflow-auto'>

@@ -212,10 +212,10 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
         </div>
 
       {/**----- Filters Section------ */} 
-       <div className='w-full flex gap-7'>
-<TextField label="Search By Name" className='w-3/4' sx={themes.textFieldStyle} value={params.search} onChange={(e)=>setParams(prev=>({...prev,search:e.target.value}))} />
+       <div className='w-full flex flex-col md:flex-row gap-7'>
+<TextField label="Search By Name" className='w-full md:w-3/4' sx={themes.textFieldStyle} value={params.search} onChange={(e)=>setParams(prev=>({...prev,search:e.target.value}))} />
 
-<FormControl className='w-1/4'>
+<FormControl className='w-full md:w-1/4'>
   <InputLabel>Search By Status</InputLabel>
   <Select 
   onChange={handleStatusChange} 
@@ -226,14 +226,14 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
         ? "Inactive"
         : "Active"
     }
-  label='Search By Status' className='w-full'>
+  label='Search By Status' className='w-full md:w-full'>
 <MenuItem value="All">All</MenuItem>
 <MenuItem value="Active">Active</MenuItem>
 <MenuItem value="Inactive">Inactive</MenuItem>
 </Select>
  </FormControl>
 
-<FormControl className='w-1/4' >
+<FormControl className='w-full md:w-1/4' >
   <InputLabel>Search by Skills</InputLabel>
   <Select label="Search by Jobs" value={SelectedJobFil} onChange={(e)=>setSelectedJobFil(e.target.value as string)}>
     {/* {taskerData.map((data,index)=><MenuItem key={index}  >{data.skills}</MenuItem>)} */}
@@ -243,7 +243,7 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
         </div>{/**----- Filters Section------ */} 
 
        <div>
-    <Card className='md:w-full w-[17%] h-131'>
+    <Card className='md:w-full  h-131'>
 <DataGrid
   rows={taskerData}
   columns={columns}
