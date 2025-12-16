@@ -220,7 +220,6 @@ Tasker not assigned yet
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.selected_tasker?.email}</Typography>
 
 </div>
-
 </div>}
     </Card>
     </div>
@@ -261,6 +260,8 @@ Tasker not assigned yet
     </div>
 
 </div>
+
+
 
     </div>
   )

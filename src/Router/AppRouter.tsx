@@ -15,6 +15,7 @@ import TaskTable from '@/resources/js/Screens/Task Screens/TaskTable'
 import ViewTask from '@/resources/js/Screens/Task Screens/ViewTask'
 import TaskersEdit from '@/resources/js/Screens/Taskers screens/TaskersEdit'
 import CustomerEdit from '@/resources/js/Screens/CustomersScreens/CustomerEdit'
+import BusinessApproval from '@/resources/js/Screens/Business Approvals/BusinessApproval'
 
 function AppRouter() {
   return (
@@ -31,6 +32,8 @@ function AppRouter() {
             <Route path='/taskers' element={<DashboardLayout><UserScreen/></DashboardLayout>}/>
             <Route path='/taskers/view/:id' element={<DashboardLayout><TaskerViewScreen/></DashboardLayout>} />
             <Route path='/taskers/edit/:id' element={<DashboardLayout><TaskersEdit/></DashboardLayout>} />
+
+            <Route path='/business/approval' element={<DashboardLayout><BusinessApproval/> </DashboardLayout>} />
 
 
 
