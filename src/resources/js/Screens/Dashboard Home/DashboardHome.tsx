@@ -1,11 +1,18 @@
-import { UserCheck, Users, BanknoteArrowDown, ToolCase } from 'lucide-react';
+import { UserCheck, Users,  ToolCase } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices';
 
 interface dashboarddetailsType {
-  customers: { total: number };
   services: { name: string; count: number }[];
   taskers: { total: number; active?: number; inactive?: number };
+  residents: {
+            total: number
+        },
+        business_users: {
+            approved: number,
+            rejected: number,
+            pending: number
+        },
   tasks: {
     accepted: number;
     cancelled: number;
@@ -26,7 +33,6 @@ function DashboardHome() {
     });
   }, []);
 
-  const totalRevenue = 1250300;
   const last30DaysRevenue = 85400;
   const totalBookings = 3200;
 
@@ -64,34 +70,40 @@ function DashboardHome() {
 
    
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-        <RUDashBoardCard
+        {/* <RUDashBoardCard
           title="Total Revenue"
           count={`$${totalRevenue.toLocaleString()}`}
           growth="+5.2%"
           icon={BanknoteArrowDown}
-        />
+        /> */}
         <RUDashBoardCard
           title="Total Taskers"
-          count={dashboardDetails?.taskers.total ?? 0}
+          count={dashboardDetails?.taskers.total}
           growth="+1.8%"
           icon={UserCheck}
         />
         <RUDashBoardCard
           title="Total Customers"
-          count={dashboardDetails?.customers.total ?? 0}
+          count={dashboardDetails?.residents.total ?? 0}
+          growth="+12.5%"
+          icon={Users}
+        />
+            <RUDashBoardCard
+          title="Approved Business Users"
+          count={dashboardDetails?.business_users.approved ?? 0}
           growth="+12.5%"
           icon={Users}
         />
         <RUDashBoardCard
-          title="Top Service"
-          count={dashboardDetails?.services[0]?.name ?? "N/A"}
+          title="Unapproved Business Users"
+          count={dashboardDetails?.business_users.pending ?? 0}
           growth="+3.1%"
           icon={ToolCase}
         />
       </div>
 
      
-      <div className="flex flex-col lg:flex-row gap-6 mb-8">
+      <div className=" flex-col lg:flex-row gap-6 mb-8 hidden">
       
 
         <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">

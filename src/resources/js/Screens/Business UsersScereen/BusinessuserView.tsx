@@ -1,11 +1,12 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallIcon, Scale, Wallet } from 'lucide-react';
+import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallIcon, Scale,  UserCircle2, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
+
 
 
 interface customerdetails {
@@ -24,45 +25,45 @@ interface bookings{
     completed:any[]
 }
 
-const ViewCustomer:React.FC = () => {
 
+const BusinessuserView:React.FC = () => {
 
-    const navigate=useNavigate()
-const {id}=useParams()
-const [userDetails,setUserdetails]=useState<customerdetails|null>(null)
-const [counts,setCounts]=useState<bookings|null>()
-
-
-useEffect(()=>{
-    const fetchtasker=async()=>{
-        try{
-            const res=await getCustomerById(Number(id))
-            console.log("response :",res)
-            setUserdetails(res.data)
-            setCounts(res.data.bookings)
-            console.log('bookings : ',counts)
-
+    
+        const navigate=useNavigate()
+    const {id}=useParams()
+    const [userDetails,setUserdetails]=useState<customerdetails|null>(null)
+    const [counts,setCounts]=useState<bookings|null>()
+    
+    useEffect(()=>{
+        const fetchtasker=async()=>{
+            try{
+                const res=await getCustomerById(Number(id))
+                console.log("response :",res)
+                setUserdetails(res.data)
+                setCounts(res.data.bookings)
+                console.log('bookings : ',counts)
+    
+            }
+            catch{
+    
+            }
         }
-        catch{
-
-        }
-    }
-fetchtasker()
-
-
-},[id])
-
-
+    fetchtasker()
+    
+    
+    },[id])
+    
 
 
 
   return (
-    <>
-    <Typography className='flex items-center w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:25,color:"var(--color-purple)"}}>
-            <ChevronLeft className='w-8 h-8' />{userDetails?.customer.name}</Typography>
+     <>
+    <Typography className='flex items-center gap-2 w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:21,color:"var(--color-purple)"}}>
+            <ChevronLeft className='w-8 h-8' /><UserCircle2/> {userDetails?.customer.name}</Typography>
             <div className=' flex flex-col gap-11'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
-                    <HighlightStatsBox icon={Wallet} count={100} title='Revenue' />
+                    {/* <RUDashBoardCard icon={Wallet} count={100} title='Revenue' /> */}
+                    <HighlightStatsBox icon={Wallet} title='Revenue' count={0} color='var(--color-grey)' />
                     <HighlightStatsBox icon={Activity} count={`${!userDetails?.customer.pause_account?"active":"Inactive"}`} title='Status' />
                     <HighlightStatsBox icon={Scale} count={userDetails?.bookings.completed.length} title='Completed_Tasks' />
                     <HighlightStatsBox icon={Calendar} count={`${userDetails?.customer.email_verified_at?userDetails?.customer.email_verified_at.slice(0,10):"N/A"}`} title={`Member_Since`} />
@@ -158,4 +159,4 @@ fetchtasker()
   )
 }
 
-export default ViewCustomer
+export default BusinessuserView

@@ -3,7 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, Pencil,  Trash2,  UserRoundMinusIcon, Users } from 'lucide-react'
+import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, Pencil, Trash2,  UserRoundMinusIcon, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Card } from '@/components/ui/card';
@@ -12,11 +12,9 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
-import { delete_Customer } from '@/Service/Customer Page API Service/Customers_Api_service';
 import { toast } from 'react-toastify';
 import  Chip from '@mui/material/Chip';
-import { getRequest } from '@/Service/Apiservice';
-import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices';
+import { deleteRequest, getRequest } from '@/Service/Apiservice';
 
 
 interface Customer {
@@ -41,31 +39,10 @@ interface taskerCount{
   active: number,
    inactive: number
 }
-interface dashboarddetailsType {
-  services: { name: string; count: number }[];
-  taskers: { total: number; active?: number; inactive?: number };
-  residents: {
-            total: number
-        },
-        business_users: {
-            approved: number,
-            rejected: number,
-            pending: number
-        },
-  tasks: {
-    accepted: number;
-    cancelled: number;
-    completed: number;
-    in_progress: number;
-    pending: number;
-    total: number;
-  };
-}
 
+const BusinessUserTable:React.FC = () => {
 
-const CustomersScreen:React.FC = () => {
-
-  const navigate=useNavigate()
+    const navigate=useNavigate()
 
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
@@ -95,18 +72,10 @@ const [params, setParams] = useState({
   const handleClose = () => {
     setAnchorEl(null);
   };
-   const [dashboardDetails, setDashboardDetails] = useState<dashboarddetailsType | null>(null);
-      
-        useEffect(() => {
-          getDashboarDetails().then((res) => {
-            console.log(res);
-            setDashboardDetails(res.data);
-          });
-        }, []);
 
 const fetchallcustomers=()=>{
   setLoading(true)
- getRequest(`admin/residents?search=${params.search}&sort_by=${params.sort_by}&sort_order=${params.sort_order}&per_page=${params.per_page}&page=${params.page}`)
+ getRequest(`admin/business-users?search=${params.search}&sort_by=${params.sort_by}&sort_order=${params.sort_order}&per_page=${params.per_page}&page=${params.page}`)
 .then((res)=>{
 setCustomerData(res.data.data)
 setCustomercount(res.counts)
@@ -144,9 +113,9 @@ const handleStatusChange = (event: SelectChangeEvent) => {
   }
 };
 
-const deleteCustomer=(taskerid:number)=>{
+const deleteCustomer=(id:number)=>{
 
-  delete_Customer(taskerid)
+  deleteRequest(`admin/business-users/${id}`)
   .then(()=>{
   fetchallcustomers()
 toast.success('Customer Deleted Successfully')
@@ -202,10 +171,10 @@ toast.success('Customer Deleted Successfully')
         }}
       >
         <MenuItem  onClick={()=>{
-          navigate(`/customers/view/${selectedrowid}`)
+          navigate(`/business/user/view/${selectedrowid}`)
           handleClose}}
            className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View</MenuItem>
- <MenuItem onClick={()=>{navigate(`/customers/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
+ <MenuItem onClick={()=>{navigate(`/business/user/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
         <MenuItem onClick={()=>{deleteCustomer(d.row.id);handleClose();}} className='flex gap-2'><Trash2 className='text-[var(--color-red)]' /> Delete</MenuItem>
       </Menu>
     </div>
@@ -215,16 +184,17 @@ toast.success('Customer Deleted Successfully')
 ];
 
 
+
+
   return (
-    <>
- <div>
-      <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Customers !</h1>
+  <div>
+      <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Business Customers !</h1>
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox title='Customers' color='var(--color-purple)' icon={Bolt}  count={dashboardDetails?.residents.total}/>
-          <HighlightStatsBox title='Active' color='var(--color-purple)' icon={LucideActivitySquare}  count={dashboardDetails?.residents.total}/>
-          <HighlightStatsBox title='Inactive' color='var(--color-purple)' icon={UserRoundMinusIcon}  count={customercount?.inactive||0}/>
+          <HighlightStatsBox title='Customers' color='var(--color-purple)' icon={Bolt}  count={customercount?.total}/>
+          <HighlightStatsBox title='Active' color='var(--color-purple)' icon={LucideActivitySquare}  count={customercount?.active}/>
+          <HighlightStatsBox title='Inactive' color='var(--color-purple)' icon={UserRoundMinusIcon}  count={customercount?.inactive}/>
         </div>
 
       {/**----- Filters Section------ */} 
@@ -271,8 +241,7 @@ toast.success('Customer Deleted Successfully')
 
       </div>
       </div>
-    </>
   )
 }
 
-export default CustomersScreen
+export default BusinessUserTable

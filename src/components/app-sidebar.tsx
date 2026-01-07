@@ -1,5 +1,5 @@
 import * as React from "react"
-import { BriefcaseBusiness, LayoutDashboard, Settings, SquarePen, ToolCase, User, Users } from "lucide-react"
+import { Brain, BriefcaseBusiness,  Building2, LayoutDashboard, Settings, SquarePen, User, Users } from "lucide-react"
 import taskconciergelogo from "../assets/images/taskconciegeLogo.svg"
 import taskconciregelogoCollapsed from '../assets/images/taskconciregelogoCollapsed.svg'
 import { NavLink, useLocation } from "react-router-dom"
@@ -19,16 +19,28 @@ const navItems = [
     url:"/Dashboard",
     icon:LayoutDashboard
   },
-{
-  title:"Tasks",
-    url:"/tasks",
-    icon:ToolCase
-  }
-  ,
+// {
+//   title:"Tasks",
+//     url:"/tasks",
+//     icon:ToolCase
+//   }
+//   ,
+
   {
     title: "Taskers",
     url: "/taskers",
     icon: User,
+  },
+   {
+    title: "Business Users",
+    url: "/business/user",
+    icon: Building2,
+  },
+  
+  {
+    title: "Residents",
+    url: "/customers",
+    icon: Users,
   },
   {
     title: "Business Approvals",
@@ -36,9 +48,9 @@ const navItems = [
     icon: BriefcaseBusiness,
   },
   {
-    title: "Customers",
-    url: "/customers",
-    icon: Users,
+    title:"Skills",
+    url:"/skills",
+    icon:Brain
   },
   {
     title:"Services",
@@ -50,7 +62,6 @@ const navItems = [
     url:"/questions",
     icon:SquarePen
   },
-  
   
 ]
 

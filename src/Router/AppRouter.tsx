@@ -16,6 +16,10 @@ import ViewTask from '@/resources/js/Screens/Task Screens/ViewTask'
 import TaskersEdit from '@/resources/js/Screens/Taskers screens/TaskersEdit'
 import CustomerEdit from '@/resources/js/Screens/CustomersScreens/CustomerEdit'
 import BusinessApproval from '@/resources/js/Screens/Business Approvals/BusinessApproval'
+import BusinessUserTable from '@/resources/js/Screens/Business UsersScereen/BusinessUserTable'
+import SkillsTable from '@/resources/js/Screens/Skills Screens/SkillsTable'
+import BusinessuserView from '@/resources/js/Screens/Business UsersScereen/BusinessuserView'
+import BusinessUserEdit from '@/resources/js/Screens/Business UsersScereen/BusinessUserEdit'
 
 function AppRouter() {
   return (
@@ -35,6 +39,13 @@ function AppRouter() {
 
             <Route path='/business/approval' element={<DashboardLayout><BusinessApproval/> </DashboardLayout>} />
 
+            <Route path='/business/user' element={<DashboardLayout><BusinessUserTable/> </DashboardLayout>} />
+             <Route path='/business/user/view/:id' element={<DashboardLayout><BusinessuserView/></DashboardLayout>}/>
+            <Route path='/business/user/edit/:id' element={<DashboardLayout><BusinessUserEdit/></DashboardLayout>}/>
+
+
+
+            <Route path='/skills' element={<DashboardLayout><SkillsTable/></DashboardLayout>}/>
 
 
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>
