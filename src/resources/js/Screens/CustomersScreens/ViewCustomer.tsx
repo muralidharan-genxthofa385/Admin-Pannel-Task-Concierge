@@ -62,7 +62,7 @@ fetchtasker()
             <ChevronLeft className='w-8 h-8' />{userDetails?.customer.name}</Typography>
             <div className=' flex flex-col gap-11'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
-                    <HighlightStatsBox icon={Wallet} count={100} title='Revenue' />
+                    <HighlightStatsBox icon={Wallet} count={0} title='Revenue' />
                     <HighlightStatsBox icon={Activity} count={`${!userDetails?.customer.pause_account?"active":"Inactive"}`} title='Status' />
                     <HighlightStatsBox icon={Scale} count={userDetails?.bookings.completed.length} title='Completed_Tasks' />
                     <HighlightStatsBox icon={Calendar} count={`${userDetails?.customer.email_verified_at?userDetails?.customer.email_verified_at.slice(0,10):"N/A"}`} title={`Member_Since`} />
@@ -90,7 +90,7 @@ fetchtasker()
 
                             <div className='flex flex-col gap-5'>
                                 <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.customer.email}</Typography>
-                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> {userDetails?.customer.phone}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> + {userDetails?.customer.phone}</Typography>
 
                             </div>
                         </div>

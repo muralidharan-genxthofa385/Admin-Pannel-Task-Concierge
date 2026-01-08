@@ -5,16 +5,19 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { Brain,EditIcon, Ellipsis, EyeIcon, GraduationCap, ToolCase, Wrench, X } from 'lucide-react'
+import { Brain,EditIcon, Ellipsis, EyeIcon, GraduationCap, Plus, ToolCase, Wrench, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
-import { getRequest } from '@/Service/Apiservice';
+import { getRequest, postRequest } from '@/Service/Apiservice';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import { Card } from '@/components/ui/card';
 import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
+import { toast } from 'react-toastify';
+
 
 interface skillprop{
     id:number,
@@ -29,8 +32,15 @@ interface skillprop{
     }
 
 }
-
-
+interface createPAyloadType{
+  id:number|null,
+  name:string,
+  description:string
+}
+interface SkillCategories{
+name:{en:string},
+id:number
+}
 
 const SkillsTable:React.FC = () => {
 
@@ -48,7 +58,14 @@ const SkillsTable:React.FC = () => {
    const [PaginationModel,setPaginationModel]=useState<{page:number,pageSize:number}>({page:1,pageSize:10})
    const [skilldatas,setSkilldatas]=useState<skillprop[]>([])
    const [loading,setLoading]=useState(false)
-    
+   const [skillCategories,setSkillCategories]=useState<SkillCategories[]>([])
+    const [Addskillopen, setAddskillopen] = React.useState(false);
+    const [createSkillPayload,setCreateskillPayload]=useState<createPAyloadType>({
+      id:null,
+      name:"",
+      description:""
+    })
+    console.log(createSkillPayload)
            const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
             const open = Boolean(anchorEl);
             const handleClick = (event: React.MouseEvent<HTMLButtonElement>,rowId:number) => {
@@ -58,8 +75,20 @@ const SkillsTable:React.FC = () => {
             const handleClose = () => {
               setAnchorEl(null);
             };
-          
-    
+
+        const get_SkillCategories=async()=>{
+
+          try{
+            const res=await getRequest(`/skills/categories`)
+            console.log("skill category",res)
+            setSkillCategories(res.data)
+          }
+          catch{}
+        } 
+        useEffect(()=>{
+get_SkillCategories()
+        },[])   
+
     const fetchallSkills=async()=>{
         setLoading(true)
 
@@ -83,6 +112,17 @@ const SkillsTable:React.FC = () => {
 setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.pageSize}))
   },[PaginationModel])
 
+  const PostNewSkill=(e:React.FormEvent)=>{
+    e.preventDefault()
+    const payload={
+      skill_category_id:createSkillPayload.id,
+      name:createSkillPayload.name,
+      description:createSkillPayload.description
+    }
+
+    postRequest(`/skills`,payload)
+    .then(()=>toast.success('Skill Added Successfully'))
+  }
     
          const columns: GridColDef[]=[
               { field: 'skill_category', headerName: 'Category Name', width: 300,renderCell:(p)=>(<>{p.row.skill_category.name}</>) },
@@ -204,7 +244,7 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
   </Select>
 </FormControl>
 
-          <Button className='md:w-[10%]' size='small' sx={{ ...themes.OutlinedButtonStyle }} 
+          <Button className='md:w-[10%]' size='small' onClick={()=>setAddskillopen(true)} sx={{ ...themes.OutlinedButtonStyle }} 
         //   onClick={() => setOpenmodal(true)}
           >
             Add +
@@ -229,6 +269,55 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
         </div>
 
     </div>
+
+{/**>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Skills add popup<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */}
+ <div>
+      <Modal
+        className='flex justify-center items-center'
+        open={Addskillopen}
+        onClose={()=>setAddskillopen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+                 <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Skill</span>  </h2>
+
+          <form className="flex flex-col gap-5" onSubmit={PostNewSkill}>
+                <div className="flex flex-col gap-2">
+                            <label htmlFor="category_id" className="text-sm font-medium">
+                              Category <span className="text-red-500">*</span>
+                            </label>
+                            <FormControl sx={themes.textFieldStyle}>
+                              <Select id="category_id" name="category_id" sx={themes.textFieldStyle}
+                               value={createSkillPayload.id}
+                                onChange={(e)=>setCreateskillPayload((prev)=>({...prev,id:Number(e.target.value)}))}
+                              >
+                                {skillCategories.map((data)=>
+                                  <MenuItem value={data.id}
+                                  onClick={()=>setCreateskillPayload((prev)=>({...prev,id:data.id}))}
+                                  >{data.name.en}</MenuItem>)}
+                                
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <TextField value={createSkillPayload.name} 
+                          label='Name'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,name:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+                          <TextField value={createSkillPayload.description} 
+                           label='Description'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,description:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+
+                          <Button type='submit' sx={{...themes.ButtonStyle}}>Submit</Button>
+
+          </form>
+        </Card>
+      </Modal>
+    </div>
+
    </>
   )
 }

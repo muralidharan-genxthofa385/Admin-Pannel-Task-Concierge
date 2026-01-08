@@ -5,12 +5,9 @@ import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallI
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
+import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 
-interface props {
-    icon: any,
-    title: 'Revenue' | 'Status' | 'Completed_Tasks' | 'Member_Since',
-    count: any
-}
+
 
 interface TaskerDetails {
   tasker: {
@@ -56,31 +53,7 @@ fetchtasker()
 },[id])
 
 
-    const cardColors = {
-        Member_Since: { icon: 'text-orange-500', shadow: 'shadow-[0_0_5px_var(--color-purple)]' },
-        Completed_Tasks: { icon: 'text-yellow-500', shadow: 'shadow-[0_0_5px_var(--color-purple)]' },
-        Status: { icon: 'text-blue-400', shadow: 'shadow-[0_0_5px_var(--color-purple)]' },
-        Revenue: { icon: 'text-green-500', shadow: 'shadow-[0_0_5px_var(--color-purple)]' }
-    };
-    const RUDashBoardCard: React.FC<props> = ({ icon: Icon, title, count }) => {
-        const colors = cardColors[title];
-        return (
-            <div className={`p-5 sm:p-6 xs:p-2 lg:p-9 flex justify-between rounded-xl  bg-white/10 backdrop-blur-md  
-        ${colors.shadow} 
-              border border-white/20 transform transition-transform duration-300 cursor-pointer hover:scale-105 `}>
-                <h1>
-                    <Icon className={`text-[var(--color-purple)] w-5 h-5 sm:w-6 sm:h-6 lg:w-10 lg:h-10 ${colors.icon}`} />
-                </h1>
-                <div className="flex flex-col items-end">
-                    <h2 className={`text-sm sm:text-sm md:text-sm lg:text-2xl text-[var(--color-purple)]  `}>
-                        {title.replace(/_/g, " ")}
-                    </h2>
-                    <h2 className={`text-xs sm:text-base font-medium ms:text-sm  lg:text-2xl ${colors.icon}`}>{count}</h2>
-                </div>
-            </div>
-        );
-    };
-
+ 
 
 
     return (
@@ -89,10 +62,12 @@ fetchtasker()
             <ChevronLeft className='w-8 h-8' />{userDetails?.tasker.name}</Typography>
             <div className=' flex flex-col gap-11'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
-                    <RUDashBoardCard icon={Wallet} count={100} title='Revenue' />
-                    <RUDashBoardCard icon={Activity} count={`${!userDetails?.tasker.pause_account?"active":"Inactive"}`} title='Status' />
-                    <RUDashBoardCard icon={Scale} count={userDetails?.tasks.completed.length} title='Completed_Tasks' />
-                    <RUDashBoardCard icon={Calendar} count={`${userDetails?.tasker.email_verified_at.slice(0,10)}`} title={`Member_Since`} />
+                    {/* <RUDashBoardCard icon={Wallet} count={100} title='Revenue' /> */}
+                    <HighlightStatsBox icon={Wallet} count={0} title='Revenue'/>
+                     <HighlightStatsBox icon={Activity}count={`${!userDetails?.tasker.pause_account?"active":"Inactive"}`} title='Status'/>
+                    <HighlightStatsBox icon={Scale}  count={userDetails?.tasks.completed.length} title='Completed Tasks'/>
+
+                    <HighlightStatsBox icon={Calendar} count={`${userDetails?.tasker.email_verified_at.slice(0,10)}`} title={`Member_Since`} />
                 </div>
 
                 <div className='w-full flex flex-col gap-10 justify-between md:flex-row '>

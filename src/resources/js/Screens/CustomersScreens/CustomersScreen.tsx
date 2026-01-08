@@ -162,7 +162,7 @@ toast.success('Customer Deleted Successfully')
   { field: 'first_name', headerName: 'Name', width: 210,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
    { field: 'entiyy_name', headerName: 'Entity Name', width: 190,renderCell:(p)=>(<>{p.row.business_details?.entity_name||"-"}</>) },
   { field: 'email', headerName: 'EMail', width: 260 },
-  {field:"phone",headerName:'Phone',width:240},
+  {field:"phone",headerName:'Phone',width:240,renderCell:(p)=>(<>+{p.row.phone}</>)},
 
   {field:'place',headerName:"Place",width:200,
    renderCell:(p)=>(
