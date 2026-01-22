@@ -1,6 +1,15 @@
-import { UserCheck, Users,  ToolCase } from 'lucide-react';
+import { UserCheck, Users,  ToolCase,  Ellipsis, CheckCircle, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices';
+import { Card } from '@/components/ui/card';
+import { getRequest, postRequest } from '@/Service/Apiservice';
+import { toast } from 'react-toastify';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
 
 interface dashboarddetailsType {
   services: { name: string; count: number }[];
@@ -22,16 +31,126 @@ interface dashboarddetailsType {
     total: number;
   };
 }
+interface pendingData{
+    id: number
+    first_name:string;
+    last_name:string;
+    phone:string;
+    reason:string;
+    status:string;
+    email:string;
+}
 
 function DashboardHome() {
   const [dashboardDetails, setDashboardDetails] = useState<dashboarddetailsType | null>(null);
+  const [pendingData,setPendingData]=useState<pendingData[]>([])
+      const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
+      const [totalCount,_setTotalCount]=useState(0)
+        const [loading,setLoading]=useState(false)
+          const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
+  
+         const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+          const open = Boolean(anchorEl);
+          const handleClick = (event: React.MouseEvent<HTMLButtonElement>,rowId:number) => {
+            setAnchorEl(event.currentTarget);
+            setSelectedRowid(rowId)
+          };
+          const handleClose = () => {
+            setAnchorEl(null);
+          };
+             const fetchPending_approvals=async()=>{   
+              try{
+                  const res=await getRequest(`admin/pending-registrations`)
+                  setPendingData(res.data.data)
+                          console.log( "pending approval >>",pendingData)
+              }
+              catch(err){}
+           
+          }
+          
 
   useEffect(() => {
+    setLoading(true)
     getDashboarDetails().then((res) => {
       console.log(res);
       setDashboardDetails(res.data);
-    });
+    })
+    .finally(()=>{
+      setLoading(false)
+    })
+    fetchPending_approvals()
   }, []);
+
+
+
+   const handleApprove=async(id:number,decision:string)=>{
+
+    setLoading(true)
+      console.log(id,decision)
+
+        const payload={
+            decision:decision,
+            reason: ""
+        }
+
+        try{
+        
+          await postRequest(`/admin/pending-registrations/${id}/decision`,payload)
+            toast.success(payload.decision=="approve"?'Approved successfully':"Applicant Rejected Successfully")
+            fetchPending_approvals()
+        }
+        catch(err){
+
+        }
+finally{
+  setLoading(false)
+}
+    }   
+
+     const columns: GridColDef[]=[
+          { field: 'first_name', headerName: 'Name', width: 240,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
+         { field: 'phone', headerName: 'Phone', width: 240,renderCell:(p)=>(<>+ {p.row.phone}</>) },
+    { field: 'email', headerName: 'Email', width: 240,renderCell:(p)=>(<>{p.row.email}</>) },
+    {field:'status',headerName:'Status',width:200,renderCell:(p)=>(<Box sx={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <Typography className={`${p.row.status=="awaiting_approval"?'bg-amber-500':"bg-green-600"} p-2 rounded-3xl text-white`} 
+        sx={{display:"flex",alignItems:"center"}}>
+        {p.row.status}</Typography> </Box>)},
+
+{ 
+  field: "actions",
+  headerName: "Actions",
+  width: 200,
+  renderCell:(d)=>(
+ <div>
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={(e)=>handleClick(e,d.row.id)}
+      ><Ellipsis/> </Button>
+      <Menu
+        id="basic-menu"
+         PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'basic-button',
+          },
+        }}
+      >
+        
+ <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"approve");handleClose()}} className='flex gap-2'><CheckCircle className='text-[var(--color-purple)]' /> Approve</MenuItem>
+        <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"reject");handleClose();}} className='flex gap-2'><X className='text-[var(--color-red)]' /> Reject</MenuItem>
+      </Menu>
+    </div>
+  )
+}
+     ]
+
+
 
   const last30DaysRevenue = 85400;
   const totalBookings = 3200;
@@ -63,7 +182,7 @@ function DashboardHome() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className=" bg-white">
       <h1 className="text-3xl lg:text-4xl font-bold mb-8" style={{ color: 'var(--color-darkPurple)' }}>
         Welcome Admin!
       </h1>
@@ -102,8 +221,33 @@ function DashboardHome() {
         />
       </div>
 
+
+<div>
+<Card className='p-8'>
+  <h3 className="text-3xl lg:text-2xl font-bold  mb-8">Business Approvals</h3>
+
+  <Card className='md:w-full rounded-2xl'>
+<DataGrid
+  rows={pendingData??[]}
+  columns={columns}
+  paginationMode="server"
+  paginationModel={PaginationModel}
+  onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
+  pageSizeOptions={[5, 10, 15]}
+  rowCount={totalCount}
+  loading={loading}
+  getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
+  sx={{ border: 0, width: "100%" }}
+/>
+  </Card>
+
+</Card>
+
+</div>
+
+
      
-      <div className=" flex-col lg:flex-row gap-6 mb-8 hidden">
+      <div className=" flex-col lg:flex-row gap-6 mb-8 hidden"> {/**>>>>>>>>>>>>>Graph <<<<<<<<<<<< */}
       
 
         <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
@@ -197,7 +341,7 @@ function DashboardHome() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[var(--color-light)] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[var(--color-light)] shadow-sm overflow-hidden hidden"> {/**>>>>>>>>>>>>>Recent Activities<<<<<<<<<<<< */}
         <div className="p-6 border-b" style={{ borderColor: 'var(--color-light)' }}>
           <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
             Recent Activity

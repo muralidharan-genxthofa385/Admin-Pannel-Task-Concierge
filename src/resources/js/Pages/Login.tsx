@@ -14,17 +14,21 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { LoginPost } from "@/Service/AuthService"
 import { toast } from "react-toastify"
-
+import { Eye, EyeClosed } from "lucide-react"
+import LightPillar from '@/components/LightPillar'
 
 
 export default function Login() {
 
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
+  const [Loader,setLoader]=useState(false)
+  const [eye,setEye]=useState(false)
 
 
 
   const handleLogin=()=>{
+    setLoader(true)
     const payload={
       email:Email,
       password:Password
@@ -39,6 +43,7 @@ export default function Login() {
     .catch(()=>{
       toast.error('Invalid Credentials')
     })
+    .finally(()=>setLoader(false))
 
 
   }
@@ -46,13 +51,29 @@ export default function Login() {
     const navigate=useNavigate()
 
     return (
-    <div className="w-full h-screen flex justify-center items-center flex-col gap-3">
+      <>
+      {/* <div style={{ width: '100%', height: '100%', position: 'absolute' }} className="absolute">
+  <LightPillar
+    topColor="#5227FF"
+    bottomColor="#FF9FFC"
+    className="absolute"
+    intensity={0.9}
+    rotationSpeed={0.3}
+    interactive={false}
+    glowAmount={0.002}
+    pillarWidth={2.5}
+    pillarHeight={0.15}
+    noiseIntensity={0.5}
+    pillarRotation={60}
+  />
+</div> */}
+    <div className="w-full h-screen flex justify-center items-center flex-col gap-3"  >
+      
         <img src={taskconciergeLogo} alt="" />
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm bg-amber-50">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardAction>
-          <Button variant="link">Sign Up</Button>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -72,26 +93,30 @@ export default function Login() {
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
                 <a
-                  href="#"
+                  href="/forgetPassword/mail"
                   className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                 >
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" onChange={(e)=>setPassword(e.target.value)} value={Password} required />
+          <div
+          className="relative">    <Input id="password" type={!eye?"password":"text"} onChange={(e)=>setPassword(e.target.value)} value={Password} required />
+          {eye?<Eye onClick={()=>setEye(!eye)} className="size-5 hover:text-[var(--color-purple)] cursor-pointer absolute right-[1%] top-[27%]"/>:
+          <EyeClosed onClick={()=>setEye(!eye)} className="size-5 hover:text-[var(--color-purple)] cursor-pointer absolute right-[1%] top-[27%]"/>}
+
+          </div>
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button onClick={handleLogin}  type="submit" className="w-full">
-          Login
+        <Button onClick={handleLogin}  type="submit"  className="w-full text-[var(--color-white)]  hover:bg-[var(--color-purple)] cursor-pointer hover:text-white">
+         {Loader? "Loading...":" Login"}
         </Button>
-        <Button variant="outline" className="w-full">
-          Login with Google
-        </Button>
+
       </CardFooter>
     </Card>
     </div>
+    </>
   )
 }

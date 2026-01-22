@@ -20,12 +20,19 @@ import BusinessUserTable from '@/resources/js/Screens/Business UsersScereen/Busi
 import SkillsTable from '@/resources/js/Screens/Skills Screens/SkillsTable'
 import BusinessuserView from '@/resources/js/Screens/Business UsersScereen/BusinessuserView'
 import BusinessUserEdit from '@/resources/js/Screens/Business UsersScereen/BusinessUserEdit'
+import PasswordReset from '@/resources/js/Pages/PasswordReset'
+import ResetPassOTP from '@/resources/js/Pages/ResetPassOTP'
+import NewPassword from '@/resources/js/Pages/NewPassword'
+import SkillCategory from '@/resources/js/Screens/Skills Category/SkillCategory'
 
 function AppRouter() {
   return (
     <div>
         <Routes>
             <Route path='/' element={<Login/>} />
+            <Route path='/forgetPassword/mail' element={<PasswordReset/>} />
+            <Route path='/EnterOtp' element={<ResetPassOTP/>} />
+            <Route path='/setNewpassword' element={<NewPassword/>} />
 
             <Route path='/Dashboard' element={<DashboardLayout><DashboardHome/></DashboardLayout>}/>
 
@@ -46,6 +53,7 @@ function AppRouter() {
 
 
             <Route path='/skills' element={<DashboardLayout><SkillsTable/></DashboardLayout>}/>
+            <Route path='/skill/category' element={<DashboardLayout><SkillCategory/></DashboardLayout>} />
 
 
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>

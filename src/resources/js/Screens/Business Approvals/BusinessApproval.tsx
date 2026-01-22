@@ -49,7 +49,7 @@ const BusinessApproval:React.FC = () => {
     const [pendingData,setPendingData]=useState<pendingData[]>([])
     const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
     const [totalCount,_setTotalCount]=useState(0)
-      const [loading,_setLoading]=useState(false)
+      const [loading,setLoading]=useState(false)
         const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
 
        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -68,25 +68,31 @@ const BusinessApproval:React.FC = () => {
             console.log(res);
             setDashboardDetails(res.data);
           });
+          fetchPending_approvals()
+
         }, []);
 
 
    const fetchPending_approvals=async()=>{   
+    setLoading(true)
     try{
         const res=await getRequest(`admin/pending-registrations`)
         setPendingData(res.data.data)
                 console.log( "pending approval >>",pendingData)
     }
     catch(err){}
+    finally{
+      setLoading(false)
+    }
  
 }
 
     useEffect(()=>{
-fetchPending_approvals()
     },[])
 
     const handleApprove=async(id:number,decision:string)=>{
 
+      setLoading(true)
       console.log(id,decision)
 
         const payload={
@@ -102,6 +108,9 @@ fetchPending_approvals()
         }
         catch(err){
 
+        }
+        finally{
+          setLoading(false)
         }
 
     }   

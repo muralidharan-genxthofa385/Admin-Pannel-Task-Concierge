@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
+import Box from '@mui/material/Box';
 
 
 
@@ -17,6 +18,7 @@ interface TaskerDetails {
     email: string;
     phone: string;
     profile_pic_url: string;
+    student_document_url:string
   };
   tasks: {
     completed: any[]; 
@@ -92,7 +94,7 @@ fetchtasker()
 
                             <div className='flex flex-col gap-5'>
                                 <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.tasker.email}</Typography>
-                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> {userDetails?.tasker.phone}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon />+ {userDetails?.tasker.phone}</Typography>
 
                             </div>
                         </div>
@@ -134,6 +136,16 @@ fetchtasker()
 
                     </Card>
                 </div>
+                <Card className='w-[100%] md:w-[49%] p-10'>
+                    <div>
+                            <Typography sx={{ ...themes.mediumSizedFont }}>Student Document</Typography>
+                            {/* <Typography sx={{ ...themes.lightFont }}>Latest Task Status and activities</Typography> */}
+                        </div>
+                            <Box component={'img'} src={userDetails?.tasker.student_document_url} className='w-100 h-100' />
+
+
+                </Card>
+
                 <Card className='w-full p-10'>
                      <div>
                             <Typography sx={{ ...themes.mediumSizedFont }}>Task History</Typography>

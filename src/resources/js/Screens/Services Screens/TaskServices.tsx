@@ -22,13 +22,16 @@ import { toast } from 'react-toastify'
 interface serviceData {
   id: number;
   base_price: number;
-  category: { name: string, id: number };
-  name: string
+  category: { name_en: string,name_cy: string, id: number };
+  name_en: string
+  name_cy:string
 }
 
 interface payloadtype {
   category_id: null | number,
   serviceName: string,
+  serviceName_cy:string,
+  description_cy:string
   description: string,
   basePrice: number,
   image: File | null
@@ -72,6 +75,8 @@ const TaskServices: React.FC = () => {
     category_id: null,
     serviceName: "",
     description: "",
+        serviceName_cy:"",
+    description_cy:"",
     basePrice: 0,
     image: null
   })
@@ -81,7 +86,9 @@ const TaskServices: React.FC = () => {
     serviceName: "",
     description: "",
     basePrice: 0,
-    image: null
+    image: null,
+    serviceName_cy:"",
+    description_cy:"",
   })
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -118,13 +125,17 @@ const TaskServices: React.FC = () => {
     .then((res)=>{
       console.log("ind",res.data.service)
       const servicedata=res.data.service
-      setEditServicebyid({
-        category_id:servicedata.category_id,
-        serviceName:servicedata?.name,
-        description:servicedata.description,
-        basePrice:servicedata?.base_price,
-        image:servicedata?.image_url
-      })
+    
+
+    setEditServicebyid({
+        category_id: servicedata.category_id,
+        serviceName: servicedata?.name_en,
+        description: servicedata.description_en,   
+        basePrice: servicedata?.base_price,
+        image: servicedata?.image_url,           
+        serviceName_cy: servicedata?.name_cy,      
+        description_cy: servicedata?.description_cy,
+      });
     })
 
 
@@ -136,10 +147,12 @@ console.log("row id",selectedRowId)
     e.preventDefault()
     const payload = {
       category_id: createServiceFormData.category_id,
-      name: createServiceFormData.serviceName,
-      description: createServiceFormData.description,
+      name_en: createServiceFormData.serviceName,
+      description_en: createServiceFormData.description,
       base_price: createServiceFormData.basePrice,
-      image_url: createServiceFormData.image
+      image_url: createServiceFormData.image,
+       name_cy:createServiceFormData.serviceName_cy,
+      description_cy:createServiceFormData.description_cy,
     }
     Create_new_service(payload,true)
       .then(() => {
@@ -150,7 +163,9 @@ console.log("row id",selectedRowId)
           serviceName: "",
           description: "",
           basePrice: 0,
-          image: null
+          image: null,
+          serviceName_cy:"",
+    description_cy:"",
         })
       })
       .catch((_err) => {
@@ -159,12 +174,15 @@ console.log("row id",selectedRowId)
 
   }
 
+
   const handleEdit_service=async(e:React.FormEvent)=>{
     e.preventDefault()
     const payload={
   category_id: editServicebyid.category_id,
-      name: editServicebyid.serviceName,
-      description: editServicebyid.description,
+      name_en: editServicebyid.serviceName,
+      description_en: editServicebyid.description,
+      name_cy:editServicebyid.serviceName_cy,
+      description_cy:editServicebyid.description_cy,
       base_price: editServicebyid.basePrice,
       image_url: editServicebyid.image
     }
@@ -198,12 +216,12 @@ toast.error('Failed to edit this service')
 
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 510 },
+    { field: 'name_en', headerName: 'Name', width: 510 },
     {
       field: 'category_id',
       headerName: 'Category Name',
       width: 500,
-      renderCell: (params) => (<span>{params.row.category.name || 'Unknown'}</span>),
+      renderCell: (params) => (<span>{params.row.category.name_en || 'Unknown'}</span>),
     },
     { field: "base_price", headerName: 'Base Price', width: 390 },
 
@@ -327,7 +345,7 @@ toast.error('Failed to edit this service')
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-scroll h-[80vh]'>
             <h2 className="text-2xl font-semibold mb-6">Create New Service</h2>
             <form className="flex flex-col gap-5" onSubmit={addNewService}>
               <div className="flex flex-col gap-2">
@@ -348,7 +366,7 @@ toast.error('Failed to edit this service')
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="name" className="text-sm font-medium">
-                  Service Name <span className="text-red-500">*</span>
+                  Service Name(en) <span className="text-red-500">*</span>
                 </label>
                 <TextField
                   value={createServiceFormData.serviceName}
@@ -361,16 +379,46 @@ toast.error('Failed to edit this service')
 
                 />
               </div>
+  <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-sm font-medium">
+                  Service Name(cy) <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  value={createServiceFormData.serviceName_cy}
+                  onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, serviceName_cy: e.target.value }))}
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="e.g., Web Development"
+                  sx={themes.textFieldStyle}
 
+                />
+              </div>
               {/* Description */}
               <div className="flex flex-col gap-2">
                 <label htmlFor="description" className="text-sm font-medium">
-                  Description <span className="text-red-500">*</span>
+                  Description (en) <span className="text-red-500">*</span>
                 </label>
                 <TextField
                   id="description"
                   onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, description: e.target.value }))}
                   value={createServiceFormData.description}
+                  name="description"
+                  placeholder="Provide a detailed description of the service..."
+                  sx={themes.textFieldStyle}
+                  maxRows={4}
+                  minRows={1}
+                  rows={5}
+                />
+              </div>
+                 <div className="flex flex-col gap-2">
+                <label htmlFor="description" className="text-sm font-medium">
+                  Description (cy) <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  id="description"
+                  onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, description_cy: e.target.value }))}
+                  value={createServiceFormData.description_cy}
                   name="description"
                   placeholder="Provide a detailed description of the service..."
                   sx={themes.textFieldStyle}
@@ -386,6 +434,7 @@ toast.error('Failed to edit this service')
                   Base Price <span className="text-red-500">*</span>
                 </label>
                 <TextField
+                onWheel={(e:any)=>e.target.blur()}
                   onChange={(e) => setcreateServiceFormData(prev => ({ ...prev, basePrice: Number(e.target.value) }))}
                   value={createServiceFormData.basePrice}
                   type="number"
@@ -459,7 +508,7 @@ toast.error('Failed to edit this service')
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+          <Card className='md:w-[40%] w-[95%] h-[80vh]  p-7 overflow-y-scroll'>
             <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon />Edit</span>  <span style={{color:"var(--color-purple)"}}>{editServicebyid.serviceName}</span></h2>
 
             <form className="flex flex-col gap-5" onSubmit={handleEdit_service}>
@@ -484,7 +533,7 @@ toast.error('Failed to edit this service')
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="name" className="text-sm font-medium">
-                  Service Name <span className="text-red-500">*</span>
+                  Service Name(en) <span className="text-red-500">*</span>
                 </label>
                 <TextField
                   value={editServicebyid.serviceName}
@@ -498,15 +547,48 @@ toast.error('Failed to edit this service')
                 />
               </div>
 
+               <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-sm font-medium">
+                  Service Name(cy) <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  value={editServicebyid.serviceName_cy}
+                  onChange={(e) => setEditServicebyid(prev => ({ ...prev, serviceName_cy: e.target.value }))}
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="e.g., Web Development"
+                  sx={themes.textFieldStyle}
+
+                />
+              </div>
+
               {/* Description */}
               <div className="flex flex-col gap-2">
                 <label htmlFor="description" className="text-sm font-medium">
-                  Description <span className="text-red-500">*</span>
+                  Description(en) <span className="text-red-500">*</span>
                 </label>
                 <TextField
                   id="description"
                   onChange={(e) => setEditServicebyid(prev => ({ ...prev, description: e.target.value }))}
                   value={editServicebyid.description}
+                  name="description"
+                  placeholder="Provide a detailed description of the service..."
+                  sx={themes.textFieldStyle}
+                  maxRows={4}
+                  minRows={1}
+                  rows={5}
+                />
+              </div>
+
+   <div className="flex flex-col gap-2">
+                <label htmlFor="description" className="text-sm font-medium">
+                  Description(cy) <span className="text-red-500">*</span>
+                </label>
+                <TextField
+                  id="description"
+                  onChange={(e) => setEditServicebyid(prev => ({ ...prev, description_cy: e.target.value }))}
+                  value={editServicebyid.description_cy}
                   name="description"
                   placeholder="Provide a detailed description of the service..."
                   sx={themes.textFieldStyle}

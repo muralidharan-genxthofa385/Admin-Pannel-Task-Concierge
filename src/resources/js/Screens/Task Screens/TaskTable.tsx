@@ -1,5 +1,5 @@
 import { getAllTasks } from '@/Service/TaskTableService/TaskTableService'
-import { Calendar1Icon, CircleCheckBig, CircleX, Ellipsis, Eye, RefreshCcw, ToolCase, X } from 'lucide-react'
+import { Calendar1Icon, CircleCheckBig, CircleX,  Eye, RefreshCcw, ToolCase, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { getRequest } from '@/Service/Apiservice';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+// import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,7 +54,7 @@ const TaskTable:React.FC = () => {
     const [totalpages,setTotalpages]=useState(0)
     const [paginationModel,setPaginationModel]=useState({page:0, pageSize:15})
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
  
 
 
@@ -102,6 +102,20 @@ fetchAllTasks()
 setParams(prev=>({...prev,page:paginationModel.page+1,per_page:paginationModel.pageSize}))
   },[paginationModel])
 
+function formatTaskTiming(hours:any) {
+  if (hours == null || isNaN(hours) || hours < 0) {
+    return "-";
+  }
+
+  const totalSeconds = Math.round(hours * 3600);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+
+  return `${h.toString().padStart(2, "0")}:${m
+    .toString()
+    .padStart(2, "0")}:${s.toString().padStart(2, "0")} ${h?'hr':'mins'}`;
+}
 
 
 
@@ -120,7 +134,7 @@ setParams(prev=>({...prev,page:paginationModel.page+1,per_page:paginationModel.p
     { field: 'proposed_rate', headerName: 'Poposed Rate', width: 170,renderCell:(dt)=>{
     const rate=dt.row.accepted_application[0]?.proposed_rate
     return <>{rate?`${rate} /hr`:"-" }</>} },
-    { field: 'total_cost', headerName: 'Income', width: 160 ,renderCell:(dt)=>(<>{dt.row.total_cost} $</>)},
+    { field: 'total_cost', headerName: 'Income', width: 160 ,renderCell:(dt)=>(<>{dt.row.total_cost} £</>)},
         { field: 'status', headerName: 'Status', width: 200,renderCell:(dt)=>{
           const taskstatus=dt.row.status
 
@@ -129,17 +143,15 @@ setParams(prev=>({...prev,page:paginationModel.page+1,per_page:paginationModel.p
              sx={{  fontFamily: "Sora, sans-serif",
             width:"60%",p:0.5,borderRadius:"14px"}}>{taskstatus}</Typography>}</div>
         } },
-    { field: 'total_hours', headerName: 'Task Timing', width: 150,renderCell:(dt)=>{
-      const totalhours=dt.row.total_hours;
-      if(totalhours==null||isNaN(totalhours)) return<>-</>
-      if(totalhours>=1){
-        return<>{totalhours} hours</>
-      }
-      else{
-        const minutes=Math.round(totalhours*60)
-        return<>{minutes} minutes</>
-      }
-    }},
+   {
+  field: 'total_hours',
+  headerName: 'Task Timing',
+  width: 150,
+  renderCell: (params) => {
+    const hours = params.row.total_hours;
+    return<> {formatTaskTiming(hours)}</>
+  },
+},
         { field: 'actions', headerName: 'View', width: 100,renderCell:(dt)=>{
           return(
             <>
