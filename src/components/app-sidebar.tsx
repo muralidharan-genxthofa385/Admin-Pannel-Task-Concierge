@@ -47,15 +47,16 @@ const navItems = [
     url: "/business/approval",
     icon: BriefcaseBusiness,
   },
-  {
-title:"Skill Category",
-    url:"/skill/Category",
-    icon:HandPlatter  },
+  
   {
     title:"Skills",
     url:"/skills",
     icon:Brain
   },
+  {
+title:"Service Category",
+    url:"/service/category",
+    icon:HandPlatter  },
   {
     title:"Services",
     url:"/services",

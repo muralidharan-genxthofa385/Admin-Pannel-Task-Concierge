@@ -23,7 +23,7 @@ import BusinessUserEdit from '@/resources/js/Screens/Business UsersScereen/Busin
 import PasswordReset from '@/resources/js/Pages/PasswordReset'
 import ResetPassOTP from '@/resources/js/Pages/ResetPassOTP'
 import NewPassword from '@/resources/js/Pages/NewPassword'
-import SkillCategory from '@/resources/js/Screens/Skills Category/SkillCategory'
+import SkillCategory from '@/resources/js/Screens/Skills Category/ServiceCategory'
 
 function AppRouter() {
   return (
@@ -53,7 +53,7 @@ function AppRouter() {
 
 
             <Route path='/skills' element={<DashboardLayout><SkillsTable/></DashboardLayout>}/>
-            <Route path='/skill/category' element={<DashboardLayout><SkillCategory/></DashboardLayout>} />
+            <Route path='/service/category' element={<DashboardLayout><SkillCategory/></DashboardLayout>} />
 
 
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>

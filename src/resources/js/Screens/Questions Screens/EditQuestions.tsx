@@ -1,6 +1,5 @@
 import { EditQuestion, getAllServicess, getQuestionByID, getQuestionByServiceID } from '@/Service/Questions_page_service/Questions_page_service'
 import { themes } from '@/Themes'
-import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import { ChevronLeft, ChevronRight, Save, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -13,7 +12,6 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
-import Typography from '@mui/material/Typography'
 
 
 interface servicedata{
@@ -41,12 +39,12 @@ const EditQuestions:React.FC = () => {
     const navigate=useNavigate()
     const {id}=useParams()
     
-      const [Servicedata, setServicedata] = useState<servicedata[]>([])
+      const [_Servicedata, setServicedata] = useState<servicedata[]>([])
       const [selectedService,setSelectedService]=useState<servicedata|null>(null)
       const [question_text,setQuestion_text]=useState('')
       const [radioOptiontext,setradioOptiontext]=useState('')
       const [checkboxOptiontext,setCheckboxOptiontext]=useState('')
-      const [serviceQuestion,setServiceQuestion]=useState<questions[]>([])
+      const [_serviceQuestion,setServiceQuestion]=useState<questions[]>([])
 
       const [dataQuestionByID,setDataQuestionByID]=useState({
         setvice_id:selectedService,

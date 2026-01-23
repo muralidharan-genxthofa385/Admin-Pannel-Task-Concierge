@@ -167,6 +167,7 @@ console.log("row id",selectedRowId)
           serviceName_cy:"",
     description_cy:"",
         })
+        fetchAllservices()
       })
       .catch((_err) => {
         toast.error('Failed to add a service')
@@ -193,6 +194,7 @@ console.log("row id",selectedRowId)
      await Edit_service(selectedRowId,payload,true)
      toast.success('Service Edited Successfully')
       setOpenEditModal(false)
+      fetchAllservices()
     }
 
     catch{

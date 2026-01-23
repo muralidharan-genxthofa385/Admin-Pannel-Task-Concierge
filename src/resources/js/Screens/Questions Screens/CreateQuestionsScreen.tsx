@@ -14,8 +14,9 @@ import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
+import { Box } from '@mui/material'
 interface servicedata{
-  name:string,
+  name_en:string,
   id:number
 
 }
@@ -41,11 +42,18 @@ const QuestionsScreen:React.FC = () => {
   const [Servicedata, setServicedata] = useState<servicedata[]>([])
   const [selectedService,setSelectedService]=useState<servicedata|null>(null)
   const [question_text,setQuestion_text]=useState('')
+    const [question_text_cy,setQuestion_text_cy]=useState('')
   const [questionType,setQuestionType]=useState<'text'|'radio'|'checkbox'>('text')
-  const [radioOptions,setRadioOptions]=useState<string[]>([])
-  const [radioOptiontext,setradioOptiontext]=useState('')
-  const [checkboxOption,setCheckboxOption]=useState<string[]>([])
-  const [checkboxOptiontext,setCheckboxOptiontext]=useState('')
+
+  const [radioOptions,setRadioOptions]=useState<{ en: string; cy: string }[]>([])
+  const [radioOpt_en,setRadioopt_en]=useState('')
+  const [radioOpt_cy,setRadioopt_cy]=useState('')
+
+
+const [checkboxOptions, setCheckboxOptions] = useState< { en: string; cy: string }[]>([]);
+const [newCheckboxEn, setNewCheckboxEn] = useState<string>('');
+const [newCheckboxCy, setNewCheckboxCy] = useState<string>('');
+
   const [is_required,setIsRequired]=useState<boolean|string>('')
   const [displayQuestions,setDisplayQuestions]=useState<questions[]|null>([])
 
@@ -95,24 +103,39 @@ useEffect(()=>{
  const radioOnchange=(e:React.ChangeEvent<HTMLInputElement>)=>{ setQuestionType(e.target.value as 'text'|'radio'|'checkbox') }
 
 const addRadioOption=()=>{
-if(radioOptiontext!==""){
-  setRadioOptions(prev=>[...prev,radioOptiontext])
-  setradioOptiontext('')}
+if(radioOpt_en.trim()==""||radioOpt_cy.trim()==""){
+  toast.error('Please entar both english and welsh option text')
+ }
+ const newOpt={
+  en:radioOpt_en.trim(),
+  cy:radioOpt_cy.trim()
+ }
+
+  setRadioOptions(prev=>[...prev,newOpt])
+setRadioopt_cy('')
+setRadioopt_en('')
 }
 const deleteRadioOption=(index:any)=>{
   setRadioOptions(prev=>prev.filter((_,i)=>i!==index))
 }
 
-
-const addCheckboxOption=( )=>{
-  if(checkboxOptiontext!==""){
-    setCheckboxOption(prev=>[...prev,checkboxOptiontext])
+const addCheckboxOption = () => {
+  if (newCheckboxEn.trim() === '' || newCheckboxCy.trim() === '') {
+    toast.error('Please enter both English and Welsh option text');
+    return;
   }
-  setCheckboxOptiontext('') 
-}
+  const newOption = {
+    en: newCheckboxEn.trim(),
+    cy: newCheckboxCy.trim(),
+  };
+
+  setCheckboxOptions((prev) => [...prev, newOption]);
+  setNewCheckboxEn('');
+  setNewCheckboxCy('');
+};
 
 const deleteCheckboxOption=(id:number)=>{
-  setCheckboxOption(prev=>prev.filter((_,i)=>i!==id))
+  setCheckboxOptions(prev=>prev.filter((_,i)=>i!==id))
 }
 
 
@@ -120,7 +143,11 @@ const deleteCheckboxOption=(id:number)=>{
 const handleSaveQuestion=async()=>{
 if(!question_text){
 toast.error('please enter the question text')
-}else if(!selectedService){
+}
+if(!question_text_cy){
+toast.error('please enter the welsh question text')
+}
+else if(!selectedService){
   toast.error('please select a service to continue')
 }else if(!questionType){
     toast.error('please select a Question Type to continue')
@@ -131,7 +158,7 @@ else if(is_required==''){  toast.error('please select if the question is Require
   input_type: questionType,
   question_type: questionType=="text"?"text":questionType=="radio"?"single_select":"multi_select",
   options_json: 
-    questionType=="radio"?radioOptions:questionType=="checkbox"?checkboxOption:null,
+    questionType=="radio"?radioOptions:questionType=="checkbox"?checkboxOptions:null,
   is_required: is_required
 
   }
@@ -143,7 +170,7 @@ toast.success('Question Created Successfully')
 setQuestion_text('')
 setQuestionType('text')
 setRadioOptions([])
-setCheckboxOption([])
+ setCheckboxOptions([])
 setIsRequired('') 
 fetchQuestionsbyId()
   }
@@ -181,7 +208,7 @@ alert('err')
 
   <Autocomplete
 options={Servicedata}
- getOptionLabel={(option) => option.name}
+ getOptionLabel={(option) => option.name_en}
  value={selectedService}
             onChange={(_event, newValue) => setSelectedService(newValue)}
 renderInput={(params)=>(
@@ -208,9 +235,27 @@ renderInput={(params)=>(
 
 <div>
    <h1 className='text-xl md:text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Create your Question</h1>
-   <TextField  label="" sx={{...themes.inputFeildActions.active}}
+   <Box className="flex  gap-5 pt-4">
+    <Card className='w-1/2 p-4'>
+   <TextField  label="Question (English)*" 
+   multiline
+   minRows={1}
+   maxRows={3}
+   sx={{...themes.inputFeildinActive,width:"100%"}}
    value={question_text} onChange={(e)=>setQuestion_text(e.target.value)}
+   inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} placeholder='enter here' variant="standard" 
+   
+   />
+   </Card>
+
+<Card className='w-1/2 p-4'>
+   <TextField  label="Question (Welsh)*" sx={{...themes.inputFeildinActive}}
+   value={question_text_cy} onChange={(e)=>setQuestion_text_cy(e.target.value)}
    inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} placeholder='enter here' variant="standard" fullWidth />
+
+</Card>
+
+   </Box>
 
 </div>
 
@@ -220,9 +265,15 @@ renderInput={(params)=>(
      onChange={radioOnchange}
      >
       <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="text" name="radio-buttons-group" value={questionType} >
-        <FormControlLabel sx={{...radiostyles.radioLabel}} value="text" control={<Radio sx={{...radiostyles.radioButton}} />} label="Text" />
-        <FormControlLabel sx={{...radiostyles.radioLabel}} value="radio" control={<Radio sx={{...radiostyles.radioButton}} />} label="Radio (single-select)" />
-        <FormControlLabel sx={{...radiostyles.radioLabel}} value="checkbox" control={<Radio sx={{...radiostyles.radioButton}} />} label="Checkbox (multiple-select)" />
+        <FormControlLabel sx={{...radiostyles.radioLabel,
+        '& .MuiFormControlLabel-label':questionType=="text"? {...themes.mediumSizedFont,fontSize:"14px"}:{ ...themes.lightFont}
+        }} value="text" control={<Radio sx={{...radiostyles.radioButton}} />} label="Text" />
+        <FormControlLabel sx={{...radiostyles.radioLabel,
+         '& .MuiFormControlLabel-label':questionType=="radio"? {...themes.mediumSizedFont,fontSize:"14px"}:{ ...themes.lightFont}
+          }} value="radio" control={<Radio sx={{...radiostyles.radioButton}} />} label="Radio (single-select)" />
+        <FormControlLabel sx={{...radiostyles.radioLabel,
+'& .MuiFormControlLabel-label':questionType=="checkbox"? {...themes.mediumSizedFont,fontSize:"14px"}:{ ...themes.lightFont}
+          }} value="checkbox" control={<Radio sx={{...radiostyles.radioButton}} />} label="Checkbox (multiple-select)" />
       </RadioGroup>
     </FormControl>
     
@@ -233,12 +284,31 @@ renderInput={(params)=>(
 
  {questionType=='radio'? <div className='flex flex-col'>
 
-     {radioOptions.map((data,index)=><h1 key={index} className='flex items-center' >
-      <Radio defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>{data} <Trash2 className='pl-1 cursor-pointer text-red-500' onClick={()=>deleteRadioOption(index)}/></h1>)}
+     {radioOptions.map((data,index)=><div key={index} className='flex items-center gap-' >
+   <>   <Radio defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>
+
+      <span className="flex-1">
+      {data.en} <em className="text-gray-500">({data.cy})</em>
+    </span><Trash2 className='pl-1 cursor-pointer text-red-500' onClick={()=>deleteRadioOption(index)}/></>
+      
+       </div>)}
 
 <h1 className='flex items-center'><Radio defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>
 
-<TextField variant='standard' value={radioOptiontext} onChange={(e)=>setradioOptiontext(e.target.value)} />
+<Box className="flex gap-5" >
+
+<TextField variant='standard'
+label={'option (en)'} 
+sx={{...themes.inputFeildinActive}}
+InputLabelProps={{ sx: themes.inputFeildActions.inActive}}
+value={radioOpt_en} onChange={(e)=>setRadioopt_en(e.target.value)} />
+
+  <TextField variant='standard'
+  label={'option (cy)'} 
+sx={{...themes.inputFeildinActive}}
+InputLabelProps={{ sx: themes.inputFeildActions.inActive}}
+  value={radioOpt_cy} onChange={(e)=>setRadioopt_cy(e.target.value)} />
+</Box>
 </h1>
        
 
@@ -246,14 +316,32 @@ renderInput={(params)=>(
  
  </div>
 :questionType=='checkbox' ?<div>
-{checkboxOption.map((data,index)=><h1 className='flex items-center' >
+{checkboxOptions.map((option,index)=><div className='flex items-center ' >
 <Checkbox defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>
-{data}
-<Trash2 className='pl-1 cursor-pointer text-red-500' onClick={()=>deleteCheckboxOption(index)}/></h1>)}
+<span className="flex-1">
+      {option.en} <em className="text-gray-500">({option.cy})</em>
+    </span>
+<Trash2
+      className="cursor-pointer text-red-500 w-5 h-5"
+      onClick={() => deleteCheckboxOption(index)}
+    />  
+</div>)}
 
 <h1 className='flex items-center' >
 <Checkbox defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>
-<TextField variant='standard' value={checkboxOptiontext} onChange={(e)=>setCheckboxOptiontext(e.target.value)}  /></h1>
+
+<Box className="flex gap-5" >
+<TextField variant='standard' 
+label={'option (en)'} 
+sx={{...themes.inputFeildinActive}}
+InputLabelProps={{ sx: themes.inputFeildActions.inActive}}
+value={newCheckboxEn} onChange={(e)=>setNewCheckboxEn(e.target.value)}  />
+<TextField variant='standard' label={'option (cy)'} 
+sx={{...themes.inputFeildinActive}}
+InputLabelProps={{ sx: themes.inputFeildActions.inActive}}
+value={newCheckboxCy} onChange={(e)=>setNewCheckboxCy(e.target.value)}  />
+</Box>
+</h1>
 
       <div>
         <Button  sx={{...themes.OutlinedButtonStyle,mt:2,width:"100%"}} onClick={addCheckboxOption}>+ Add Option</Button>

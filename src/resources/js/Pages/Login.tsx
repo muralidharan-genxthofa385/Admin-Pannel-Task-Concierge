@@ -14,8 +14,9 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { LoginPost } from "@/Service/AuthService"
 import { toast } from "react-toastify"
-import { Eye, EyeClosed } from "lucide-react"
+import {  Eye, EyeClosed } from "lucide-react"
 import LightPillar from '@/components/LightPillar'
+import { Box, Typography } from "@mui/material"
 
 
 export default function Login() {
@@ -52,25 +53,45 @@ export default function Login() {
 
     return (
       <>
-      {/* <div style={{ width: '100%', height: '100%', position: 'absolute' }} className="absolute">
+      <div style={{ width: '100%', height: '100%', position: 'absolute',zIndex:0}} className="absolute">
   <LightPillar
     topColor="#5227FF"
     bottomColor="#FF9FFC"
-    className="absolute"
+    className="absolute w-[100%]"
     intensity={0.9}
     rotationSpeed={0.3}
     interactive={false}
-    glowAmount={0.002}
-    pillarWidth={2.5}
+    glowAmount={0.0010}
+    pillarWidth={3.5}
     pillarHeight={0.15}
     noiseIntensity={0.5}
     pillarRotation={60}
   />
-</div> */}
-    <div className="w-full h-screen flex justify-center items-center flex-col gap-3"  >
+</div>
+    <div className="w-full h-screen flex justify-center items-center flex-col gap-3 bg-black p-4" style={{zIndex:10}}  >
       
-        <img src={taskconciergeLogo} alt="" />
-    <Card className="w-full max-w-sm bg-amber-50">
+       
+    <Card 
+    className="
+    w-full max-w-sm
+    bg-white/20           
+    backdrop-blur-xl       
+    backdrop-saturate-150   
+    border border-white/25  
+    shadow-2xl              
+    rounded-2xl            
+    text-white             
+    overflow-hidden
+    transition-all duration-300
+    hover:bg-white/15       
+    hover:shadow-3xl
+    hover:scale-[1.02]
+  "
+    
+    style={{zIndex:20}}>
+       <Box className="flex justify-center items-center"> 
+         <Box component={'img'} src={taskconciergeLogo} className="w-40 h-10" alt="" /></Box>
+       
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardAction>
@@ -116,6 +137,7 @@ export default function Login() {
 
       </CardFooter>
     </Card>
+      <Typography className="text-white">Powered by Genx thofa technologies</Typography>
     </div>
     </>
   )

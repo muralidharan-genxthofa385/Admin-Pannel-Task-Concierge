@@ -179,7 +179,7 @@ const payload = {
                             <div className='p-6 flex justify-between'>
                                 <div>
                                     <h1>Pause Account</h1>
-                                    <Typography sx={{ ...themes.lightFont, fontSize: "13px" }}>{taskerDetails.pause_account ? "Tasker will receive niotifications" : "Tasker will not receive niotifications"}</Typography>
+                                    <Typography sx={{ ...themes.lightFont, fontSize: "13px" }}>{taskerDetails.pause_account ? "Tasker will not receive niotifications" : "Tasker will receive niotifications"}</Typography>
                                 </div>
                                 <Switch {...label}
                                     checked={taskerDetails.pause_account}
