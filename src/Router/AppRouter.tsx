@@ -24,6 +24,7 @@ import PasswordReset from '@/resources/js/Pages/PasswordReset'
 import ResetPassOTP from '@/resources/js/Pages/ResetPassOTP'
 import NewPassword from '@/resources/js/Pages/NewPassword'
 import SkillCategory from '@/resources/js/Screens/Skills Category/ServiceCategory'
+import ApproveBusinessView from '@/resources/js/Screens/Business Approvals/ApproveBusinessView'
 
 function AppRouter() {
   return (
@@ -45,6 +46,7 @@ function AppRouter() {
             <Route path='/taskers/edit/:id' element={<DashboardLayout><TaskersEdit/></DashboardLayout>} />
 
             <Route path='/business/approval' element={<DashboardLayout><BusinessApproval/> </DashboardLayout>} />
+            <Route path='/business/approval/:id' element={<DashboardLayout><ApproveBusinessView/> </DashboardLayout>} />
 
             <Route path='/business/user' element={<DashboardLayout><BusinessUserTable/> </DashboardLayout>} />
              <Route path='/business/user/view/:id' element={<DashboardLayout><BusinessuserView/></DashboardLayout>}/>

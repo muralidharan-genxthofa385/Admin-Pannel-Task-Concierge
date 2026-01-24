@@ -1,4 +1,4 @@
-import { ActivitySquare, Bolt, BriefcaseBusiness, CheckCircle,  Ellipsis,  PanelTopClose, X } from 'lucide-react'
+import { ActivitySquare, Bolt, BriefcaseBusiness,  Ellipsis,  PanelTopClose, SearchIcon} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox'
 import { getRequest, postRequest } from '@/Service/Apiservice'
@@ -11,6 +11,7 @@ import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices'
+import { useNavigate } from 'react-router-dom'
 
 
 interface pendingData{
@@ -50,6 +51,7 @@ const BusinessApproval:React.FC = () => {
     const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
     const [totalCount,_setTotalCount]=useState(0)
       const [loading,setLoading]=useState(false)
+      const navigate=useNavigate()
         const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
 
        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -149,9 +151,10 @@ const BusinessApproval:React.FC = () => {
           },
         }}
       >
-        
- <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"approve");handleClose()}} className='flex gap-2'><CheckCircle className='text-[var(--color-purple)]' /> Approve</MenuItem>
-        <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"reject");handleClose();}} className='flex gap-2'><X className='text-[var(--color-red)]' /> Reject</MenuItem>
+        {/* /business/approval/:id */}
+
+ <MenuItem onClick={()=>{navigate(`/business/approval/${selectedrowid}`,{state: {pending_id:d.row.id}})}} className='flex gap-2'><SearchIcon className='text-[var(--color-purple)]' /> Verify</MenuItem>
+        {/* <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"reject");handleClose();}} className='flex gap-2'><X className='text-[var(--color-red)]' /> Reject</MenuItem> */}
       </Menu>
     </div>
   )
