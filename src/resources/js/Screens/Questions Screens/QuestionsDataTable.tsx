@@ -20,10 +20,10 @@ interface questions {
   id: number
   input_type: string,
   options_json: string[],
-  question_text: string,
+  question_text_en: string,
   service: {
-    category: { name: string },
-    name: string,
+    category: { name_en: string },
+    name_en: string,
     id: number
   }
 
@@ -126,19 +126,29 @@ const QuestionsDataTable: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'service', headerName: "Service Name", width: 230, renderCell: (params) => (<span>{params.row.service?.name || 'N/A'}</span>), },
-    { field: 'category', headerName: "Category", width: 240, renderCell: (params) => (<span>{params.row.service?.category?.name}</span>) },
-    { field: 'question_text', headerName: "Question", width: 500 },
+    { field: 'service', headerName: "Service Name", width: 230, renderCell: (params) => (<span>{params.row.service?.name_en || 'N/A'}</span>), },
+    { field: 'category', headerName: "Category", width: 140, renderCell: (params) => (<span>{params.row.service?.category?.name_en}</span>) },
+    { field: 'question_type', headerName: "Question Type", width: 200 },
+    { field: 'question_text_en', headerName: "Question", width: 500 },
     {
       field: 'options_json', headerName: "Options", width: 400,
-      renderCell: (params) => {
-        const options = params.row.options_json;
-        return <span >{options && options.length > 0 ? options.join(', ') : '-'}</span>;
-      }
+     renderCell: (params) => {
+  const options = params.row.options_json;
+  
+  if (Array.isArray(options)) {
+    return <span>{options.join(', ') || '-'}</span>;
+  }
+  
+  if (typeof options === 'string') {
+    return <span>{options || '-'}</span>;
+  }
+  
+  return <span>-</span>;
+}
     },
 
     {
-      field: 'actions', headerName: "Actions", width: 200, renderCell: (act) => (
+      field: 'actions', headerName: "Actions", width: 100, renderCell: (act) => (
         <>
           <div>
             <Button
@@ -258,7 +268,7 @@ const QuestionsDataTable: React.FC = () => {
 
               {viewQuestions == undefined ? <Typography>Failed to Fetch...!</Typography> : viewQuestions.map((data, ind) => <div>
                 
-               <Typography className='flex items-center gap-3 border-b-1 pb-2'> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text}</span></Typography>
+               <Typography className='flex items-center gap-3 border-b-1 pb-2'> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text_en}</span></Typography>
 
               </div>)}
 

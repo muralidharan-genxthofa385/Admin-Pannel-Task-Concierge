@@ -23,7 +23,9 @@ interface questions {
   id: number
   input_type: string,
   options_json: string[],
-  question_text: string,
+  question_text_en: string,
+    question_text_cy: string,
+
   service: {
     category: { name: string },
     name: string,
@@ -48,7 +50,7 @@ const EditQuestions:React.FC = () => {
 
       const [dataQuestionByID,setDataQuestionByID]=useState({
         setvice_id:selectedService,
-        question_text:question_text,
+        question_text_en:question_text,
         input_type:'text',
         options_json:[] as string[],
         is_required:false,
@@ -140,7 +142,7 @@ useEffect(()=>{fetchQuestionsbyId()},[])
 
     
     const handleSaveQuestion=async()=>{
-    if(!dataQuestionByID.question_text){
+    if(!dataQuestionByID.question_text_en){
     toast.error('please enter the question text')
     }else if(!dataQuestionByID.input_type){
       toast.error('please select a service to continue')
@@ -150,7 +152,7 @@ useEffect(()=>{fetchQuestionsbyId()},[])
     else if(!dataQuestionByID.is_required){  toast.error('please select if the question is Required or Not')}
       const payload={
         setvice_id:dataQuestionByID.setvice_id,
-        question_text: dataQuestionByID.question_text,
+        question_text_en: dataQuestionByID.question_text_en,
       input_type: dataQuestionByID.input_type,
 options_json:dataQuestionByID.options_json,
       is_required: dataQuestionByID.is_required
@@ -198,7 +200,7 @@ options_json:dataQuestionByID.options_json,
 <div>
    <h1 className='text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Create your Question</h1>
    <TextField  label="" sx={{...themes.inputFeildActions.active}}
-   value={dataQuestionByID.question_text} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text:e.target.value}))}
+   value={dataQuestionByID.question_text_en} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text:e.target.value}))}
    inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} variant="standard" fullWidth />
 
 </div>

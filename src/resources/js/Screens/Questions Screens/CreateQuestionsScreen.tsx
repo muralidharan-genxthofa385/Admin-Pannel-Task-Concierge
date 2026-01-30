@@ -25,9 +25,9 @@ interface questions {
   id: number
   input_type: string,
   options_json: string[],
-  question_text: string,
+  question_text_en: string,
   service: {
-    category: { name: string },
+    category: { name_en: string },
     name: string,
     id: number
   }
@@ -140,45 +140,87 @@ const deleteCheckboxOption=(id:number)=>{
 
 
 
-const handleSaveQuestion=async()=>{
-if(!question_text){
-toast.error('please enter the question text')
-}
-if(!question_text_cy){
-toast.error('please enter the welsh question text')
-}
-else if(!selectedService){
-  toast.error('please select a service to continue')
-}else if(!questionType){
-    toast.error('please select a Question Type to continue')
-}
-else if(is_required==''){  toast.error('please select if the question is Required or Not')}
-  const payload={
-    question_text: question_text,
-  input_type: questionType,
-  question_type: questionType=="text"?"text":questionType=="radio"?"single_select":"multi_select",
-  options_json: 
-    questionType=="radio"?radioOptions:questionType=="checkbox"?checkboxOptions:null,
-  is_required: is_required
-
+const handleSaveQuestion = async () => {
+  // ── Validation ────────────────────────────────────────────────
+  if (!question_text.trim()) {
+    toast.error("Please enter the English question text");
+    return;
   }
-  console.log(  ",payload data",payload)
-
-  await PostQuestion(payload,Number(selectedService?.id))
-  try{
-toast.success('Question Created Successfully')
-setQuestion_text('')
-setQuestionType('text')
-setRadioOptions([])
- setCheckboxOptions([])
-setIsRequired('') 
-fetchQuestionsbyId()
+  if (!question_text_cy.trim()) {
+    toast.error("Please enter the Welsh question text");
+    return;
   }
-  catch{
-alert('err')
+  if (!selectedService) {
+    toast.error("Please select a service");
+    return;
+  }
+  if (is_required === '' || is_required === null) {
+    toast.error("Please select whether the question is required");
+    return;
   }
 
-}
+  // Prepare options
+  let options_en: string[] = [];
+  let options_cy: string[] = [];
+
+  if (questionType === "radio") {
+    if (radioOptions.length === 0) {
+      toast.error("Please add at least one option for radio buttons");
+      return;
+    }
+    options_en = radioOptions.map((opt) => opt.en.trim());
+    options_cy = radioOptions.map((opt) => opt.cy.trim());
+  } else if (questionType === "checkbox") {
+    if (checkboxOptions.length === 0) {
+      toast.error("Please add at least one option for checkboxes");
+      return;
+    }
+    options_en = checkboxOptions.map((opt) => opt.en.trim());
+    options_cy = checkboxOptions.map((opt) => opt.cy.trim());
+  }
+  // For text → empty arrays (already initialized)
+
+  // ── Payload ───────────────────────────────────────────────────
+  const payload = {
+    question_text_en: question_text.trim(),
+    question_text_cy: question_text_cy.trim(),
+    input_type: questionType, // "text" | "radio" | "checkbox"
+    question_type:
+      questionType === "text"
+        ? "text"
+        : questionType === "radio"
+        ? "single_select"
+        : "multi_select",
+    options_json_en: options_en,
+    options_json_cy: options_cy,
+    is_required: is_required === true || is_required === "true", // normalize to boolean
+  };
+
+  console.log("Sending payload:", payload);
+
+  try {
+    await PostQuestion(payload, Number(selectedService.id));
+
+    toast.success("Question created successfully");
+
+    // Reset form
+    setQuestion_text("");
+    setQuestion_text_cy("");
+    setQuestionType("text");
+    setRadioOptions([]);
+    setCheckboxOptions([]);
+    setRadioopt_en("");
+    setRadioopt_cy("");
+    setNewCheckboxEn("");
+    setNewCheckboxCy("");
+    setIsRequired("");           // or null — see recommendation below
+
+    await fetchQuestionsbyId();  // better to await if possible
+  } catch (err) {
+    console.error("Failed to create question:", err);
+    toast.error("Failed to create question");
+  }
+};
 
   const deleteQuestion = (id: number) => {
     deleteQuestionbyId(id)
@@ -220,7 +262,7 @@ renderInput={(params)=>(
   {selectedService&&<div>
     {displayQuestions?.length == null ? <Typography>No Questions for this service</Typography> : displayQuestions.map((data, ind) => <div>
                 
-              <div className='flex w-full border-b-1 py-2 pb-2'> <Typography className='flex w-full items-center gap-3 '> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text}</span></Typography>
+              <div className='flex w-full border-b-1 py-2 pb-2'> <Typography className='flex w-full items-center gap-3 '> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text_en}</span></Typography>
 <div className='flex justify-end gap-4 w-[50%]'>
   <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"20%",fontSize:"14px"}} onClick={()=>navigate(`/questions/edit/${data.id}`)}>Edit <Pencil className='w-4 h-4 ml-2' /></Button>
   <Button size='small' sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"20%",fontSize:"14px"}} onClick={()=>deleteQuestion(data.id)}> Delete <Trash2 className='w-4 h-4 ml-2 text-red-500' /></Button>

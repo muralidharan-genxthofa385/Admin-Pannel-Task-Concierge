@@ -1,12 +1,11 @@
 import { ActivitySquare, Bolt, BriefcaseBusiness,  Ellipsis,  PanelTopClose, SearchIcon} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox'
-import { getRequest, postRequest } from '@/Service/Apiservice'
+import { getRequest} from '@/Service/Apiservice'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { Card } from '@/components/ui/card'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import { toast } from 'react-toastify'
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -22,6 +21,7 @@ interface pendingData{
     reason:string;
     status:string;
     email:string;
+    user_id:number
 }
 interface dashboarddetailsType {
   services: { name: string; count: number }[];
@@ -92,30 +92,30 @@ const BusinessApproval:React.FC = () => {
     useEffect(()=>{
     },[])
 
-    const handleApprove=async(id:number,decision:string)=>{
+    // const handleApprove=async(id:number,decision:string)=>{
 
-      setLoading(true)
-      console.log(id,decision)
+    //   setLoading(true)
+    //   console.log(id,decision)
 
-        const payload={
-            decision:decision,
-            reason: ""
-        }
+    //     const payload={
+    //         decision:decision,
+    //         reason: ""
+    //     }
 
-        try{
+    //     try{
         
-          await postRequest(`/admin/pending-registrations/${id}/decision`,payload)
-            toast.success(payload.decision=="approve"?'Approved successfully':"Applicant Rejected Successfully")
-            fetchPending_approvals()
-        }
-        catch(err){
+    //       await postRequest(`/admin/pending-registrations/${id}/decision`,payload)
+    //         toast.success(payload.decision=="approve"?'Approved successfully':"Applicant Rejected Successfully")
+    //         fetchPending_approvals()
+    //     }
+    //     catch(err){
 
-        }
-        finally{
-          setLoading(false)
-        }
+    //     }
+    //     finally{
+    //       setLoading(false)
+    //     }
 
-    }   
+    // }   
 
      const columns: GridColDef[]=[
           { field: 'first_name', headerName: 'Name', width: 240,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
@@ -137,7 +137,7 @@ const BusinessApproval:React.FC = () => {
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={(e)=>handleClick(e,d.row.id)}
+        onClick={(e)=>handleClick(e,d.row.user_id)}
       ><Ellipsis/> </Button>
       <Menu
         id="basic-menu"

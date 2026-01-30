@@ -6,11 +6,8 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getRequest, postRequest } from '@/Service/Apiservice';
 import { Button, Switch, TextField } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { toast } from 'react-toastify';
-import dayjs, { Dayjs } from 'dayjs';
 
 
 
@@ -25,10 +22,21 @@ interface customerdetails {
     profile_pic_url:string,
     email:string,
     phone:string
-    date_of_birth:Dayjs|null
+    // date_of_birth:Dayjs|null
     street:string,
     apartment:string,
     location:string,
+    business_details:{
+companies_house_code:string,
+entity_name:string
+street:string,
+apartment:string,
+city:string
+state:string
+postcode:string
+
+
+    }[]
 
 }
 bookings:bookings,
@@ -68,7 +76,7 @@ console.log(pending_id)
         const [userDetails,setUserdetails]=useState<customerdetails|null>(null)
         const [counts,setCounts]=useState<bookings|null>()
               const [loading,setLoading]=useState(false)
-              const [onCh,setOnch]=useState('')
+              const [_onCh,setOnch]=useState('')
 
               const handleChange=(e:any)=>{
                 setOnch(e.target.value)
@@ -119,7 +127,6 @@ navigate(-1)
     } 
 
   
-    const dob= dayjs(userDetails?.customer.date_of_birth);
 
     return (
 
@@ -129,7 +136,7 @@ navigate(-1)
 
 <div className='flex gap-4 w-[50%] justify-end'>
     <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"15%"}} onClick={()=>navigate(-1)}>Back</Button>
-        <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"18%"}} onClick={()=>handleApprove(Number(id),'')} className='flex gap-2'>{loading?"Loading...": <><CheckCircle /> Approve</>}</Button>
+        <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"18%"}} onClick={()=>handleApprove(Number(pending_id),'approve')} className='flex gap-2'>{loading?"Loading...": <><CheckCircle /> Approve</>}</Button>
 </div>
 </div>
             <div className='w-full flex flex-col md:flex-row justify-between'>
@@ -141,17 +148,14 @@ navigate(-1)
                         <div className='p-5 flex flex-col gap-8'>
                             <div className='flex flex-col md:flex-row justify-between gap-3'>
 
-                                <TextField InputProps={{ readOnly: true }} onChange={handleChange} label="First Name" value={userDetails?.customer.first_name} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
-                                <TextField label="Last Name" value={userDetails?.customer.last_name} onChange={handleChange}  sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField InputProps={{ readOnly: true }} onChange={handleChange} label="First Name" value={`${userDetails?.customer.first_name}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField label="Last Name" value={`${userDetails?.customer.last_name}`} onChange={handleChange}  sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
                             </div>
-                            <TextField label="Email" value={userDetails?.customer.email}  sx={themes.textFieldStyle} className='w-[100%] ' />
-                            <div className='flex flex-col md:flex-row justify-between gap-3'>
-                                <TextField label="Phone" value={userDetails?.customer.phone}  sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
-                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                            <TextField label="Email" value={ `${userDetails?.customer.email}`}  sx={themes.textFieldStyle} className='w-[100%] ' />
+                            <div className='flex flex-col md:flex-row justify-between gap-3 '>
+                                <TextField label="Phone" value={`+ ${userDetails?.customer.phone}`}  sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                             <TextField  label="Post Code"  value={`${userDetails?.customer.business_details[0].postcode}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
 
-                                    <DatePicker value={dob}  className='w-full md:w-[49%]' label="Date of Birth" sx={themes.textFieldStyle} />
-
-                                </LocalizationProvider>
                             </div>
 
                         </div>
@@ -162,10 +166,10 @@ navigate(-1)
                     <Card className='h-max-content'>
                         <h1 className='p-4 border-b-2 text-2xl font-semibold'>Address</h1>
                         <div className='p-5 flex flex-col gap-8'>
-                            <TextField  label="Street" value={userDetails?.customer.street} sx={themes.textFieldStyle} className='w-[100%] ' />
+                            <TextField  label="Street"  value={`${userDetails?.customer.business_details[0].street}`} sx={themes.textFieldStyle} className='w-[100%] ' />
                             <div className='flex flex-col md:flex-row justify-between gap-3'>
-                                <TextField  label="Appartment/suite" value={userDetails?.customer.apartment} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
-                                <TextField value={userDetails?.customer.location}   label="Location" sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField  label="Appartment/suite"  value={`${userDetails?.customer.business_details[0].apartment}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField  value={`${userDetails?.customer.business_details[0].city},${userDetails?.customer.business_details[0].state}`}   label="Location" sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
                             </div>
 
 
@@ -198,11 +202,12 @@ navigate(-1)
 
                     <Card>
                         <h1 className='p-4 border-b-2 text-2xl font-semibold'>Confedential Information</h1>
-                        <div className='p-5'>
+                        <div className='p-5 flex flex-col gap-8'>
                             <TextField fullWidth label="Company House Code" sx={themes.textFieldStyle}
-                                value={'23456'}
-                              
-
+                                value={`${userDetails?.customer.business_details[0].companies_house_code}`}
+                            />
+                             <TextField fullWidth label="Entity Name" sx={themes.textFieldStyle}
+                                value={`${userDetails?.customer.business_details[0].entity_name}`}
                             />
 
                         </div>
