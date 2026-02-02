@@ -22,7 +22,9 @@ import { toast } from 'react-toastify';
 interface skillprop{
     id:number,
     skill_category_id:number,
-    name:string,
+    name:{
+      en:string,cy:string
+    },
     description:string
             is_active:boolean
 
@@ -35,8 +37,11 @@ interface skillprop{
 }
 interface createPAyloadType{
   id:number|null,
-  name:string,
-  description:string
+  name_en:string,
+  name_cy:string,
+  description_en:string
+  description_cy:string
+
 }
 interface SkillCategories{
 name:{en:string},
@@ -46,8 +51,10 @@ interface skilltoEdit{
   id: number|null,
   is_active:boolean|null
         skill_category_id: number|null,
-        name: string,
-        description: string,
+        name_en: string,
+                name_cy: string,
+        description_en: string,
+                description_cy: string,
         skill_category:{name:string}
 }
 
@@ -72,11 +79,14 @@ const SkillsTable:React.FC = () => {
     const [addskillLoader,setAddskillLoader]=useState(false)
     const [editSkillOpen,setEditSkillOpen]=useState(false)
     const [totalCount, setTotalCount] = useState(0);
-      const [skillToEdit,setSkilltoEdit]=useState<skilltoEdit>({ id:null, skill_category_id: null,name: "", description: "",is_active:null,skill_category:{name:""}})
+      const [skillToEdit,setSkilltoEdit]=useState<skilltoEdit>({ id:null, skill_category_id: null,name_en: "",name_cy: "", description_en: "",description_cy:"",is_active:null,skill_category:{name:""}})
     const [createSkillPayload,setCreateskillPayload]=useState<createPAyloadType>({
       id:null,
-      name:"",
-      description:""
+      name_en:"",
+      name_cy:"",
+      description_en:"",
+      description_cy:""
+
     })
     console.log(createSkillPayload)
            const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -106,8 +116,10 @@ const SkillsTable:React.FC = () => {
           setSkilltoEdit({
             id:response.id,
           skill_category_id:response.skill_category_id,
-          name:response.name,
-          description:response.description,
+          name_en:response.name_en,
+          name_cy:response.name_cy,
+          description_cy:response.description_cy,
+          description_en:response.description_en,
           is_active:response.is_active,
           skill_category:{name:response.skill_category.name}
           })
@@ -151,8 +163,11 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
     e.preventDefault()
     const payload={
       skill_category_id:createSkillPayload.id,
-      name:createSkillPayload.name,
-      description:createSkillPayload.description
+      name_en:createSkillPayload.name_en,
+      name_cy:createSkillPayload.name_cy,
+      description_en:createSkillPayload.description_en,
+      description_cy:createSkillPayload.description_cy
+
     }
     postRequest(`/skills`,payload)
     .then(()=>toast.success('Skill Added Successfully'))
@@ -160,7 +175,11 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
     .finally(()=>{setAddskillLoader(false)
       setAddskillopen(false)
       setCreateskillPayload(()=>({
-        id:null,name:"",description:""
+       id:null,
+      name_en:"",
+      name_cy:"",
+      description_en:"",
+      description_cy:""
       }))
     })
   }
@@ -169,8 +188,8 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
  e.preventDefault()
  const payload={
         skill_category_id:skillToEdit.skill_category_id,
-      name:skillToEdit.name,
-      description:skillToEdit.description,
+      name:skillToEdit.name_en,
+      description:skillToEdit.description_cy,
       is_active:skillToEdit.is_active
  }
  PutRequest(`/skills/${skillToEdit.id}`,payload)
@@ -198,9 +217,9 @@ fetchallSkills()
   }
     
          const columns: GridColDef[]=[
-              { field: 'skill_category', headerName: 'Category Name', width: 300,renderCell:(p)=>(<>{p.row.skill_category.name}</>) },
-             { field: 'name', headerName: 'Skill', width: 290,renderCell:(p)=>(<>{p.row.name}</>) },
-        { field: 'description', headerName: 'Description', width: 480,renderCell:(p)=>(<>{p.row.description}</>)},
+              { field: 'skill_category', headerName: 'Category Name', width: 300,renderCell:(p)=>(<>{p.row.skill_category.name_en}</>) },
+             { field: 'name', headerName: 'Skill', width: 290,renderCell:(p)=>(<>{p.row.name_en}</>) },
+        { field: 'description', headerName: 'Description', width: 480,renderCell:(p)=>(<>{p.row.description_en}</>)},
         {field:'is_active',headerName:'Status',width:250,renderCell:(p)=>(
         <Box sx={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <Typography 
@@ -360,7 +379,8 @@ rowCount={totalCount}
                               Category <span className="text-red-500">*</span>
                             </label>
                             <FormControl sx={themes.textFieldStyle}>
-                              <Select id="category_id" name="category_id" sx={themes.textFieldStyle}
+                              <InputLabel>Select a category</InputLabel>
+                              <Select id="category_id" name="category_id" label="Select a category" sx={themes.textFieldStyle}
                                value={createSkillPayload.id}
                                 onChange={(e)=>setCreateskillPayload((prev)=>({...prev,id:Number(e.target.value)}))}
                               >
@@ -372,14 +392,24 @@ rowCount={totalCount}
                               </Select>
                             </FormControl>
                           </div>
-                          <TextField value={createSkillPayload.name} 
-                          label='Name'
-                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,name:e.target.value}))}
+                          <TextField value={createSkillPayload.name_en} 
+                          label='Name (Eng)'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,name_en:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
-                          <TextField value={createSkillPayload.description} 
-                           label='Description'
-                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,description:e.target.value}))}
+                           <TextField value={createSkillPayload.name_cy} 
+                          label='Name (Welsh)'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,name_cy:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+                          <TextField value={createSkillPayload.description_en} 
+                           label='Description (Eng)'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,description_en:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+                          <TextField value={createSkillPayload.description_cy} 
+                           label='Description (Welsh)'
+                          onChange={(e)=>setCreateskillPayload(prev=>({...prev,description_cy:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
 
@@ -426,16 +456,28 @@ rowCount={totalCount}
                               </Select>
                             </FormControl>
                           </div>
-                          <TextField value={skillToEdit.name} 
-                          label='Name'
-                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,name:e.target.value}))}
+                          <TextField value={`${skillToEdit.name_en}`} 
+                          label='Name (eng)'
+                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,name_en:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
-                          <TextField value={skillToEdit.description} 
-                           label='Description'
+                          <TextField value={skillToEdit.name_cy} 
+                          label='Name (Welsh)'
+                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,name_cy:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+                          <TextField value={skillToEdit.description_en} 
+                           label='Description (Eng)'
                            multiline
                            maxRows={3}
-                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,description:e.target.value}))}
+                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,description_en:e.target.value}))}
+                          sx={themes.textFieldStyle}
+                          />
+                          <TextField value={skillToEdit.description_cy} 
+                           label='Description (Welsh)'
+                           multiline
+                           maxRows={3}
+                          onChange={(e)=>setSkilltoEdit(prev=>({...prev,description_cy:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
                           <FormControl sx={themes.textFieldStyle}>
