@@ -9,7 +9,8 @@ import Switch from '@mui/material/Switch';
 import { ChevronLeft } from 'lucide-react';
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
-import { edit_customer, getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
+import { edit_customer} from '@/Service/Customer Page API Service/Customers_Api_service';
+import { getRequest } from '@/Service/Apiservice';
 
 const CustomerEdit:React.FC = () => {
 
@@ -46,11 +47,11 @@ const CustomerEdit:React.FC = () => {
 
     
     useEffect(() => {
-  getCustomerById(Number(id))
+  getRequest(`admin/residents/${id}`)
     .then((res) => {
       console.log("cust:", res.data);
 
-      const customer = res.data.customer;
+      const customer = res.data;
       const business = customer.business_details?.[0] || {};
 
       setCustomerdetails({

@@ -4,20 +4,21 @@ import Typography from '@mui/material/Typography';
 import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallIcon, Scale,  UserCircle2, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
+// import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
+import { getRequest } from '@/Service/Apiservice';
 
 
 
 interface customerdetails {
    
-   customer:{ name:string,
+    name:string,
     pause_account:false,
     email_verified_at:string,
     profile_pic_url:string,
     email:string,
     phone:string
-}
+
 bookings:bookings,
 
 }
@@ -37,7 +38,7 @@ const BusinessuserView:React.FC = () => {
     useEffect(()=>{
         const fetchtasker=async()=>{
             try{
-                const res=await getCustomerById(Number(id))
+                const res=await getRequest(`admin/business-users/${id}`)
                 console.log("response :",res)
                 setUserdetails(res.data)
                 setCounts(res.data.bookings)
@@ -59,14 +60,14 @@ const BusinessuserView:React.FC = () => {
   return (
      <>
     <Typography className='flex items-center gap-2 w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:21,color:"var(--color-purple)"}}>
-            <ChevronLeft className='w-8 h-8' /><UserCircle2/> {userDetails?.customer.name}</Typography>
+            <ChevronLeft className='w-8 h-8' /><UserCircle2/> {userDetails?.name}</Typography>
             <div className=' flex flex-col gap-11'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
                     {/* <RUDashBoardCard icon={Wallet} count={100} title='Revenue' /> */}
                     <HighlightStatsBox icon={Wallet} title='Revenue' count={0} color='var(--color-grey)' />
-                    <HighlightStatsBox icon={Activity} count={`${!userDetails?.customer.pause_account?"active":"Inactive"}`} title='Status' />
-                    <HighlightStatsBox icon={Scale} count={userDetails?.bookings.completed.length} title='Completed_Tasks' />
-                    <HighlightStatsBox icon={Calendar} count={`${userDetails?.customer.email_verified_at?userDetails?.customer.email_verified_at.slice(0,10):"N/A"}`} title={`Member_Since`} />
+                    <HighlightStatsBox icon={Activity} count={`${!userDetails?.pause_account?"active":"Inactive"}`} title='Status' />
+                    <HighlightStatsBox icon={Scale} count={userDetails?.bookings?.completed.length} title='Completed_Tasks' />
+                    <HighlightStatsBox icon={Calendar} count={`${userDetails?.email_verified_at?userDetails?.email_verified_at.slice(0,10):"N/A"}`} title={`Member_Since`} />
                 </div>
 
                 <div className='w-full flex flex-col gap-10 justify-between md:flex-row '>
@@ -81,17 +82,17 @@ const BusinessuserView:React.FC = () => {
                             <div className='flex items-center gap-7 flex-wrap'>
 
 
-                                <img src={userDetails?.customer.profile_pic_url} className='w-25 p-1 h-25 rounded-full border' />
+                                <img src={userDetails?.profile_pic_url} className='w-25 p-1 h-25 rounded-full border' />
                                 <div>
-                                    <Typography sx={{ ...themes.mediumSizedFont}}>{userDetails?.customer.name}</Typography>
-                                    <Typography sx={{ ...themes.lightFont }}>{userDetails?.customer.email}</Typography>
+                                    <Typography sx={{ ...themes.mediumSizedFont}}>{userDetails?.name}</Typography>
+                                    <Typography sx={{ ...themes.lightFont }}>{userDetails?.email}</Typography>
                                 </div>
 
                             </div>
 
                             <div className='flex flex-col gap-5'>
-                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.customer.email}</Typography>
-                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> {userDetails?.customer.phone}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.email}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> {userDetails?.phone}</Typography>
 
                             </div>
                         </div>
@@ -107,9 +108,9 @@ const BusinessuserView:React.FC = () => {
 
 
                         <div className='pt-3'>
-{userDetails?.bookings.completed.length!==0?
+{userDetails?.bookings?.completed.length!==0?
 
-<>{userDetails?.bookings.completed.map((data)=><div className='flex w-full justify-between items-center'>
+<>{userDetails?.bookings?.completed.map((data)=><div className='flex w-full justify-between items-center'>
    <div className='flex items-center gap-3'>
         <History className='text-gray-500'/>
 <div>
@@ -140,7 +141,7 @@ const BusinessuserView:React.FC = () => {
                         </div>
 
 
-                        {userDetails?.bookings.completed.length!==0?<div>
+                        {userDetails?.bookings?.completed.length!==0?<div>
                             
                         </div>:
                         <div className='flex w-full justify-center flex-col items-center gap-3'>

@@ -154,7 +154,7 @@ navigate(-1)
                             <TextField label="Email" value={ `${userDetails?.customer.email}`}  sx={themes.textFieldStyle} className='w-[100%] ' />
                             <div className='flex flex-col md:flex-row justify-between gap-3 '>
                                 <TextField label="Phone" value={`+ ${userDetails?.customer.phone}`}  sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
-                             <TextField  label="Post Code"  value={`${userDetails?.customer.business_details[0].postcode}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                             <TextField  label="Post Code"  value={`${userDetails?.customer.business_details[0]?.postcode||""}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
 
                             </div>
 
@@ -166,10 +166,10 @@ navigate(-1)
                     <Card className='h-max-content'>
                         <h1 className='p-4 border-b-2 text-2xl font-semibold'>Address</h1>
                         <div className='p-5 flex flex-col gap-8'>
-                            <TextField  label="Street"  value={`${userDetails?.customer.business_details[0].street}`} sx={themes.textFieldStyle} className='w-[100%] ' />
+                            <TextField  label="Street"  value={`${userDetails?.customer.business_details[0]?.street||""}`} sx={themes.textFieldStyle} className='w-[100%] ' />
                             <div className='flex flex-col md:flex-row justify-between gap-3'>
-                                <TextField  label="Appartment/suite"  value={`${userDetails?.customer.business_details[0].apartment}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
-                                <TextField  value={`${userDetails?.customer.business_details[0].city},${userDetails?.customer.business_details[0].state}`}   label="Location" sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField  label="Appartment/suite"  value={`${userDetails?.customer.business_details[0]?.apartment||""}`} sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
+                                <TextField  value={`${userDetails?.customer.business_details[0]?.city||""},${userDetails?.customer.business_details[0]?.state||""}`}   label="Location" sx={themes.textFieldStyle} className='w-full md:w-[49%]' />
                             </div>
 
 
@@ -204,10 +204,10 @@ navigate(-1)
                         <h1 className='p-4 border-b-2 text-2xl font-semibold'>Confedential Information</h1>
                         <div className='p-5 flex flex-col gap-8'>
                             <TextField fullWidth label="Company House Code" sx={themes.textFieldStyle}
-                                value={`${userDetails?.customer.business_details[0].companies_house_code}`}
+                                value={`${userDetails?.customer.business_details[0]?.companies_house_code||""   }`}
                             />
                              <TextField fullWidth label="Entity Name" sx={themes.textFieldStyle}
-                                value={`${userDetails?.customer.business_details[0].entity_name}`}
+                                value={`${userDetails?.customer.business_details[0]?.entity_name||""}`}
                             />
 
                         </div>

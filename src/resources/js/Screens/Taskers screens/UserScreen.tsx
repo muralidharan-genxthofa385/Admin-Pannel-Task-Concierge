@@ -209,6 +209,7 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
           <HighlightStatsBox color='var(--color-purple)' title='Taskers' icon={Bolt} count={Number(taskercount?.total)||0}/>
                     <HighlightStatsBox color='var(--color-purple)' title='Active Taskers' icon={Flame} count={Number(taskercount?.active)||0}/>
           <HighlightStatsBox color='var(--color-purple)' title='Inactive Taskers' icon={UserRoundMinusIcon} count={Number(taskercount?.inactive)||0}/>
+          
         </div>
 
       {/**----- Filters Section------ */} 

@@ -1,73 +1,115 @@
-import { UserCheck, Users,  ToolCase,  Ellipsis, CheckCircle, X } from 'lucide-react';
+import { UserCheck, Users, ToolCase, Ellipsis, SearchIcon, PoundSterling } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices';
 import { Card } from '@/components/ui/card';
-import { getRequest, postRequest } from '@/Service/Apiservice';
-import { toast } from 'react-toastify';
+import { getRequest } from '@/Service/Apiservice';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
+import { PieChart } from '@mui/x-charts/PieChart';
+// import Revenuegarph from './Revenuegraph';
+import { themes } from '@/Themes';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto'
+import { FormControl, InputLabel, Select } from '@mui/material';
+
 
 interface dashboarddetailsType {
   services: { name: string; count: number }[];
+  top_completed_services: { name: string; count: number }[];
   taskers: { total: number; active?: number; inactive?: number };
   residents: {
-            total: number
-        },
-        business_users: {
-            approved: number,
-            rejected: number,
-            pending: number
-        },
+    total: number
+  },
+  business_users: {
+    approved: number,
+    rejected: number,
+    pending: number
+  },
   tasks: {
     accepted: number;
     cancelled: number;
+    active: number;
     completed: number;
     in_progress: number;
     pending: number;
     total: number;
   };
 }
-interface pendingData{
-    id: number
-    first_name:string;
-    last_name:string;
-    phone:string;
-    reason:string;
-    status:string;
-    email:string;
+interface pendingData {
+  id: number
+  first_name: string;
+  last_name: string;
+  phone: string;
+  reason: string;
+  status: string;
+  email: string;
+}
+
+interface revenueDataType {
+
+  daily_this_week: any,
+  weekly_this_month: any,
+  monthly_this_year: any
+}
+interface Revenuedetails{
+   total_payments: number
+    total_admin_fees:number,
 }
 
 function DashboardHome() {
+
+
   const [dashboardDetails, setDashboardDetails] = useState<dashboarddetailsType | null>(null);
-  const [pendingData,setPendingData]=useState<pendingData[]>([])
-      const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
-      const [totalCount,_setTotalCount]=useState(0)
-        const [loading,setLoading]=useState(false)
-          const [selectedrowid,setSelectedRowid]=useState<number|null>(null)
-  
-         const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-          const open = Boolean(anchorEl);
-          const handleClick = (event: React.MouseEvent<HTMLButtonElement>,rowId:number) => {
-            setAnchorEl(event.currentTarget);
-            setSelectedRowid(rowId)
-          };
-          const handleClose = () => {
-            setAnchorEl(null);
-          };
-             const fetchPending_approvals=async()=>{   
-              try{
-                  const res=await getRequest(`admin/pending-registrations`)
-                  setPendingData(res.data.data)
-                          console.log( "pending approval >>",pendingData)
-              }
-              catch(err){}
-           
-          }
-          
+  const [pendingData, setPendingData] = useState<pendingData[]>([])
+  const [timeRange, setTimeRange] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({ page: 0, pageSize: 10, });
+  const [totalCount, _setTotalCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [selectedrowid, setSelectedRowid] = useState<number | null>(null)
+  const [revenuedata, setRevenuedata] = useState<revenueDataType>({} as revenueDataType)
+  const [totalRevenue, setTotalRevenue] = useState<Revenuedetails >({ total_payments: 0, total_admin_fees: 0 })
+  const navigate = useNavigate()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, rowId: number) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRowid(rowId)
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const fetchPending_approvals = async () => {
+    try {
+      const res = await getRequest(`admin/pending-registrations`)
+      setPendingData(res.data.data)
+      console.log("pending approval >>", pendingData)
+    }
+    catch (err) { }
+
+  }
+
+  ChartJS.register();
+  const fetch_revenue = async () => {
+
+    try {
+      const res = await getRequest(`admin/revenue`)
+      setRevenuedata(res.data.summary)
+      setTotalRevenue(res.data.summary)
+      setRevenuedata(res.data.periods)
+      console.log("revenue data >>", totalRevenue)
+
+    }
+    catch {
+
+    }
+
+  }
+
 
   useEffect(() => {
     setLoading(true)
@@ -75,94 +117,98 @@ function DashboardHome() {
       console.log(res);
       setDashboardDetails(res.data);
     })
-    .finally(()=>{
-      setLoading(false)
-    })
+      .finally(() => {
+        setLoading(false)
+      })
     fetchPending_approvals()
+    fetch_revenue()
   }, []);
 
 
 
-   const handleApprove=async(id:number,decision:string)=>{
+  const columns: GridColDef[] = [
+    { field: 'first_name', headerName: 'Name', width: 240, renderCell: (p) => (<>{p.row.first_name} {p.row.last_name}</>) },
+    { field: 'phone', headerName: 'Phone', width: 240, renderCell: (p) => (<>+ {p.row.phone}</>) },
+    { field: 'email', headerName: 'Email', width: 240, renderCell: (p) => (<>{p.row.email}</>) },
+    {
+      field: 'status', headerName: 'Status', width: 200, renderCell: (p) => (<Box sx={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Typography className={`${p.row.status == "awaiting_approval" ? 'bg-amber-500' : "bg-green-600"} p-2 rounded-3xl text-white`}
+          sx={{ display: "flex", alignItems: "center" }}>
+          {p.row.status}</Typography> </Box>)
+    },
 
-    setLoading(true)
-      console.log(id,decision)
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 200,
+      renderCell: (d) => (
+        <div>
+          <Button
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={(e) => handleClick(e, d.row.user_id)}
+          ><Ellipsis /> </Button>
+          <Menu
+            id="basic-menu"
+            PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)', borderRadius: '10px', }, }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            slotProps={{
+              list: {
+                'aria-labelledby': 'basic-button',
+              },
+            }}
+          >
+            <MenuItem onClick={() => { navigate(`/business/approval/${selectedrowid}`, { state: { pending_id: d.row.user_id } }) }} className='flex gap-2'><SearchIcon className='text-[var(--color-purple)]' /> Verify</MenuItem>
+            {/* <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"approve");handleClose()}} className='flex gap-2'><CheckCircle className='text-[var(--color-purple)]' /> Approve</MenuItem>
+        <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"reject");handleClose();}} className='flex gap-2'><X className='text-[var(--color-red)]' /> Reject</MenuItem> */}
+          </Menu>
+        </div>
+      )
+    }
+  ]
 
-        const payload={
-            decision:decision,
-            reason: ""
-        }
+  const getChartData = () => {
+    if (!revenuedata) return { labels: [], data: [] };
 
-        try{
-        
-          await postRequest(`/admin/pending-registrations/${id}/decision`,payload)
-            toast.success(payload.decision=="approve"?'Approved successfully':"Applicant Rejected Successfully")
-            fetchPending_approvals()
-        }
-        catch(err){
+    let periodData: Record<string, any> = {};
 
-        }
-finally{
-  setLoading(false)
-}
-    }   
+    if (timeRange === 'daily') {
+      periodData = revenuedata?.daily_this_week || {};
+    } else if (timeRange === 'weekly') {
+      periodData = revenuedata?.weekly_this_month || {};
+    } else if (timeRange === 'monthly') {
+      periodData = revenuedata?.monthly_this_year || {};
+    }
 
-     const columns: GridColDef[]=[
-          { field: 'first_name', headerName: 'Name', width: 240,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
-         { field: 'phone', headerName: 'Phone', width: 240,renderCell:(p)=>(<>+ {p.row.phone}</>) },
-    { field: 'email', headerName: 'Email', width: 240,renderCell:(p)=>(<>{p.row.email}</>) },
-    {field:'status',headerName:'Status',width:200,renderCell:(p)=>(<Box sx={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
-        <Typography className={`${p.row.status=="awaiting_approval"?'bg-amber-500':"bg-green-600"} p-2 rounded-3xl text-white`} 
-        sx={{display:"flex",alignItems:"center"}}>
-        {p.row.status}</Typography> </Box>)},
+    const entries = Object.entries(periodData);
+    if (timeRange === 'weekly') {
+      entries.sort((a, b) => Number(a[1].label) - Number(b[1].label));
+    }
 
-{ 
-  field: "actions",
-  headerName: "Actions",
-  width: 200,
-  renderCell:(d)=>(
- <div>
-      <Button
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={(e)=>handleClick(e,d.row.id)}
-      ><Ellipsis/> </Button>
-      <Menu
-        id="basic-menu"
-         PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        slotProps={{
-          list: {
-            'aria-labelledby': 'basic-button',
-          },
-        }}
-      >
-        
- <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"approve");handleClose()}} className='flex gap-2'><CheckCircle className='text-[var(--color-purple)]' /> Approve</MenuItem>
-        <MenuItem onClick={()=>{handleApprove(selectedrowid||0,"reject");handleClose();}} className='flex gap-2'><X className='text-[var(--color-red)]' /> Reject</MenuItem>
-      </Menu>
-    </div>
-  )
-}
-     ]
+    const labels = entries.map(([_, item]) => item.label);
+    const revenueValues = entries.map(([_, item]) => item.total_payments || 0);
+
+    return { labels, data: revenueValues };
+  };
+
+  const { labels, data } = getChartData();
 
 
 
-  const last30DaysRevenue = 85400;
-  const totalBookings = 3200;
 
-  const RUDashBoardCard: React.FC<{ icon: any; title: string; count: any; growth?: string }> = ({
+  const RUDashBoardCard: React.FC<{ icon: any; title: string; count: any; growth?: string, navigation?: string }> = ({
     icon: Icon,
     title,
     count,
     growth,
+    navigation
   }) => {
     return (
-      <div className="flex flex-col gap-2 rounded-xl p-6 bg-white border border-[var(--color-light)] shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
+      <div onClick={() => navigate(navigation || "")} className="flex flex-col gap-2 rounded-xl p-6 bg-white border border-[var(--color-light)] shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium" style={{ color: 'var(--color-grey)' }}>
             {title}
@@ -187,8 +233,8 @@ finally{
         Welcome Admin!
       </h1>
 
-   
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
         {/* <RUDashBoardCard
           title="Total Revenue"
           count={`$${totalRevenue.toLocaleString()}`}
@@ -198,59 +244,270 @@ finally{
         <RUDashBoardCard
           title="Total Taskers"
           count={dashboardDetails?.taskers.total}
-          growth="+1.8%"
+          navigation="/taskers"
           icon={UserCheck}
         />
         <RUDashBoardCard
           title="Total Customers"
           count={dashboardDetails?.residents.total ?? 0}
-          growth="+12.5%"
-          icon={Users}
-        />
-            <RUDashBoardCard
-          title="Approved Business Users"
-          count={dashboardDetails?.business_users.approved ?? 0}
-          growth="+12.5%"
+          navigation='/customers'
           icon={Users}
         />
         <RUDashBoardCard
-          title="Unapproved Business Users"
+          title="Approved Business Users"
+          count={dashboardDetails?.business_users.approved ?? 0}
+          navigation="/business/user"
+          icon={Users}
+        />
+        <RUDashBoardCard
+          title="Awaiting Business Users"
           count={dashboardDetails?.business_users.pending ?? 0}
-          growth="+3.1%"
+          navigation="/business/approval"
+          icon={ToolCase}
+        />
+        <RUDashBoardCard
+          title="Rejected Business Users"
+          count={dashboardDetails?.business_users.rejected ?? 0}
+          navigation="/business/approval"
           icon={ToolCase}
         />
       </div>
 
 
-<div>
-<Card className='p-8'>
-  <h3 className="text-3xl lg:text-2xl font-bold  mb-8">Business Approvals</h3>
+      <div className='hidden'>
+        <Card className='p-8'>
+          <h3 className="text-3xl lg:text-2xl font-bold  mb-8">Business Approvals</h3>
 
-  <Card className='md:w-full rounded-2xl'>
-<DataGrid
-  rows={pendingData??[]}
-  columns={columns}
-  paginationMode="server"
-  paginationModel={PaginationModel}
-  onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
-  pageSizeOptions={[5, 10, 15]}
-  rowCount={totalCount}
-  loading={loading}
-  getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
-  sx={{ border: 0, width: "100%" }}
-/>
-  </Card>
+          <Card className='md:w-full rounded-2xl'>
+            <DataGrid
+              rows={pendingData ?? []}
+              columns={columns}
+              paginationMode="server"
+              paginationModel={PaginationModel}
+              onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
+              pageSizeOptions={[5, 10, 15]}
+              rowCount={totalCount}
+              loading={loading}
+              getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
+              sx={{ border: 0, width: "100%" }}
+            />
+          </Card>
 
-</Card>
+        </Card>
 
-</div>
+      </div>
 
 
-     
-      <div className=" flex-col lg:flex-row gap-6 mb-8 hidden"> {/**>>>>>>>>>>>>>Graph <<<<<<<<<<<< */}
-      
+
+      <div className=" flex-col lg:flex-row gap-6 mb-8 flex"> {/**>>>>>>>>>>>>>Graph <<<<<<<<<<<< */}
+
 
         <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
+          <p className="text-base font-medium" style={{ color: 'var(--color-text)' }}>
+            Tasks analysis
+          </p>
+          <p className="text-4xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
+            {dashboardDetails?.tasks.total}
+          </p>
+          <div className="flex gap-1 text-sm">
+            <p style={{ color: 'var(--color-grey)' }}>Total Task Activities </p>
+            {/* <p className="font-medium" style={{ color: 'var(--color-green)' }}>
+              +8.9%
+            </p> */}
+          </div>
+          <div className="grid grid-flow-col gap-6 items-end justify-items-center mt-6">
+
+            <PieChart
+              series={[
+                {
+                  data: dashboardDetails?.tasks
+                    ? [
+                      { id: 0, value: dashboardDetails.tasks.pending, label: 'Pending', color: '#f59e0b' },
+                      { id: 1, value: dashboardDetails.tasks.active, label: 'Active', color: '#3b82f6' },
+                      { id: 2, value: dashboardDetails.tasks.accepted, label: 'Accepted', color: '#8b5cf6' },
+                      { id: 3, value: dashboardDetails.tasks.completed, label: 'Completed', color: 'var(--color-green)' },
+                      { id: 4, value: dashboardDetails.tasks.cancelled, label: 'Cancelled', color: '#ef4444' },
+                    ].filter(item => item.value > 0)
+                    : [],
+                  innerRadius: 60,
+                  outerRadius: 100,
+                  paddingAngle: 2,
+                  cornerRadius: 8,
+                  arcLabelMinAngle: 35,
+                }
+              ]}
+              width={300}
+              height={220}
+            />
+
+            {/* Fallback message when no data */}
+            {dashboardDetails?.tasks?.total === 0 && (
+              <p className="text-gray-500 mt-4">No tasks recorded yet</p>
+            )}
+
+          </div>
+        </div>
+
+
+        <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
+          <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
+            Top 3 Service Usage Breakdown
+          </p>
+          <p className="text-4xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
+            {dashboardDetails?.tasks.total}
+          </p>
+          <div className="flex gap-1 text-sm">
+            <p style={{ color: 'var(--color-grey)' }}>Last 30 Days</p>
+            <p className="font-medium" style={{ color: 'var(--color-green)' }}>
+              +8.9%
+            </p>
+          </div>
+          <div className="grid grid-flow-col gap-0 items-end justify-items-center mt-6 h-40">
+            {dashboardDetails?.top_completed_services.map((service, i) => {
+              const heights = [150, 100, 60];
+              return (
+                <div key={service.name} className="flex flex-col items-center gap-2">
+                  {/* <div className="absolute hidden group-hover:block">
+    <Typography>
+      {service.name} {service.count}
+    </Typography>
+  </div> */}
+                  <div
+                    className="rounded-t-sm w-full transition-all"
+
+                  />
+                  <div
+                    style={{
+                      height: `${heights[i]}px`,
+                      backgroundColor: 'var(--color-purple)',
+                      borderRadius: '4px 4px 0 0',
+                      width: '50%',
+                      transition: 'height 0.3s ease',
+                    }}
+                  ></div>
+                  <p
+                    className="text-xs font-bold truncate  text-center"
+                    style={{ color: 'var(--color-grey)' }}
+                  >
+                    {service.name} ({service.count})
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+
+
+
+      </div>
+
+      <div className='w-full'>
+
+
+        <Card className='p-6 w-full rounded-2xl'>
+
+          <Typography sx={{ ...themes.largeHeading }} className='p-3 border-b-2'>
+            Revenue Over Time
+          </Typography>
+          <div className='flex gap-3 w-full items-center flex-wrap' >
+             <div  className="w-full lg:w-1/4">
+             
+               <RUDashBoardCard
+              title="Total Revenue Generated"
+              count={`£${totalRevenue.total_payments}`}
+              icon={PoundSterling}
+            />
+            </div> 
+           
+            <div className="w-full lg:w-1/4">
+                 <RUDashBoardCard
+              title="Total Admin Fee Generated"
+              count={`£${totalRevenue.total_admin_fees}`}
+              icon={PoundSterling}
+            />
+            </div>
+
+              <div className="flex w-[100%] md:w-45% sm:w-full  items-center justify-end mb-4 ">
+
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 160 }} >
+          <InputLabel
+            id="time-range-select-label"
+            sx={{ '&.Mui-focused': { color: 'var(--color-purple)' } }}
+          >
+            Period
+          </InputLabel>
+          <Select
+          defaultValue="monthly"
+            labelId="time-range-select-label"
+            value={timeRange}
+            label="Period"
+           onChange={(e) => setTimeRange(e.target.value as any)}
+            sx={{
+              borderRadius: 0.6,
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'grey.500' },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'grey.700' },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'var(--color-purple)',
+                borderWidth: '2px',
+              },
+            }}
+          >
+                          <MenuItem value="monthly">This Year (Monthly)</MenuItem>
+              <MenuItem value="weekly">This Month (Weekly)</MenuItem>
+          <MenuItem value="daily">This Week (Daily)</MenuItem>
+
+          </Select>
+        </FormControl>
+          </div>
+
+          </div>
+
+        
+
+          <div style={{ height: '500px', position: 'relative' }}>
+            <Bar
+              data={{
+                labels,
+                datasets: [
+                  {
+                    label: 'Revenue',
+                    data,
+                 backgroundColor: '#6C63FF',          
+borderColor: '#8b5cf6',
+hoverBackgroundColor: 'rgba(139, 92, 246, 0.85)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                  },
+                 
+                },
+                scales: {
+
+                 
+                },
+              }}
+            />
+          </div>
+
+          {data.length === 0 && !loading && (
+            <div className="text-center py-10 text-gray-500">
+              No revenue data available for this period
+            </div>
+          )}
+        </Card>
+
+      </div>
+
+      {/* <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
           <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
             Revenue Over Time
           </p>
@@ -295,51 +552,7 @@ finally{
               <span>Week 4</span>
             </div>
           </div>
-        </div>
-       
-        <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
-          <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-            Service Usage Breakdown
-          </p>
-          <p className="text-4xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
-            {totalBookings.toLocaleString()}
-          </p>
-          <div className="flex gap-1 text-sm">
-            <p style={{ color: 'var(--color-grey)' }}>Last 30 Days</p>
-            <p className="font-medium" style={{ color: 'var(--color-green)' }}>
-              +8.9%
-            </p>
-          </div>
-          <div className="grid grid-flow-col gap-6 items-end justify-items-center mt-6 h-40">
-            {dashboardDetails?.services.slice(0, 3).map((service, i) => {
-             const heights = [150, 100, 60];
-              return (
-                <div key={service.name} className="flex flex-col items-center gap-2">
-                  <div
-                    className="rounded-t-sm w-full transition-all"
-                    
-                  />
-                  <div
-                  style={{
-            height: `${heights[i]}px`,
-            backgroundColor: 'var(--color-purple)',
-            borderRadius: '4px 4px 0 0',
-            width: '50%',
-            transition: 'height 0.3s ease',
-          }}
-                  ></div>
-                  <p
-                    className="text-xs font-bold truncate  text-center"
-                    style={{ color: 'var(--color-grey)' }}
-                  >
-                    {service.name}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+        </div> */}
 
       <div className="bg-white rounded-xl border border-[var(--color-light)] shadow-sm overflow-hidden hidden"> {/**>>>>>>>>>>>>>Recent Activities<<<<<<<<<<<< */}
         <div className="p-6 border-b" style={{ borderColor: 'var(--color-light)' }}>
@@ -385,7 +598,7 @@ finally{
                   <span
                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                     style={{
-                      backgroundColor: 'rgba(43, 147, 72, 0.1)', 
+                      backgroundColor: 'rgba(43, 147, 72, 0.1)',
                       color: 'var(--color-green)',
                     }}
                   >

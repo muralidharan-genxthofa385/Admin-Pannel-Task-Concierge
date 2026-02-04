@@ -28,7 +28,8 @@ customer:{
     name:string
 }
 service:{
-    name:string,
+    name_en:string,
+    name_cy:string,
     id:number
 }
 
@@ -42,7 +43,8 @@ interface serviceData {
   id: number;
   base_price: number;
   category: { name: string, id: number };
-  name: string
+  name_en: string
+  name_cy: string
 }
 
 const TaskTable:React.FC = () => {
@@ -213,7 +215,7 @@ function formatTaskTiming(hours:any) {
             >
               
               <MenuItem className='flex gap-2' value={""}>Clear <X className='w-4 h-4' /></MenuItem>
-              {getService.map((data)=><MenuItem value={data.id}>{data.name}</MenuItem>)}
+              {getService.map((data)=><MenuItem value={data.id}>{data.name_en}</MenuItem>)}
             </Select>
           </FormControl>
 

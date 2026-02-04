@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallIcon, Scale, Wallet } from 'lucide-react';
+import { Activity, Calendar, CheckCircle, ChevronLeft, History, Mail, PhoneCallIcon, Scale, Star, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 interface TaskerDetails {
   tasker: {
     name: string;
+    rating:string
     pause_account: boolean;
     email_verified_at: string;
     email: string;
@@ -63,13 +64,15 @@ fetchtasker()
         <Typography className='flex items-center w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:25,color:"var(--color-purple)"}}>
             <ChevronLeft className='w-8 h-8' />{userDetails?.tasker.name}</Typography>
             <div className=' flex flex-col gap-11'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 pt-6'>
                     {/* <RUDashBoardCard icon={Wallet} count={100} title='Revenue' /> */}
                     <HighlightStatsBox icon={Wallet} count={0} title='Revenue'/>
                      <HighlightStatsBox icon={Activity}count={`${!userDetails?.tasker.pause_account?"active":"Inactive"}`} title='Status'/>
                     <HighlightStatsBox icon={Scale}  count={userDetails?.tasks.completed.length} title='Completed Tasks'/>
+                    <HighlightStatsBox icon={Scale}  count={userDetails?.tasks.completed.length} title='Cancelled Tasks'/>
 
-                    <HighlightStatsBox icon={Calendar} count={`${userDetails?.tasker.email_verified_at.slice(0,10)}`} title={`Member_Since`} />
+
+                    <HighlightStatsBox icon={Calendar} count={`${userDetails?.tasker.email_verified_at.slice(0,10)}`} title={`Member Since`} />
                 </div>
 
                 <div className='w-full flex flex-col gap-10 justify-between md:flex-row '>
@@ -95,6 +98,7 @@ fetchtasker()
                             <div className='flex flex-col gap-5'>
                                 <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.tasker.email}</Typography>
                                 <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon />+ {userDetails?.tasker.phone}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Star />{userDetails?.tasker.rating}</Typography>
 
                             </div>
                         </div>

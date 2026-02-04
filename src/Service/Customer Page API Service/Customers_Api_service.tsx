@@ -14,7 +14,7 @@ export const GetAllCustomers=(
 }
 
 export const getCustomerById=(id:number)=>{
-    return getRequest(`/admin/customers/${id}`)
+    return getRequest(`/admin/residents/${id}`)
 }
 
 export const delete_Customer=(id:number)=>{
