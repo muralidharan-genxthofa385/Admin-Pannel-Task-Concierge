@@ -324,7 +324,7 @@ function DashboardHome() {
                     ? [
                       { id: 0, value: dashboardDetails.tasks.pending, label: 'Pending', color: '#f59e0b' },
                       { id: 1, value: dashboardDetails.tasks.active, label: 'Active', color: '#3b82f6' },
-                      { id: 2, value: dashboardDetails.tasks.accepted, label: 'Accepted', color: '#8b5cf6' },
+                      { id: 2, value: dashboardDetails.tasks.accepted, label: 'Scheduled', color: '#8b5cf6' },
                       { id: 3, value: dashboardDetails.tasks.completed, label: 'Completed', color: 'var(--color-green)' },
                       { id: 4, value: dashboardDetails.tasks.cancelled, label: 'Cancelled', color: '#ef4444' },
                     ].filter(item => item.value > 0)
@@ -351,27 +351,76 @@ function DashboardHome() {
 
         <div className="flex-1 min-w-72 bg-white rounded-xl border border-[var(--color-light)] p-6 shadow-sm">
           <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-            Top 3 Service Usage Breakdown
+            Top Services Usage Breakdown
           </p>
           <p className="text-4xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
-            {dashboardDetails?.tasks.total}
+            {dashboardDetails?.top_completed_services[0]?.name || 'N/A'}
           </p>
           <div className="flex gap-1 text-sm">
-            <p style={{ color: 'var(--color-grey)' }}>Last 30 Days</p>
+            <p style={{ color: 'var(--color-grey)' }}>Most Used </p>
             <p className="font-medium" style={{ color: 'var(--color-green)' }}>
-              +8.9%
+              Service
             </p>
           </div>
-          <div className="grid grid-flow-col gap-0 items-end justify-items-center mt-6 h-40">
+
+<div>
+
+
+<Bar 
+data={{
+  labels:dashboardDetails?.top_completed_services.map(s=>s.name)||[],
+  datasets:[
+    {
+      label:'Services',
+      data:dashboardDetails?.top_completed_services.map(s=> (s.count))||[]
+    }
+  
+  ]
+}}
+
+options={{
+    indexAxis: 'y',       
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,   
+        },
+        border: {
+          display: true,      
+        },
+        ticks: {
+        display:false
+        },
+        title: {
+          display:false
+        }
+      },
+      y: {
+        grid: {
+          display: false,     
+        },
+        border: {
+          display: true,
+        },
+      }
+    }
+  }}
+
+/>
+
+</div>
+
+          {/* <div className="grid grid-flow-col gap-0 items-end justify-items-center mt-6 h-40">
             {dashboardDetails?.top_completed_services.map((service, i) => {
               const heights = [150, 100, 60];
               return (
                 <div key={service.name} className="flex flex-col items-center gap-2">
-                  {/* <div className="absolute hidden group-hover:block">
-    <Typography>
-      {service.name} {service.count}
-    </Typography>
-  </div> */}
+                  
                   <div
                     className="rounded-t-sm w-full transition-all"
 
@@ -394,7 +443,7 @@ function DashboardHome() {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
 
 
@@ -415,7 +464,7 @@ function DashboardHome() {
              
                <RUDashBoardCard
               title="Total Revenue Generated"
-              count={`£${totalRevenue.total_payments}`}
+              count={`£ ${totalRevenue.total_payments.toFixed(0)}`}
               icon={PoundSterling}
             />
             </div> 
@@ -423,7 +472,7 @@ function DashboardHome() {
             <div className="w-full lg:w-1/4">
                  <RUDashBoardCard
               title="Total Admin Fee Generated"
-              count={`£${totalRevenue.total_admin_fees}`}
+              count={`£ ${totalRevenue.total_admin_fees.toFixed(0)}`}
               icon={PoundSterling}
             />
             </div>
@@ -471,7 +520,7 @@ function DashboardHome() {
                 labels,
                 datasets: [
                   {
-                    label: 'Revenue',
+                    label: 'Revenue £',
                     data,
                  backgroundColor: '#6C63FF',          
 borderColor: '#8b5cf6',
@@ -491,8 +540,6 @@ hoverBackgroundColor: 'rgba(139, 92, 246, 0.85)',
                  
                 },
                 scales: {
-
-                 
                 },
               }}
             />

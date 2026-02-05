@@ -62,7 +62,7 @@ export default function Login() {
     rotationSpeed={0.3}
     interactive={false}
     glowAmount={0.0010}
-    pillarWidth={3.5}
+    pillarWidth={3.9}
     pillarHeight={0.15}
     noiseIntensity={0.5}
     pillarRotation={60}
