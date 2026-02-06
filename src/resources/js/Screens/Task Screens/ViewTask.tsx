@@ -48,7 +48,8 @@ interface bookingdetailstype {
       }
     ]
   }
-  selected_tasker: {
+  selected_taskers: {
+    id:number
     name: string,
     profile_pic_url: string,
     location: string,
@@ -57,7 +58,7 @@ interface bookingdetailstype {
     application: {
       proposed_rate: number
     }
-  }
+  }[]
   time_logs: {
     start_time: string,
     end_time: string | null
@@ -198,30 +199,34 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
     <Card className=' w-full lg:w-[28%]'>
                 <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Tasker Info</Typography>
 
-                {taskDetails?.selected_tasker?.name?<>
+                {!taskDetails?.selected_taskers?<>
                 
                 <div className='w-full flex flex-col items-center gap-3'>
                   <ClipboardClock className='w-30 h-30 font-light text-[var(--color-grey)]'/>
 Tasker not assigned yet
 
                 </div>
-                </> :<div className='p-4'>
-<div className='flex gap-8 items-center border-b-2 pb-6'>
+                </> :
+                
+                (<>
+                
+                { taskDetails.selected_taskers.map((tasker)=><div className='p-4'>
+<div className='flex gap-8 items-center border-b-2 pb-6' key={tasker.id}>
     <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
-     src={taskDetails?.selected_tasker?.profile_pic_url} 
+     src={tasker.profile_pic_url} alt={noProfile}
     //src={noProfile}
      />
      <div>
-        <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.selected_tasker?.name}</Typography>
+        <Typography sx={{...themes.mediumSizedFont}}>{tasker.name}</Typography>
         <Typography className='text-yellow-400 flex gap-2 items-center'><Star/> 4.9</Typography>
      </div>
 </div>
 <div className='p-5 flex flex-col gap-3'>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.selected_tasker?.phone}</Typography>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.selected_tasker?.email}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/>+ {tasker.phone}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {tasker.email}</Typography>
 
 </div>
-</div>}
+</div>)}</>)}
     </Card>
     </div>
 
