@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar,  ChevronLeft,  Mail, PhoneCallIcon, Scale, Wallet } from 'lucide-react';
+import { Activity, Calendar,  CheckCircle,  ChevronLeft,  History,  Mail, PhoneCallIcon, Scale, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
@@ -106,15 +106,15 @@ fetchtasker()
 
 
                         <div className='pt-3'>
-{/* {userDetails?.bookings?.completed.length!==0?
+{userDetails?.bookings?.completed.length==0?
 
-<>{userDetails?.bookings.completed.map((data)=><div className='flex w-full justify-between items-center'>
+<>{userDetails?.bookings.completed.map((_data)=><div className='flex w-full justify-between items-center'>
    <div className='flex items-center gap-3'>
         <History className='text-gray-500'/>
-<div>
+{/* <div>
     <Typography sx={{...themes.mediumSizedFont,fontSize:17}}>{data.service.name}</Typography>
     <Typography sx={{...themes.lightFont,fontSize:14}}>{data.scheduled_dates.length===0?data.scheduled_dates[0]:data.scheduled_dates[0]-data.scheduled_dates[data.scheduled_dates.length-1]}</Typography>
-    </div>
+    </div> */}
     </div>
     <Typography className='flex' ><CheckCircle className='w-4 mr-1'/> Completed</Typography>
     
@@ -126,7 +126,7 @@ fetchtasker()
     <Typography sx={{...themes.mediumSizedFont}}>
         No Recent Activities Recorded
     </Typography>
-    </div>} */}
+    </div>}
 
                         </div>
 

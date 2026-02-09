@@ -92,7 +92,7 @@ const BusinessuserView:React.FC = () => {
 
                             <div className='flex flex-col gap-5'>
                                 <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><Mail /> {userDetails?.email}</Typography>
-                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon /> {userDetails?.phone}</Typography>
+                                <Typography className='flex items-center gap-2' sx={{ ...themes.mediumSizedFont, fontSize: 16 }}><PhoneCallIcon />+ {userDetails?.phone}</Typography>
 
                             </div>
                         </div>
@@ -108,7 +108,7 @@ const BusinessuserView:React.FC = () => {
 
 
                         <div className='pt-3'>
-{userDetails?.bookings?.completed.length!==0?
+{userDetails?.bookings?.completed.length==0?
 
 <>{userDetails?.bookings?.completed.map((data)=><div className='flex w-full justify-between items-center'>
    <div className='flex items-center gap-3'>

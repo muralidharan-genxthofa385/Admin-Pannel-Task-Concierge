@@ -23,8 +23,9 @@ import BusinessUserEdit from '@/resources/js/Screens/Business UsersScereen/Busin
 import PasswordReset from '@/resources/js/Pages/PasswordReset'
 import ResetPassOTP from '@/resources/js/Pages/ResetPassOTP'
 import NewPassword from '@/resources/js/Pages/NewPassword'
-import SkillCategory from '@/resources/js/Screens/Skills Category/ServiceCategory'
 import ApproveBusinessView from '@/resources/js/Screens/Business Approvals/ApproveBusinessView'
+import ServiceCategory from '@/resources/js/Screens/Service Category/ServiceCategory'
+import SkillCategories from '@/resources/js/Screens/Skills Screens/Skill Categories/SkillCategories'
 
 function AppRouter() {
   return (
@@ -55,8 +56,7 @@ function AppRouter() {
 
 
             <Route path='/skills' element={<DashboardLayout><SkillsTable/></DashboardLayout>}/>
-            <Route path='/service/category' element={<DashboardLayout><SkillCategory/></DashboardLayout>} />
-
+            <Route path='/skill/category' element={<DashboardLayout><SkillCategories/></DashboardLayout>} />
 
             <Route path='/customers' element={<DashboardLayout><CustomersScreen/></DashboardLayout>}/>
             <Route path='/customers/view/:id' element={<DashboardLayout><ViewCustomer/></DashboardLayout>}/>
@@ -65,7 +65,8 @@ function AppRouter() {
             
 
             <Route path='/services' element={<DashboardLayout><TaskServices/></DashboardLayout>}/>
-            
+           <Route path='/service/category' element={<DashboardLayout><ServiceCategory/></DashboardLayout>} />
+
 
             <Route path='/questions/creation' element={<DashboardLayout><QuestionsScreen/></DashboardLayout>}  />
             <Route path='/questions/edit/:id' element={<DashboardLayout><EditQuestions/></DashboardLayout>} />

@@ -13,7 +13,7 @@ interface skillCategoryType{
 }
 
 
-const SkillCategory:React.FC = () => {
+const ServiceCategory:React.FC = () => {
 
 
   const [skillCat,setSkillcat]=useState<skillCategoryType[]>([])
@@ -305,4 +305,4 @@ loading={loader}
   )
 }
 
-export default SkillCategory
+export default ServiceCategory

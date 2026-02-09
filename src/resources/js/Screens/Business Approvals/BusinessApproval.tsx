@@ -119,7 +119,7 @@ const BusinessApproval:React.FC = () => {
 
      const columns: GridColDef[]=[
           { field: 'first_name', headerName: 'Name', width: 240,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
-         { field: 'phone', headerName: 'Phone', width: 240,renderCell:(p)=>(<>{p.row.phone}</>) },
+         { field: 'phone', headerName: 'Phone', width: 240,renderCell:(p)=>(<>+ {p.row.phone}</>) },
     { field: 'email', headerName: 'Email', width: 240,renderCell:(p)=>(<>{p.row.email}</>) },
     {field:'status',headerName:'Status',width:200,renderCell:(p)=>(<Box sx={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
         <Typography className={`${p.row.status=="awaiting_approval"?'bg-amber-500':"bg-green-600"} p-2 rounded-3xl text-white`} 

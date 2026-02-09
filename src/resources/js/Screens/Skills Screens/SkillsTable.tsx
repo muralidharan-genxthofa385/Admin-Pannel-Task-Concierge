@@ -223,7 +223,7 @@ fetchallSkills()
         {field:'is_active',headerName:'Status',width:250,renderCell:(p)=>(
         <Box sx={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <Typography 
-             className={`${p.row.is_active==false?'bg-amber-500':"bg-green-600"} p-2 rounded-3xl text-white w-[80%] flex justify-center`} 
+             className={`${p.row.is_active==false?'bg-amber-500':"bg-green-600"} p-2 rounded-3xl text-white w-[50%] flex justify-center`} 
             sx={{display:"flex",alignItems:"center"}}>
             {p.row.is_active==true?"Active":"Inactive"}</Typography>
              </Box>)},
@@ -327,9 +327,9 @@ fetchallSkills()
     
     }}
   >
-    {skilldatas.map((d) => (
-      <MenuItem key={d.skill_category_id} value={d.skill_category_id}>
-        {d.skill_category.name}
+    {skillCategories.map((d) => (
+      <MenuItem key={d.id} value={d.id}>
+        {d.name.en}
       </MenuItem>
     ))}
   </Select>

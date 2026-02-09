@@ -87,7 +87,7 @@ try{
     const res=await getQuestionByID(Number(id))
     const Q=res.data
     setDataQuestionByID(prev=>({...prev,
-          question_text:Q.question_text, 
+          question_text_en:Q.question_text_en, 
         input_type:Q.input_type||"text", 
          options_json:Q.options_json||[], is_required:Q.is_required,
         service_name:Q.service_name
@@ -198,9 +198,9 @@ options_json:dataQuestionByID.options_json,
 
 </div>
 <div>
-   <h1 className='text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Create your Question</h1>
+   <h1 className='text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Edit your Question</h1>
    <TextField  label="" sx={{...themes.inputFeildActions.active}}
-   value={dataQuestionByID.question_text_en} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text:e.target.value}))}
+   value={dataQuestionByID.question_text_en} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text_en:e.target.value}))}
    inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} variant="standard" fullWidth />
 
 </div>

@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { CheckCircle, ChevronLeft} from 'lucide-react';
+import { CheckCircle, ChevronLeft, CircleXIcon} from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getRequest, postRequest } from '@/Service/Apiservice';
@@ -136,6 +136,20 @@ navigate(-1)
 
 <div className='flex gap-4 w-[50%] justify-end'>
     <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"15%"}} onClick={()=>navigate(-1)}>Back</Button>
+             <Button sx={{border:"1px solid var(--color-red)",
+             fontWeight: 600,
+  fontSize: "18px",
+  borderRadius: "10px",
+  color: "var(--color-red)",
+  textTransform: "none",
+  fontFamily: "Sora, sans-serif",
+  "&:hover": {
+    backgroundColor: "var(--color-red)",
+    color: "var(--color-white)",
+    border: "1px solid var(--color-red)",
+  },
+width:"18%"}} onClick={()=>handleApprove(Number(pending_id),'reject')} className='flex gap-2'>{loading?"Loading...": <><CircleXIcon /> Reject</>}</Button>
+
         <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"18%"}} onClick={()=>handleApprove(Number(pending_id),'approve')} className='flex gap-2'>{loading?"Loading...": <><CheckCircle /> Approve</>}</Button>
 </div>
 </div>
@@ -192,8 +206,7 @@ navigate(-1)
                                     <Typography sx={{ ...themes.lightFont, fontSize: "13px" }}>{'Email address has been confirmed'}</Typography>
                                 </div>
                                 <Switch {...label}
-                                    checked={userDetails?.customer.email_verified_at==true?true:false}
-                                   
+                                    checked={true}
                                     sx={switch_style}
                                 />
                             </div>
