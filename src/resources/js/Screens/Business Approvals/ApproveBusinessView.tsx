@@ -77,6 +77,7 @@ console.log(pending_id)
         const [counts,setCounts]=useState<bookings|null>()
               const [loading,setLoading]=useState(false)
               const [_onCh,setOnch]=useState('')
+              const [rejectLoading,setRejectLoading]=useState(false)
 
               const handleChange=(e:any)=>{
                 setOnch(e.target.value)
@@ -103,7 +104,12 @@ console.log(pending_id)
         
 const handleApprove=async(id:number,decision:string)=>{
 
-      setLoading(true)
+    if(decision=="approve"){
+ setLoading(true)
+    }else{
+        setRejectLoading(true)
+    }
+     
       console.log(id,decision)
 
         const payload={
@@ -122,6 +128,8 @@ navigate(-1)
         }
         finally{
           setLoading(false)
+                  setRejectLoading(false)
+
         }
 
     } 
@@ -135,7 +143,7 @@ navigate(-1)
         <h1 className='flex items-center text-xl cursor-pointer' onClick={()=>navigate(-1)}> <ChevronLeft className='w-8 h-8' />{"Approve Business User"}</h1>
 
 <div className='flex gap-4 w-[50%] justify-end'>
-    <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"15%"}} onClick={()=>navigate(-1)}>Back</Button>
+    <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"max-content",padding:"0rem 3rem"}} onClick={()=>navigate(-1)}>Back</Button>
              <Button sx={{border:"1px solid var(--color-red)",
              fontWeight: 600,
   fontSize: "18px",
@@ -147,10 +155,9 @@ navigate(-1)
     backgroundColor: "var(--color-red)",
     color: "var(--color-white)",
     border: "1px solid var(--color-red)",
-  },
-width:"18%"}} onClick={()=>handleApprove(Number(pending_id),'reject')} className='flex gap-2'>{loading?"Loading...": <><CircleXIcon /> Reject</>}</Button>
+  },padding:"0.5rem 3rem"}} onClick={()=>handleApprove(Number(pending_id),'reject')} className='flex gap-2'>{rejectLoading?"Loading...": <><CircleXIcon /> Reject</>}</Button>
 
-        <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,width:"18%"}} onClick={()=>handleApprove(Number(pending_id),'approve')} className='flex gap-2'>{loading?"Loading...": <><CheckCircle /> Approve</>}</Button>
+        <Button sx={{...themes.OutlinedButtonStyle,fontWeight:400,padding:"0.5rem 3rem"}} onClick={()=>handleApprove(Number(pending_id),'approve')} className='flex gap-2'>{loading?"Loading...": <><CheckCircle /> Approve</>}</Button>
 </div>
 </div>
             <div className='w-full flex flex-col md:flex-row justify-between'>

@@ -53,7 +53,7 @@ export default function Login() {
 
     return (
       <>
-      <div style={{ width: '100%', height: '100%', position: 'absolute',zIndex:0}} className="absolute">
+      <div style={{ width: '100%', height: '100%', position: 'absolute',zIndex:0}} className="absolute hidden">
   <LightPillar
     topColor="#5227FF"
     bottomColor="#FF9FFC"
@@ -68,7 +68,7 @@ export default function Login() {
     pillarRotation={60}
   />
 </div>
-    <div className="w-full h-screen flex justify-center items-center flex-col gap-3 bg-black p-4" style={{zIndex:10}}  >
+    <div className="w-full h-screen flex justify-center items-center flex-col gap-3 bg-amber-500 p-4" style={{zIndex:10}}  >
       
        
     <Card 

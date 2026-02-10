@@ -207,7 +207,7 @@ const columns: GridColDef[] = [
                             <Typography sx={{ ...themes.mediumSizedFont }}>Student Document</Typography>
                             {/* <Typography sx={{ ...themes.lightFont }}>Latest Task Status and activities</Typography> */}
                         </div>
-                            <Box component={'img'} src={userDetails?.tasker.student_document_url} className='w-100 h-100' />
+                            <Box component={'img'} src={userDetails?.tasker.student_document_url} className='w-100 h-100'/>
 
 
                 </Card>
