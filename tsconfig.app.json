@@ -19,16 +19,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-     "baseUrl": ".",
+
+    /* Path aliases – modern style (no baseUrl needed) */
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "ignoreDeprecations": "6.0",
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

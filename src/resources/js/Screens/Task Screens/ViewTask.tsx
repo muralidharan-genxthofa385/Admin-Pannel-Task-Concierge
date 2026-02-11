@@ -19,6 +19,7 @@ interface bookingdetailstype {
   status: string,
   created_at:string
   notes:string,
+  start_date:string
   customer:{
   name: string,
     profile_pic_url: string,
@@ -176,7 +177,12 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
             </div>
             <div className='w-[40%]'>
                 <Typography sx={{...themes.lightFont}}>Task Date</Typography>
-               <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.scheduled_dates[0]} ,at :{convert_time_format(taskDetails?.scheduled_time)}</Typography>
+            <>   {taskDetails?.start_date?
+             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.start_date} ,at :{convert_time_format(taskDetails?.scheduled_time)}</Typography>:
+             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.scheduled_dates[0]} ,at :{convert_time_format(taskDetails?.scheduled_time)}</Typography>
+             }
+
+            </>
             </div>
             </div>
 
