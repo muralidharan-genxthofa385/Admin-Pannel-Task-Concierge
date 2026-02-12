@@ -205,8 +205,8 @@ const QuestionsDataTable: React.FC = () => {
     <>
       <div className='flex flex-col gap-10'>
         <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><SquarePen className='w-6 h-6' /> Service Questions</h1>
-        <div className='flex md:gap-0 xs:gap-10 md:flex-row flex-col w-full justify-between'>
-          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: {md:"78%",xs:"100%"} }} />
+        <div className='flex md:gap-4 xs:gap-10 md:flex-row flex-col w-full  flex-wrap'>
+          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: {md:"70%",xs:"100%"} }} />
 
           <FormControl sx={{ ...themes.textFieldStyle, width: {md:"11%",xs:"100%"},mt:{xs:3,md:0} }} >
             <InputLabel>filter by category</InputLabel>
@@ -219,7 +219,7 @@ const QuestionsDataTable: React.FC = () => {
               <MenuItem value={3}>Business & Events</MenuItem>
             </Select>
           </FormControl>
-          <Button sx={{ ...themes.OutlinedButtonStyle,width: {md:"8%",xs:"100%"},mt:{xs:3,md:0} ,fontWeight:400 }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
+          <Button sx={{ ...themes.OutlinedButtonStyle,mt:{xs:3,md:0} ,fontWeight:400,padding:"0rem 1.5rem" }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
         </div>
 
         <div>

@@ -123,7 +123,7 @@ function formatTaskTiming(hours:any) {
 
     const columns: GridColDef[] = [
   { field: 'service', headerName: 'Service', width: 250,renderCell:(dt)=>(<>{dt.row.service.name_en}</>)},
-    { field: 'customer', headerName: 'Customer', width: 260,renderCell:(dt)=>(<>{dt.row.customer.name}</>) },
+    { field: 'customer', headerName: 'Customer', width: 260,renderCell:(dt)=>(<>{dt?.row?.customer?.name}</>) },
       { 
     field: 'accepted_application', 
     headerName: 'Tasker', 

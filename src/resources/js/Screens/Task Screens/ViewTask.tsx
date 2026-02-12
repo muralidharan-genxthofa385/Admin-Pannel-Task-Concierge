@@ -255,16 +255,16 @@ Tasker not assigned yet
                 <div className='p-4'>
 <div className='flex gap-8 items-center border-b-2 pb-6'>
     <Box component={'img'} className='w-[79px] h-[79px] rounded-full'
-      src={taskDetails?.customer.profile_pic_url}  alt={noProfile}
+      src={taskDetails?.customer?.profile_pic_url}  alt={noProfile}
     // src={noProfile}
      />
      <div>
-        <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.customer.name}</Typography>
+        <Typography sx={{...themes.mediumSizedFont}}>{taskDetails?.customer?.name}</Typography>
         <Typography className='text-yellow-400 flex gap-2 items-center'><Star/> 4.9</Typography>
      </div>
 </div>
 <div className='p-5 flex flex-col gap-3'>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.customer.phone}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.customer?.phone}</Typography>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.customer?.email}</Typography>
 </div>
 </div>

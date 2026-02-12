@@ -68,19 +68,19 @@ export default function Login() {
     pillarRotation={60}
   />
 </div>
-    <div className="w-full h-screen flex justify-center items-center flex-col gap-3 bg-amber-500 p-4" style={{zIndex:10}}  >
+    <div className="w-full h-screen flex justify-center items-center flex-col gap-3 p-4" style={{zIndex:10}}  >
       
        
     <Card 
     className="
     w-full max-w-sm
-    bg-white/20           
-    backdrop-blur-xl       
-    backdrop-saturate-150   
-    border border-white/25  
+            
+        
+  
+   
     shadow-2xl              
     rounded-2xl            
-    text-white             
+            
     overflow-hidden
     transition-all duration-300
     hover:bg-white/15       
