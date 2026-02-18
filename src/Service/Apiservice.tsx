@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-// const BASE_URL='http://127.0.0.1:8000/api/v2/'
+const BASE_URL='http://127.0.0.1:8000/api/v2/'
 
-const BASE_URL='https://devapi.taskconcierge.uk/api/v2'
+// const BASE_URL='https://devapi.taskconcierge.uk/api/v2'
 
 
 const Token_key='accessToken'

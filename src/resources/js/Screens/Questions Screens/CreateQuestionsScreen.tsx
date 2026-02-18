@@ -397,7 +397,7 @@ value={newCheckboxCy} onChange={(e)=>setNewCheckboxCy(e.target.value)}  />
 </div>}
 
 <div className='flex flex-col gap-3'>
- <h1 className='text-xl md:text-2xl flex gap-1 items-top md:items-center' >{questionType=="text"?4:5}<ChevronRight className='text-[var(--color-purple)]'/> Is your Question is Madnatory and to be filled ?</h1>
+ <h1 className='text-xl md:text-2xl flex gap-1 items-top md:items-center' >{questionType=="text"?4:5}<ChevronRight className='text-[var(--color-purple)]'/> Is your Question is Mandatory and to be filled ?</h1>
    <FormControl onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
 setIsRequired(e.target.value ==='true')
    }}>

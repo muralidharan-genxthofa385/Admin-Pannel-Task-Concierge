@@ -26,6 +26,7 @@ import NewPassword from '@/resources/js/Pages/NewPassword'
 import ApproveBusinessView from '@/resources/js/Screens/Business Approvals/ApproveBusinessView'
 import ServiceCategory from '@/resources/js/Screens/Service Category/ServiceCategory'
 import SkillCategories from '@/resources/js/Screens/Skills Screens/Skill Categories/SkillCategories'
+import ReportedUsersTable from '@/resources/js/Screens/Reported users/ReportedUsersTable'
 
 function AppRouter() {
   return (
@@ -71,6 +72,9 @@ function AppRouter() {
             <Route path='/questions/creation' element={<DashboardLayout><QuestionsScreen/></DashboardLayout>}  />
             <Route path='/questions/edit/:id' element={<DashboardLayout><EditQuestions/></DashboardLayout>} />
             <Route path='/questions' element={<DashboardLayout><QuestionsDataTable/></DashboardLayout>} />
+
+<Route path='/Users/Report' element={<DashboardLayout><ReportedUsersTable/> </DashboardLayout>} />
+
         </Routes>
     </div>
   )
