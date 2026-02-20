@@ -12,6 +12,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { NavUser } from "@/components/nav-user"
+import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
 
 const navItems = [
     {
@@ -69,9 +70,14 @@ const navItems = [
     icon:SquarePen
   },
   {
-    title:"Report Users",
+    title:"Reported Users",
     url:"/Users/Report",
     icon:ShieldAlert,
+  },
+  {
+    title:"Payments",
+    url:"/Payments",
+    icon:CurrencyPoundIcon
   }
   
 ]

@@ -9,14 +9,14 @@ export const themes = {
   },
   lightFont:{
     fontWeight: 400,
-    fontSize: {xs:"15px",md:"16px"},
+    fontSize: {xs:"14px",md:"16px"},
     color: "var(--color-grey)",
         fontFamily: "Sora, sans-serif",
 
   },
   mediumSizedFont:{
      fontWeight: 600,
-    fontSize: "19px",
+    fontSize: "16px",
     color: "var(--color-black)",
         fontFamily: "Sora, sans-serif",
 
