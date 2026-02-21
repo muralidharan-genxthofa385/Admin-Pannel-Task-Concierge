@@ -34,7 +34,7 @@ interface payloadtype {
   description_cy:string
   description: string,
   basePrice: number,
-  image: File | null
+  image: File | null|string
 
 }
 
@@ -178,15 +178,19 @@ console.log("row id",selectedRowId)
 
   const handleEdit_service=async(e:React.FormEvent)=>{
     e.preventDefault()
-    const payload={
-  category_id: editServicebyid.category_id,
-      name_en: editServicebyid.serviceName,
-      description_en: editServicebyid.description,
-      name_cy:editServicebyid.serviceName_cy,
-      description_cy:editServicebyid.description_cy,
-      base_price: editServicebyid.basePrice,
-      image_url: editServicebyid.image
-    }
+  const payload: any = {
+    category_id: editServicebyid.category_id,
+    name_en: editServicebyid.serviceName,
+    description_en: editServicebyid.description,
+    name_cy: editServicebyid.serviceName_cy,
+    description_cy: editServicebyid.description_cy,
+    base_price: editServicebyid.basePrice,
+  };
+
+  if (editServicebyid.image instanceof File) {
+    payload.image_url = editServicebyid.image;
+  }
+
         console.log("edited",payload)
 
 
@@ -462,7 +466,7 @@ toast.error('Failed to edit this service')
                   className='flex gap-3 items-center rounded'
                   sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
                 >
-                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image.name}
+                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image}
                     <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setcreateServiceFormData(prev => ({ ...prev, image: null })) }} /></>
                     : <><Upload /> Upload files</>}
                   <VisuallyHiddenInput
