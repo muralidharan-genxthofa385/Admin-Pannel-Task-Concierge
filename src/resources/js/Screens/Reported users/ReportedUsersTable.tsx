@@ -250,7 +250,7 @@ sx={{border:"none"}}
 
             
             <Box sx={{display:"flex",flexDirection:{md:"row",xs:"column"},gap:2}}>
-              <Button type='submit' sx={themes.ButtonStyle} onClick={()=>{unblockUser(ViewReport?.id);setOpenEditModal(false)}}>
+              <Button type='submit' sx={themes.ButtonStyle} onClick={()=>{unblockUser(ViewReport?.reported_user.id);setOpenEditModal(false)}}>
                 Unblock User
               </Button>
 
