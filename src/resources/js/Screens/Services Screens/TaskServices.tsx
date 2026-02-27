@@ -466,7 +466,9 @@ toast.error('Failed to edit this service')
                   className='flex gap-3 items-center rounded'
                   sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
                 >
-                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image}
+                  {createServiceFormData.image !== null ? <> <CheckCircle className='text-green-500' />{createServiceFormData.image instanceof File 
+  ? createServiceFormData.image.name 
+  : createServiceFormData.image}
                     <Trash2 className='text-red-500' onClick={(e) => { e.stopPropagation(); setcreateServiceFormData(prev => ({ ...prev, image: null })) }} /></>
                     : <><Upload /> Upload files</>}
                   <VisuallyHiddenInput
