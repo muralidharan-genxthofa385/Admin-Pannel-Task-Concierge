@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { getRequest, PutRequest } from '@/Service/Apiservice';
+import { getRequest } from '@/Service/Apiservice';
 import { themes } from '@/Themes';
 import  noProfile from '../../../../assets/images/noProfilepic.svg'
 import Typography from '@mui/material/Typography';
@@ -7,11 +7,12 @@ import Box from '@mui/material/Box'
 import { ChevronLeft,CircleDot, ClipboardClock, Mail, Phone, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import { toast } from 'react-toastify';
+import { formatUtcTimeToLocal } from '@/utils/timeutils';
+// import FormControl from '@mui/material/FormControl';
+// import Select from '@mui/material/Select';
+// import MenuItem from '@mui/material/MenuItem';
+// import InputLabel from '@mui/material/InputLabel';
+// import { toast } from 'react-toastify';
 
 
 interface bookingdetailstype {
@@ -96,14 +97,7 @@ const taskstatus=taskDetails?.status
 
 console.log("taskdetails",taskstatus)
 
-const convert_time_format=(time:any)=>{
-      if (!time || typeof time !== "string") return "";
-    const [hours,minutes,_seconds]=time?.split(":").map(Number);
-    const suffix=hours>=12?"PM":"AM";
-    const hoursformat=hours%12||12
-return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
 
-}
 
 // const updateTaskStatus=(  )=>{
 //   PutRequest(`/admin/bookings/${id}/status`, { status: taskstatus })
@@ -138,7 +132,7 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
               <div className='flex items-center gap-4'> <Typography className={`flex justify-center text-white items-center gap-1
              ${taskstatus=="pending"?"bg-yellow-500":taskstatus=="completed"?"bg-green-500":taskstatus=="in_progress"?"bg-amber-500":taskstatus=="accepted"?"bg-purple-500" :"bg-red-500"}`}
              sx={{  fontFamily: "Sora, sans-serif",width:"max-content",p:0.5,borderRadius:"14px",fontSize:"small"}}><CircleDot className='w-4 h-4' /> {taskstatus}</Typography>
-<FormControl className="w-[8vw] ">
+{/* <FormControl className="w-[8vw] ">
   <InputLabel shrink>Update Status</InputLabel>
   <Select
     sx={themes.textFieldStyle}
@@ -171,15 +165,15 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
     <MenuItem value="accepted">Accepted</MenuItem>
     <MenuItem value="rejected">Rejected</MenuItem>
   </Select>
-</FormControl>
+</FormControl> */}
 
              </div>
             </div>
             <div className='w-[40%]'>
                 <Typography sx={{...themes.lightFont}}>Task Date</Typography>
             <>   {taskDetails?.start_date?
-             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.start_date} ,at :{convert_time_format(taskDetails?.scheduled_time)}</Typography>:
-             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.scheduled_dates[0]} ,at :{convert_time_format(taskDetails?.scheduled_time)}</Typography>
+             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.start_date} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>:
+             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.scheduled_dates[0]} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>
              }
 
             </>
@@ -194,7 +188,7 @@ return `${hoursformat}:${minutes.toString().padStart(2, "0")} ${suffix}`
             </div>
             <div className='w-[40%]'>
                 <Typography sx={{...themes.lightFont}}>Created Date</Typography>
-               <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.created_at.slice(0,10)||""} ,at :{convert_time_format(taskDetails?.created_at.slice(12,19)||"")}</Typography>
+               <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.created_at.slice(0,10)||""} ,at :{formatUtcTimeToLocal(taskDetails?.created_at.slice(12,19)||"")}</Typography>
             </div>
             </div>
 

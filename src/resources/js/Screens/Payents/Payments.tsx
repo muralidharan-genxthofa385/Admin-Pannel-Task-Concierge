@@ -5,6 +5,7 @@ import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox'
 import { Money } from '@mui/icons-material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { themes } from '@/Themes'
+import { Ellipsis } from 'lucide-react'
 
 
 interface revenueDataType {
@@ -131,9 +132,10 @@ valueGetter: (_value, row) => row.customer?.name || '—',
   {
     field:"Actions",
     headerName:"Actions",
-    renderCell:(_params)=>(<>
+    renderCell:(_params)=>(<Box sx={{cursor:"pointer",width:"100%",height:"100%",display:"flex",justifyContent:"center",alignItems:"center"}} >
+    <Ellipsis />
     
-    </>)
+    </Box>)
   }
 ];
 
@@ -151,9 +153,9 @@ valueGetter: (_value, row) => row.customer?.name || '—',
   <div className='w-full pt-1 pb-1'>
 <div className='flex flex-col gap-4 w-[100%]'>
   <Typography sx={{...themes.mediumSizedFont}}>{"Filter"}</Typography>
-  <div className='flex gap-6' >
-      <TextField className='w-3/4 flex' value={params.service_name} onChange={(e)=>setParams(prev=>({...prev,service_name:e.target.value}))} label="Search by service" />
-      <FormControl className='w-1/4' >
+  <div className='flex gap-6 flex-wrap md:flex-none lg:flex-nowrap' >
+      <TextField className=' w-full md:w-3/4 flex' value={params.service_name} onChange={(e)=>setParams(prev=>({...prev,service_name:e.target.value}))} label="Search by service" />
+      <FormControl className='w-full  sm:w-full md:w-1/4 lg:w-1/4' >
         <InputLabel>Payment Status</InputLabel>
       <Select  
       value={params.is_paid}

@@ -11,7 +11,7 @@ import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import { CheckCircle, Ellipsis, FilePen, PencilIcon, Settings, Trash2, Upload } from 'lucide-react'
+import { CheckCircle, Ellipsis, FilePen, PencilIcon, Settings, Trash2, Upload, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 // import { useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles';
@@ -351,8 +351,12 @@ toast.error('Failed to edit this service')
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-scroll h-[80vh]'>
+          <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-scroll h-[80vh] [&::-webkit-scrollbar]:hidden'>
+                                                              <div className='flex w-full justify-between items-center cursor-pointer' >
+
             <h2 className="text-2xl font-semibold mb-6">Create New Service</h2>
+            <X onClick={() => { setOpenmodal(false); handleClose()}} />
+            </div>
             <form className="flex flex-col gap-5" onSubmit={addNewService}>
               <div className="flex flex-col gap-2">
                 <label htmlFor="category_id" className="text-sm font-medium">
@@ -516,9 +520,12 @@ toast.error('Failed to edit this service')
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Card className='md:w-[40%] w-[95%] h-[80vh]  p-7 overflow-y-scroll'>
-            <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon />Edit</span>  <span style={{color:"var(--color-purple)"}}>{editServicebyid.serviceName}</span></h2>
+          <Card className='md:w-[40%] w-[95%] h-[80vh]  p-7 overflow-y-scroll [scrollbar-width:none]'>
+                                                                  <div className='flex w-full justify-between items-center cursor-pointer' >
 
+            <h2 className="text-xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-2"><span className='flex items-center gap-2'><PencilIcon /></span>  <span style={{color:"var(--color-purple)"}}>{editServicebyid.serviceName}</span></h2>
+<X onClick={() => { setOpenEditModal(false); handleClose()}} />
+</div>
             <form className="flex flex-col gap-5" onSubmit={handleEdit_service}>
               <div className="flex flex-col gap-2">
                 <label htmlFor="category_id" className="text-sm font-medium">
@@ -607,7 +614,7 @@ toast.error('Failed to edit this service')
               </div>
 
               {/* Base Price */}
-              <div className="flex flex-col gap-2">
+              <div className=" flex-col gap-2 hidden">
                 <label htmlFor="base_price" className="text-sm font-medium">
                   Base Price <span className="text-red-500">*</span>
                 </label>
@@ -617,7 +624,7 @@ toast.error('Failed to edit this service')
                   type="number"
                   id="base_price"
                   name="base_price"
-                  placeholder="e.g., 50.00"
+                  placeholder="e.g.50.00"
                   sx={themes.textFieldStyle}
                 />
               </div>
@@ -635,7 +642,7 @@ toast.error('Failed to edit this service')
                   variant="contained"
                   tabIndex={-1}
                   className='flex gap-3 items-center rounded'
-                  sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "2px dotted var(--color-purple)" }}
+                  sx={{ ...themes.mediumSizedFont, fontSize: "17px", backgroundColor: "transparent", boxShadow: "none", color: "var(--color-purple)", p: 5, border: "3px dashed var(--color-purple)" }}
                 >
                   {editServicebyid.image !== null ? <Typography sx={{display:"flex",justifyContent:"space-between",gap:"2rem",wordBreak:"break-all"}} width={"80%"}> <CheckCircle className='text-green-500 w-10 h-10' />{typeof editServicebyid.image === 'string'  ? editServicebyid.image : editServicebyid.image.name.slice(0,20)}
                     <Trash2 className='text-red-500 w-10 h-10' onClick={(e) => { e.stopPropagation(); setEditServicebyid(prev => ({ ...prev, image: null })) }} /></Typography>

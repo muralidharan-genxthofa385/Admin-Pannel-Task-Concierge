@@ -6,13 +6,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate, useParams } from 'react-router-dom';
-import { edit_tasker, getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
+import { edit_tasker } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
 import dayjs, { Dayjs } from 'dayjs';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import { ChevronLeft, SquarePlus, Trash2 } from 'lucide-react';
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
+import { getRequest } from '@/Service/Apiservice';
 
 
 
@@ -51,7 +52,8 @@ const TaskersEdit: React.FC = () => {
 
 
     useEffect(() => {
-        getTaskerById(Number(id))
+        // getTaskerById(Number(id))
+        getRequest(`admin/taskers/${Number(id)}`)
             .then((res) => {
                 console.log(res.data)
                 const data = res.data
@@ -204,7 +206,7 @@ const payload = {
                     </Card>
 
                     <Card>
-                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>Confedential Information</h1>
+                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>ConfidentialInformation</h1>
                         <div className='p-5'>
                             <TextField fullWidth label="National Insurance Number" sx={themes.textFieldStyle}
                                 value={taskerDetails.national_insurance_number}

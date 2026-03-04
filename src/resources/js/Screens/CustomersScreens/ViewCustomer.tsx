@@ -15,7 +15,19 @@ interface customerdetails {
     email_verified_at:string,
     profile_pic_url:string,
     email:string,
-    phone:string
+    phone:string,
+     task_history:{
+ tasks: {
+     customer:{
+        name:string
+     }
+    status:string
+    service:{
+        name:string
+    }
+    scheduled_dates:string[]
+  }[]
+  }
 
 bookings:bookings,
 

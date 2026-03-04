@@ -371,8 +371,10 @@ rowCount={totalCount}
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
-                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Skill</span>  </h2>
-
+                    <div className='flex w-full justify-between items-center cursor-pointer' >
+                      <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Skill</span>  </h2>
+<X  onClick={()=>setAddskillopen(false)} />
+</div> 
           <form className="flex flex-col gap-5" onSubmit={PostNewSkill}>
                 <div className="flex flex-col gap-2">
                             <label htmlFor="category_id" className="text-sm font-medium">
@@ -433,8 +435,11 @@ rowCount={totalCount}
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
-                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon/> Edit Skill</span>  </h2>
+                                       <div className='flex w-full justify-between items-center cursor-pointer' >
 
+                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon/> Edit Skill</span>  </h2>
+<X onClick={()=>setEditSkillOpen(false)} />
+</div>
           <form className="flex flex-col gap-5" onSubmit={Edit_Skill}>
                 <div className="flex flex-col gap-2">
                             <label htmlFor="category_id" className="text-sm font-medium">

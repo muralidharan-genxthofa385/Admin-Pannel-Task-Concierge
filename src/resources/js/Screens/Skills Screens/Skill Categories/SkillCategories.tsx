@@ -26,6 +26,9 @@ export interface Category {
   created_at: string;    
   updated_at: string;  
     }[]
+    pagination:{
+      total:number
+    }
    
 }
 interface catToedit{
@@ -46,6 +49,7 @@ const SkillCategories:React.FC = () => {
     const [loader,setLoader]=useState(false)
     const [addskillcatopen,setAddskillcatopen]=useState(false)
     const [editcatOpen,setEditCatOpen]=useState(false)
+    const [totalcount,setTotalCount]=useState(0)
 
     const [createNewCatPayload,setCreateNewCatPayload]=useState({
        id:null,
@@ -90,6 +94,7 @@ const SkillCategories:React.FC = () => {
             const res=await getRequest(`/skill-categories?${params.search}`)
            
             setSkillCategories(res.data.items)
+            setTotalCount(res.data.pagination.total)
  console.log(skilllCategories)
         }
     catch{
@@ -316,7 +321,7 @@ getCatBYID()
   // paginationModel={PaginationModel}
   // onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
   pageSizeOptions={[5, 10, 15]}
-// rowCount={totalCount}
+ rowCount={totalcount}
 //   loading={loading}
   // getRowId={(row) => row.id || `${row.email}-${row.phone}`}  
   sx={{ border: 0, width: "100%" }}
@@ -340,8 +345,10 @@ getCatBYID()
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+                                    <div className='flex w-full justify-between items-center cursor-pointer' >
                      <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Skill Category</span>  </h2>
-
+<X onClick={()=>setAddskillcatopen(false)} />
+</div>
           <form className="flex flex-col gap-5" onSubmit={CreateNewCategory}>
                           <TextField value={createNewCatPayload.name_en} 
                           label='Name (Eng)'
@@ -386,8 +393,11 @@ getCatBYID()
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
-                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon/> Edit Skill Category</span>  </h2>
+                                                      <div className='flex w-full justify-between items-center cursor-pointer' >
 
+                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><PencilIcon/> Edit Skill Category</span>  </h2>
+<X onClick={()=>setEditCatOpen(false)} />
+</div>
           <form className="flex flex-col gap-5" onSubmit={editSkillCategory}>
                 <div className="flex flex-col gap-2">
                           </div>

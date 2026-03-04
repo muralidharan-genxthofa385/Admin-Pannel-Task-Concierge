@@ -160,7 +160,6 @@ toast.success('Customer Deleted Successfully')
 
   const columns: GridColDef[] = [
   { field: 'first_name', headerName: 'Name', width: 210,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
-   { field: 'entiyy_name', headerName: 'Entity Name', width: 190,renderCell:(p)=>(<>{p.row.business_details?.entity_name||"-"}</>) },
   { field: 'email', headerName: 'EMail', width: 260 },
   {field:"phone",headerName:'Phone',width:240,renderCell:(p)=>(<>+{p.row.phone}</>)},
 
@@ -222,9 +221,9 @@ toast.success('Customer Deleted Successfully')
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox title='Customers' color='var(--color-purple)' icon={Bolt}  count={dashboardDetails?.residents.total}/>
-          <HighlightStatsBox title='Active' color='var(--color-purple)' icon={LucideActivitySquare}  count={dashboardDetails?.residents.total}/>
-          <HighlightStatsBox title='Inactive' color='var(--color-purple)' icon={UserRoundMinusIcon}  count={customercount?.inactive||0}/>
+          <HighlightStatsBox title='Customers' color='var(--color-grey)' icon={Bolt}  count={dashboardDetails?.residents.total}/>
+          <HighlightStatsBox title='Active' color='var(--color-grey)' icon={LucideActivitySquare}  count={dashboardDetails?.residents.total}/>
+          <HighlightStatsBox title='Inactive' color='var(--color-grey)' icon={UserRoundMinusIcon}  count={customercount?.inactive||0}/>
         </div>
 
       {/**----- Filters Section------ */} 

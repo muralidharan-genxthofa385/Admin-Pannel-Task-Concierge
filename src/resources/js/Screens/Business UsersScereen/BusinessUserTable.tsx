@@ -192,9 +192,9 @@ toast.success('Customer Deleted Successfully')
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox title='Customers' color='var(--color-purple)' icon={Bolt}  count={customercount?.total}/>
-          <HighlightStatsBox title='Active' color='var(--color-purple)' icon={LucideActivitySquare}  count={customercount?.active}/>
-          <HighlightStatsBox title='Inactive' color='var(--color-purple)' icon={UserRoundMinusIcon}  count={customercount?.inactive}/>
+          <HighlightStatsBox title='Customers' color='var(--color-grey)' icon={Bolt}  count={customercount?.total}/>
+          <HighlightStatsBox title='Active' color='var(--color-grey)' icon={LucideActivitySquare}  count={customercount?.active}/>
+          <HighlightStatsBox title='Inactive' color='var(--color-grey)' icon={UserRoundMinusIcon}  count={customercount?.inactive}/>
         </div>
 
       {/**----- Filters Section------ */} 

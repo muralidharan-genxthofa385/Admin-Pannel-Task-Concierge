@@ -16,8 +16,8 @@ export const getAllTaskers=(
         &is_verified=${is_verified}&sort_by=${sort_by}&sort_order=${sort_order}&per_page=${per_page}&page=${page}`)
 }
 
-export const getTaskerById=(id:number)=>{
-    return getRequest(`admin/taskers/${id}`)
+export const getTaskerById=(id:number,task_page:any,task_per_page:any)=>{
+    return getRequest(`admin/taskers/${id}?task_page:${task_page}&task_per_page:${task_per_page}`)
 }
 
 export const delete_Tasker=(id:number)=>{

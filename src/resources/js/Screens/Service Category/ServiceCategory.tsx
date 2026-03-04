@@ -3,7 +3,7 @@ import { deleteRequest, getRequest, postRequest } from '@/Service/Apiservice'
 import { themes } from '@/Themes'
 import { Button, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import {  EllipsisIcon, FilePen, HandPlatter, Plus, PlusCircle, Trash2 } from 'lucide-react'
+import {  EllipsisIcon, FilePen, HandPlatter, Plus, PlusCircle, Trash2, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -172,9 +172,9 @@ await postRequest(`/categories/${id}`,payload)
              
               <MenuItem className='flex gap-3 '><FilePen className='w-4 h-4 text-[var(--color-purple)]'
                onClick={()=>{
-                
               setSelectedRowid(params.row.id)
 getCategory_byid(params.row.id)
+setEditcategoryOpen(true)
               }} 
                 /> <Typography > Edit</Typography></MenuItem>
               <MenuItem  onClick={()=>{
@@ -195,8 +195,8 @@ delete_category(selectedrowid)
     <>
     <div className='flex flex-col gap-10'>
             <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><HandPlatter className='w-6 h-6' /> Service Categories</h1>
-            <div className='flex gap-3 md:flex-row flex-col flex-wrap w-full justify-between'>
-          <TextField label="Search Categories"  sx={{ ...themes.textFieldStyle, width: {md:"80%",xs:"100%",lg:"100%"} }} />
+            <div className='flex gap-3 md:flex-row flex-col  flex-wrap w-full justify-between'>
+          <TextField label="Search Categories"  sx={{ ...themes.textFieldStyle,width:"70%"}} />
 
           <Button onClick={()=>setAddcategoryOpen(true)} sx={{...themes.ButtonStyle,padding:2,fontSize:"15px",width:{md:"max-content",xs:"100%"}}} className='flex gap-2'><PlusCircle/> Create Service Category</Button>
             </div>
@@ -232,8 +232,10 @@ loading={loader}
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
+                  <div className='flex w-full justify-between items-center cursor-pointer' >
                      <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Category</span>  </h2>
-
+                     <X onClick={()=>setAddcategoryOpen(false)} />
+</div>
           <form className="flex flex-col gap-5" onSubmit={addNew_Category}>
                 <div className="flex flex-col gap-2">
                             <label htmlFor="category_id" className="text-sm font-medium">
@@ -274,8 +276,11 @@ loading={loader}
         aria-describedby="modal-modal-description"
       >
                  <Card className='md:w-[40%] w-[95%]  p-7 overflow-y-auto'>
-                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Category</span>  </h2>
+                                                      <div className='flex w-full justify-between items-center cursor-pointer' >
 
+                     <h2 className="text-2xl  font-semibold mb-6 md:flex-row flex-col flex items-center gap-4"><span className='flex items-center gap-2'><Plus/> Add New Category</span>  </h2>
+<X onClick={()=>setEditcategoryOpen(false)} />
+</div>
           <form className="flex flex-col gap-5" onSubmit={(e)=> edit_category(e,selectedrowid)}>
                 <div className="flex flex-col gap-2">
                             <label htmlFor="category_id" className="text-sm font-medium">

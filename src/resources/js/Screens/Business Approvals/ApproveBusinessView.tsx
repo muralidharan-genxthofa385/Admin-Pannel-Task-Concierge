@@ -221,7 +221,7 @@ navigate(-1)
                     </Card>
 
                     <Card>
-                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>Confedential Information</h1>
+                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>ConfidentialInformation</h1>
                         <div className='p-5 flex flex-col gap-8'>
                             <TextField fullWidth label="Company House Code" sx={themes.textFieldStyle}
                                 value={`${userDetails?.customer.business_details[0]?.companies_house_code||""   }`}

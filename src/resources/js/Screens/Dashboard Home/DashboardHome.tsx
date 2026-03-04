@@ -288,7 +288,7 @@ function DashboardHome() {
               pageSizeOptions={[5, 10, 15]}
               rowCount={totalCount}
               loading={loading}
-              getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
+              getRowId={(row) => row.id || `${row.email}-${row.phone}`} 
               sx={{ border: 0, width: "100%" }}
             />
           </Card>
@@ -319,6 +319,7 @@ function DashboardHome() {
 
             <PieChart
               series={[
+              
                 {
                   data: dashboardDetails?.tasks
                     ? [
@@ -336,6 +337,7 @@ function DashboardHome() {
                   arcLabelMinAngle: 35,
                 }
               ]}
+              style={{display:"flex",flexWrap:"wrap"}}
               width={300}
               height={220}
             />
@@ -353,7 +355,7 @@ function DashboardHome() {
           <p className="text-base font-medium mb-1" style={{ color: 'var(--color-text)' }}>
             Top Services Usage Breakdown
           </p>
-          <p className="text-4xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
+          <p className="text-2xl font-bold mb-1" style={{ color: 'var(--color-text)' }}>
             {dashboardDetails?.top_completed_services[0]?.name || 'N/A'}
           </p>
           <div className="flex gap-1 text-sm">

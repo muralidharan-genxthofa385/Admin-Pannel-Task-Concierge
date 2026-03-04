@@ -194,7 +194,7 @@ const BusinessUserEdit:React.FC = () => {
                     </Card>
 
                     <Card>
-                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>Confedential Information</h1>
+                        <h1 className='p-4 border-b-2 text-2xl font-semibold'>ConfidentialInformation</h1>
                         <div className='p-5'>
                             <TextField fullWidth label="National Insurance Number" sx={themes.textFieldStyle}
                                 value={customerDetails.national_insurance_number}

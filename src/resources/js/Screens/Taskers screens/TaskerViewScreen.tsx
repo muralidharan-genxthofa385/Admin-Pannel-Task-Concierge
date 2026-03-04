@@ -39,6 +39,7 @@ total: number
     service:{
         name:string
     }
+    is_paid:boolean
     scheduled_dates:string[]
   }[]
   }
@@ -56,61 +57,63 @@ const {id}=useParams()
 const [userDetails,setUserdetails]=useState<TaskerDetails|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
 const [totalCount,setTotalCount]=useState(0)
+const [loading,setLoading]=useState(false)
 
 
-useEffect(()=>{
-    const fetchtasker=async()=>{
+const fetchtasker=async()=>{
+  setLoading(true)
         try{
 
-            const res=await getTaskerById(Number(id))
+          const backendPage = PaginationModel.page + 1;
+
+            const res=await getTaskerById(Number(id),backendPage,PaginationModel.pageSize)
+            
             console.log("response :",res)
             setUserdetails(res.data)
             setTotalCount(res.data.pagination?.total)
            await getRequest(`/admin/documents/onboarding/${res.data.tasker.student_document}`)
 
-      
-
         }
         catch(err){
             console.log('error fetching tasker details:',err)
         }
+        finally{
+          setLoading(false)
+        }
     }
+
+useEffect(()=>{
+    
 fetchtasker()
-// fetchDocuments()
 
 
-},[id])
+},[id,PaginationModel.page,PaginationModel.pageSize])
 
 
-// const fetchDocuments=async()=>{
-
-// try{
-//      const docFetch = await getRequest(`/admin/documents/onboarding/${userDetails?.tasker?.student_document}`)
-//           console.log("document fetch response:", docFetch);
-// }
-// catch(err){
-//     console.log('error fetching document:',err) 
 
 
-// }
-// }
-
-useEffect(()=>{ 
-setPaginationModel((prev) => ({ ...prev, page: userDetails ? userDetails.pagination.current_page - 1 : 0, pageSize: userDetails ? userDetails.pagination.per_page : 10 }));
-},[])
+useEffect(() => { 
+  setPaginationModel((prev) => ({ 
+    ...prev, 
+    page:  userDetails?.pagination?.current_page 
+             ? userDetails.pagination.current_page - 1 
+             : 0,
+    pageSize: userDetails?.pagination?.per_page ?? 10,
+  }));
+}, [userDetails]);  
 
 
 const columns: GridColDef[] = [
   {
     field: 'service',
     headerName: 'Service',
-    width: 220,
+    width: 180,
     valueGetter: (_value, row) => row.service?.name_en || row.service?.name || '—',
   },
   {
     field:'customer',
     headerName:"Customer Name",
-    width:250,
+    width:200,
     valueGetter:(_value,row)=>row.customer?.name || '—'
 
 
@@ -143,8 +146,27 @@ const columns: GridColDef[] = [
   {
     field: 'total_cost',
     headerName: 'Amount',
-    width: 110,
+    width: 120,
     valueFormatter: (value) => value ? `£${Number(value).toFixed(2)}` : '—',
+  },
+  {
+field:"is_paid",headerName:"Payment Status",width:150,
+renderCell: (params) => {
+  return (
+    <Box
+      component="span"
+      className={`capitalize px-2 py-1 rounded text-sm font-medium w-[100%] ${
+        params.value === true
+          ? "bg-green-100 text-green-800"
+          : "bg-red-100 text-red-800"
+      }`}
+    >
+      {params.value === true ? "Paid" : "Unpaid"}
+    </Box>
+  );
+},
+
+
   },
   {
     field: 'created_at',
@@ -249,7 +271,7 @@ const columns: GridColDef[] = [
                 </div>
                
 
-                <Card className='w-full p-10'>
+                <Card className='w-full p-4'>
                      <div>
                             <Typography sx={{ ...themes.mediumSizedFont }}>Task History</Typography>
                             <Typography sx={{ ...themes.lightFont }}>Complete Transaction History For this user</Typography>
@@ -259,26 +281,28 @@ const columns: GridColDef[] = [
                         {userDetails?.task_history?.tasks?.length!==0?<div>
 
 <DataGrid
-        rows={userDetails?.task_history?.tasks || []}   
-        columns={columns}
-        paginationMode='server'
-        paginationModel={PaginationModel}
-        pageSizeOptions={[5, 10, 15]}
-        initialState={{
-          pagination: { paginationModel: { pageSize: 10 } },
-        }}
-        rowCount={totalCount}
-        getRowId={(row) => row.id}           
-        disableRowSelectionOnClick
-        sx={{
-          border: 0,
-          '& .MuiDataGrid-columnHeaders': {
-            backgroundColor: '#f8f9fa',
-          },
-        }}
-      />
-
-                            
+  rows={userDetails?.task_history?.tasks || []}
+  columns={columns}
+  paginationMode="server"
+  pagination                 
+  paginationModel={PaginationModel}
+  onPaginationModelChange={setPaginationModel}
+  rowCount={totalCount}      
+  loading={loading}
+  pageSizeOptions={[5, 10, 15, 20, 25]}
+  getRowId={(row) => row.id ?? crypto.randomUUID()}
+  disableRowSelectionOnClick
+  autoHeight                
+  sx={{
+    border: 0,
+    minHeight: 400,           
+    '& .MuiDataGrid-footerContainer': {
+      borderTop: '1px solid #e0e0e0',
+      minHeight: '52px !important',
+      display: 'flex !important',
+    },
+  }}
+/>                   
                         </div>:
                         <div className='flex w-full justify-center flex-col items-center gap-3'>
     <History className='w-20 h-20 text-gray-500' />

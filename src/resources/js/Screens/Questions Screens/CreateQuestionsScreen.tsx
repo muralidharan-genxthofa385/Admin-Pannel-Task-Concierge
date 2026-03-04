@@ -276,9 +276,9 @@ renderInput={(params)=>(
 </div>
 
 <div>
-   <h1 className='text-xl md:text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Create your Question</h1>
-   <Box className="flex  gap-5 pt-4">
-    <Card className='w-1/2 p-4'>
+   <h1 className='text-xl md:text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/>Create your Question</h1>
+   <Box className="flex  gap-5 pt-4 flex-col md:flex-row lg:flex-row">
+    <Card className=' md:w-1/2 w-full lg:w-1/2 p-4'>
    <TextField  label="Question (English)*" 
    multiline
    minRows={1}
@@ -290,7 +290,7 @@ renderInput={(params)=>(
    />
    </Card>
 
-<Card className='w-1/2 p-4'>
+<Card className=' md:w-1/2 w-full lg:w-1/2 p-4'>
    <TextField  label="Question (Welsh)*" sx={{...themes.inputFeildinActive}}
    value={question_text_cy} onChange={(e)=>setQuestion_text_cy(e.target.value)}
    inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} placeholder='enter here' variant="standard" fullWidth />
@@ -337,7 +337,7 @@ renderInput={(params)=>(
 
 <h1 className='flex items-center'><Radio defaultChecked sx={{...radiostyles.checkboxStyle,scale:0.9}}/>
 
-<Box className="flex gap-5" >
+<Box className="flex gap-5 " >
 
 <TextField variant='standard'
 label={'option (en)'} 
