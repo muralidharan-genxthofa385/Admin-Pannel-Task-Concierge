@@ -206,9 +206,9 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
-          <HighlightStatsBox color='var(--color-purple)' title='Taskers' icon={Bolt} count={Number(taskercount?.total)||0}/>
-                    <HighlightStatsBox color='var(--color-purple)' title='Active Taskers' icon={Flame} count={Number(taskercount?.active)||0}/>
-          <HighlightStatsBox color='var(--color-purple)' title='Inactive Taskers' icon={UserRoundMinusIcon} count={Number(taskercount?.inactive)||0}/>
+          <HighlightStatsBox color='var(--color-grey)' title='Taskers' icon={Bolt} count={Number(taskercount?.total)||0}/>
+                    <HighlightStatsBox color='var(--color-grey)' title='Active Taskers' icon={Flame} count={Number(taskercount?.active)||0}/>
+          <HighlightStatsBox color='var(--color-grey)' title='Inactive Taskers' icon={UserRoundMinusIcon} count={Number(taskercount?.inactive)||0}/>
           
         </div>
 

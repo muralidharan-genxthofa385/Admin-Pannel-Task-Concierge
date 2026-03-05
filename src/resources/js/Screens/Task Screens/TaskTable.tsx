@@ -179,10 +179,10 @@ function formatTaskTiming(hours:any) {
  <div className=' flex flex-col gap-10'>
 
  <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-4'>
-    <HighlightStatsBox icon={Calendar1Icon} title='Scheduled' count={ taskDetails.filter(d=>d.status=="accepted").length}  />
-        <HighlightStatsBox icon={RefreshCcw} title='Inprogress' color='#1C96E8' count={taskDetails.filter(d=>d.status=="in_progress").length}  />
-    <HighlightStatsBox icon={CircleCheckBig} title='Completed' count={taskDetails.filter(d=>d.status=="completed").length} color='green'  />
-    <HighlightStatsBox icon={CircleX} title='Cancelled' color='#EB2626' count={taskDetails.filter(d=>d.status=="cancelled").length}  />
+    <HighlightStatsBox icon={Calendar1Icon} title='Scheduled' color='var(--color-grey)' count={ taskDetails.filter(d=>d.status=="accepted").length}  />
+        <HighlightStatsBox icon={RefreshCcw} title='Inprogress' color='var(--color-grey)' count={taskDetails.filter(d=>d.status=="in_progress").length}  />
+    <HighlightStatsBox icon={CircleCheckBig} title='Completed' count={taskDetails.filter(d=>d.status=="completed").length} color='var(--color-grey)'  />
+    <HighlightStatsBox icon={CircleX} title='Cancelled' color='var(--color-grey)' count={taskDetails.filter(d=>d.status=="cancelled").length}  />
 
  </div>
 
