@@ -1,14 +1,15 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar, ChevronLeft, History, Mail, PhoneCallIcon, Scale, Star, Wallet } from 'lucide-react';
+import { Activity, Calendar, ChevronLeft, Eye, History, Mail, PhoneCallIcon, Scale, Star, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { getRequest} from '@/Service/Apiservice';
+import {  getRequest} from '@/Service/Apiservice';
+import {  Modal } from '@mui/material';
 
 
 
@@ -58,6 +59,10 @@ const [userDetails,setUserdetails]=useState<TaskerDetails|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
 const [totalCount,setTotalCount]=useState(0)
 const [loading,setLoading]=useState(false)
+const [docUrl, setDocUrl] = useState<string>("");
+const [docLoading, setDocLoading] = useState(false);
+const [docError, setDocError] = useState<string | null>(null);
+const [renderCertificate,setRenderCertificate]=useState(false)
 
 
 const fetchtasker=async()=>{
@@ -88,7 +93,6 @@ fetchtasker()
 
 
 },[id,PaginationModel.page,PaginationModel.pageSize])
-
 
 
 
@@ -175,7 +179,77 @@ renderCell: (params) => {
     valueFormatter: (value) => value ? new Date(value).toLocaleDateString() : '—',
   },
 ];
- 
+
+
+useEffect(() => {
+  if (!userDetails?.tasker?.student_document) return;
+
+  let blobUrl: string | null = null;
+
+const loadDocument = async () => {
+  setDocLoading(true);
+  setDocError(null);
+
+  try {
+    const token = localStorage.getItem("accessToken") || // adjust key if needed
+                  localStorage.getItem("token") ||
+                  localStorage.getItem("auth_token") ||
+                  null;
+
+    if (!token) {
+      throw new Error("No auth token found in localStorage");
+    }
+
+    console.log("Using token:", token.substring(0, 20) + "...");
+
+    // ────────────────────────────────────────────────────────────────
+    // Fix: Normalize base URL (remove trailing slash if present)
+    let base = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/\/+$/, '');
+    
+    // If your API has version prefix like /api/v2, keep it, but avoid double slash
+    const path = `/admin/documents/onboarding/${userDetails.tasker.student_document}`.replace(/^\/+/, '');
+    
+    const url = `${base}/${path}`;
+    // ────────────────────────────────────────────────────────────────
+
+    console.log("Fetching document from:", url); // ← add this log to confirm
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Raw fetch status:", response.status);
+    console.log("Raw Content-Type:", response.headers.get("content-type"));
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.log("Error response body (first 300 chars):", text.substring(0, 300));
+      throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    console.log("Blob type:", blob.type);
+    console.log("Blob size:", blob.size);
+
+    const blobUrl = URL.createObjectURL(blob);
+    setDocUrl(blobUrl);
+  } catch (err: any) {
+    console.error("Manual fetch failed:", err);
+    setDocError(err.message || "Failed to load document");
+  } finally {
+    setDocLoading(false);
+  }
+};
+
+  loadDocument();
+
+  return () => {
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+  };
+}, [userDetails?.tasker?.student_document]);
+
 
 
     return (
@@ -224,50 +298,40 @@ renderCell: (params) => {
 
                     </Card>
 
-                     <Card className='w-[100%] md:w-[49%] p-10'>
-                    <div>
-                            <Typography sx={{ ...themes.mediumSizedFont }}>Student Document</Typography>
-                            {/* <Typography sx={{ ...themes.lightFont }}>Latest Task Status and activities</Typography> */}
-                        </div>
-                            <Box component={'img'} src={userDetails?.tasker.student_document_url} className='w-100 h-100'/>
+                  <Card className="w-[100%] md:w-[49%] p-10">
+  <div>
+    <Typography sx={{ ...themes.mediumSizedFont }}>Student Document</Typography>
+  </div>
 
-
-                </Card>
-
-                    {/* <Card className='w-[100%] md:w-[49%] p-10'>
-
-                        <div>
-                            <Typography sx={{ ...themes.mediumSizedFont }}>Recent Activity</Typography>
-                            <Typography sx={{ ...themes.lightFont }}>Latest Task Status and activities</Typography>
-                        </div>
-
-
-                        <div className='pt-3'>
-{userDetails?.task_history?.tasks?.length!==0?
-
-<>{userDetails?.task_history?.tasks?.map((data)=><div className='flex w-full justify-between items-center'>
-   <div className='flex items-center gap-3'>
-        <History className='text-gray-500'/>
-<div>
-    <Typography sx={{...themes.mediumSizedFont,fontSize:17}}>{data.service.name}</Typography>
-    <Typography sx={{...themes.lightFont,fontSize:14}}>{data.scheduled_dates.length===0?data.scheduled_dates[0]:data.scheduled_dates[0]-data.scheduled_dates[data.scheduled_dates.length-1]}</Typography>
-    </div>
-    </div>
-    <Typography className='flex' ><CheckCircle className='w-4 mr-1'/> {data.status}</Typography>
-    
-
-</div>)}</>
-
-:<div className='flex w-full justify-center flex-col items-center gap-3'>
-    <History className='w-20 h-20 text-gray-500' />
-    <Typography sx={{...themes.mediumSizedFont}}>
-        No Recent Activities Recorded
-    </Typography>
-    </div>}
-
-                        </div>
-
-                    </Card> */}
+  <Box sx={{ mt: 3 }}>
+    {docError ? (
+      <Typography color="error.main">
+        {docError} — check console + network tab
+      </Typography>
+    ) : docLoading ? (
+      <Typography color="text.secondary">Loading certificate...</Typography>
+    ) : docUrl ? (
+      <Box
+        component="img"
+        src={docUrl}
+        alt="Student document / certificate"
+        sx={{
+          width: "100%",
+          height: "30vh",
+          objectFit: "contain",
+          border: "1px solid #e5e7eb",
+          borderRadius: 1,
+          boxShadow: 1,
+          backgroundColor: "#f9fafb",
+        }}
+        onError={() => setDocError("Image failed to display (corrupt or wrong format?)")}
+      />
+    ) : (
+      <Typography color="text.secondary">No document available</Typography>
+    )}
+  </Box>
+  <Eye style={{color:"var(--color-purple)",cursor:"pointer"}} onClick={()=>{setRenderCertificate(true)}}/>
+</Card>
                 </div>
                
 
@@ -295,7 +359,8 @@ renderCell: (params) => {
   autoHeight                
   sx={{
     border: 0,
-    minHeight: 400,           
+    minHeight: 400,  
+    '& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} ,        
     '& .MuiDataGrid-footerContainer': {
       borderTop: '1px solid #e0e0e0',
       minHeight: '52px !important',
@@ -312,6 +377,25 @@ renderCell: (params) => {
     </div>}
 
                 </Card>
+
+<Modal
+        open={renderCertificate}
+        onClose={()=>setRenderCertificate(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+         sx={{...themes.background_blur, display:"flex",justifyContent:"center",alignItems:"center"}}
+      >
+      
+          <Card style={{padding:2,width:"30%",height:"80%",overflow:"hidden"}}>
+            <Box component={'img'} src={`${docUrl}`}  sx={{height:"100%",width:"100%"}}/>
+
+          </Card>
+
+        
+      </Modal>
+
+
+
 
             </div>
         </>

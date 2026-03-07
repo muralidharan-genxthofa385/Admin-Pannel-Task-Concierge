@@ -217,7 +217,7 @@ toast.success('Customer Deleted Successfully')
   return (
     <>
  <div>
-      <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Customers !</h1>
+      <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Customers !</h1>
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
@@ -262,7 +262,7 @@ toast.success('Customer Deleted Successfully')
   rowCount={totalCount}
   loading={loading}
   getRowId={(row) => row.id || `${row.email}-${row.phone}`}  
-  sx={{ border: 0, width: { xs:"100%",md:"100%"} }}
+  sx={{ border: 0, width: { xs:"100%",md:"100%"},'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} }}
 />
 
     </Card>

@@ -289,7 +289,7 @@ function DashboardHome() {
               rowCount={totalCount}
               loading={loading}
               getRowId={(row) => row.id || `${row.email}-${row.phone}`} 
-              sx={{ border: 0, width: "100%" }}
+              sx={{ border: 0, width: "100%",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} }}
             />
           </Card>
 
@@ -516,7 +516,7 @@ options={{
 
         
 
-          <div style={{ height: '500px', position: 'relative' }}>
+          <div style={{ height: '400px', position: 'relative' }}>
             <Bar
               data={{
                 labels,

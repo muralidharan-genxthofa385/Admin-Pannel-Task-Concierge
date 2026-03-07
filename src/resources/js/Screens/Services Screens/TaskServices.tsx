@@ -278,7 +278,7 @@ toast.error('Failed to edit this service')
 
     <>
       <div className='flex flex-col gap-10'>
-        <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings className='w-6 h-6' /> Services</h1>
+        <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings className='w-6 h-6' /> Services</h1>
 
         {/**---------- Filter Section---------- */}
         <div className='flex flex-col gap-5 md:flex-row w-[100%]'>
@@ -334,7 +334,7 @@ toast.error('Failed to edit this service')
               columns={columns}
               initialState={{ pagination: { paginationModel } }}
               pageSizeOptions={[5, 10, 20]}
-              sx={{ border: 0, width: { md: "100%" } }}
+              sx={{ border: 0, width: { md: "100%" },'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} }}
               loading={loading}
             />
           </Card>

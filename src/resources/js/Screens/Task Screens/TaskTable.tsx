@@ -174,7 +174,7 @@ function formatTaskTiming(hours:any) {
     <>
 <div>
 
- <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><ToolCase className='w-6 h-6'/> View Tasks !</h1>
+ <h1 style={{fontWeight:600}} className='sm:text-2xl font-medium md:text-2xl flex items-center gap-3'><ToolCase className='w-6 h-6'/> View Tasks !</h1>
 
  <div className=' flex flex-col gap-10'>
 
@@ -230,9 +230,10 @@ function formatTaskTiming(hours:any) {
        paginationMode='server'
       paginationModel={paginationModel}
   onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
-        sx={{border:"none"}}
+        sx={{border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
         pageSizeOptions={[5,10,15,20]}
         getRowId={(row)=>row.id}
+
        
       />
       </Card>

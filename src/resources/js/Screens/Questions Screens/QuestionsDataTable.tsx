@@ -132,19 +132,19 @@ const QuestionsDataTable: React.FC = () => {
     { field: 'question_text_en', headerName: "Question", width: 500 },
     {
       field: 'options_json', headerName: "Options", width: 400,
-     renderCell: (params) => {
-  const options = params.row.options_json;
-  
-  if (Array.isArray(options)) {
-    return <span>{options.join(', ') || '-'}</span>;
-  }
-  
-  if (typeof options === 'string') {
-    return <span>{options || '-'}</span>;
-  }
-  
-  return <span>-</span>;
-}
+      renderCell: (params) => {
+        const options = params.row.options_json;
+
+        if (Array.isArray(options)) {
+          return <span>{options.join(', ') || '-'}</span>;
+        }
+
+        if (typeof options === 'string') {
+          return <span>{options || '-'}</span>;
+        }
+
+        return <span>-</span>;
+      }
     },
 
     {
@@ -165,7 +165,7 @@ const QuestionsDataTable: React.FC = () => {
               aria-labelledby="demo-positioned-button"
               anchorEl={anchorEl}
               open={open}
-               PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
+              PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)', borderRadius: '10px', }, }}
               onClose={handleClose}
               anchorOrigin={{
                 vertical: 'top',
@@ -185,7 +185,7 @@ const QuestionsDataTable: React.FC = () => {
                   toast.error("Service ID not found for this question");
                 }
               }}
-                className='flex gap-3'><Eye className='w-4 h-5 text-[var(--color-purple)]'/> <Typography> View</Typography></MenuItem>
+                className='flex gap-3'><Eye className='w-4 h-5 text-[var(--color-purple)]' /> <Typography> View</Typography></MenuItem>
               <MenuItem onClick={() => {
                 handleClose;
                 if (selectedrowid !== null) { navigate(`/questions/edit/${selectedrowid}`) }
@@ -204,11 +204,11 @@ const QuestionsDataTable: React.FC = () => {
   return (
     <>
       <div className='flex flex-col gap-10'>
-        <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><SquarePen className='w-6 h-6' /> Service Questions</h1>
+        <h1 style={{ fontWeight: 600 }} className='sm:text-2xl md:text-2xl flex items-center gap-3'><SquarePen className='w-6 h-6' /> Service Questions</h1>
         <div className='flex md:gap-4 xs:gap-10 md:flex-row flex-col w-full  flex-wrap'>
-          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: {md:"70%",xs:"100%"} }} />
+          <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: { md: "70%", xs: "100%" } }} />
 
-          <FormControl sx={{ ...themes.textFieldStyle, width: {md:"11%",xs:"100%"},mt:{xs:3,md:0} }} >
+          <FormControl sx={{ ...themes.textFieldStyle, width: { md: "11%", xs: "100%" }, mt: { xs: 3, md: 0 } }} >
             <InputLabel>filter by category</InputLabel>
             <Select label='filter by category' value={params.category_id}
               onChange={(e) => setparams(prev => ({ ...prev, category_id: Number(e.target.value), page: 0 }))}
@@ -219,29 +219,29 @@ const QuestionsDataTable: React.FC = () => {
               <MenuItem value={3}>Business & Events</MenuItem>
             </Select>
           </FormControl>
-          <Button sx={{ ...themes.OutlinedButtonStyle,mt:{xs:3,md:0} ,fontWeight:400,padding:"0rem 1.5rem" }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
+          <Button sx={{ ...themes.OutlinedButtonStyle, mt: { xs: 3, md: 0 }, fontWeight: 400, padding: "0rem 1.5rem" }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
         </div>
 
         <div>
           <Card className='md:w-full w-[100%] h-141'>
-<DataGrid
-  rows={questions || []}
-  columns={columns}
-  className='rounded border-0'
-  paginationMode="server"
-  rowCount={totalCount}
-  sx={{border:"none"}}
-  pageSizeOptions={[5, 10, 15]}
-  paginationModel={paginationModel}
-  onPaginationModelChange={(newModel) => {
-    setPaginationModel(newModel);  
-    setparams(prev => ({
-      ...prev,
-      page: newModel.page,
-      per_page: newModel.pageSize
-    }));
-  }}
-/>
+            <DataGrid
+              rows={questions || []}
+              columns={columns}
+              className='rounded border-0'
+              paginationMode="server"
+              rowCount={totalCount}
+              sx={{ border: "none", '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold', } }}
+              pageSizeOptions={[5, 10, 15]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={(newModel) => {
+                setPaginationModel(newModel);
+                setparams(prev => ({
+                  ...prev,
+                  page: newModel.page,
+                  per_page: newModel.pageSize
+                }));
+              }}
+            />
 
 
           </Card>
@@ -267,13 +267,13 @@ const QuestionsDataTable: React.FC = () => {
             <Card className='w-[100%]  p-5 overflow-auto'>
 
               {viewQuestions == undefined ? <Typography>Failed to Fetch...!</Typography> : viewQuestions.map((data, ind) => <div>
-                
-               <Typography className='flex items-center gap-3 border-b-1 pb-2'> <span className='bg-gray-200 rounded' style={{padding:5}}>Q{ind+1}</span> <span className='text-1xl'>{data.question_text_en}</span></Typography>
+
+                <Typography className='flex items-center gap-3 border-b-1 pb-2'> <span className='bg-gray-200 rounded' style={{ padding: 5 }}>Q{ind + 1}</span> <span className='text-1xl'>{data.question_text_en}</span></Typography>
 
               </div>)}
 
             </Card>
-            <Button sx={themes.OutlinedButtonStyle} onClick={()=>navigate(`/questions/edit/${selectedrowid}`)}>Edit This Question</Button>
+            <Button sx={themes.OutlinedButtonStyle} onClick={() => navigate(`/questions/edit/${selectedrowid}`)}>Edit This Question</Button>
           </Card>
         </Modal>
       </div>

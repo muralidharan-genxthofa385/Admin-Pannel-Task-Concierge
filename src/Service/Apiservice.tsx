@@ -67,3 +67,16 @@ export const deleteRequest=(id:any)=>{
     return api.delete(id).then((res)=>res.data)
 
 }
+
+export const getBlobRequest = async (url: string) => {
+  try {
+    const response = await axios.get(url, {
+      responseType: 'blob',           // this is what we need
+      // no need to add Authorization – interceptor should handle it
+    });
+    return response;
+  } catch (error) {
+    console.error('Blob request failed:', error);
+    throw error;
+  }
+};

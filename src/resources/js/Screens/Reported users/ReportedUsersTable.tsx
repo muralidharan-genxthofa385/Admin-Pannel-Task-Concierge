@@ -152,7 +152,7 @@ getUserBYID(selectedRowId)
     <>
     
     <div className='flex flex-col gap-10'>
-<h1 className='sm:text-2xl md:text-2xl flex items-center gap-3' onClick={()=>navigate(-1)}><ShieldAlert/>Reported Users</h1>
+<h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3' onClick={()=>navigate(-1)}><ShieldAlert/>Reported Users</h1>
 
         <div>
             <Card>
@@ -160,7 +160,7 @@ getUserBYID(selectedRowId)
 columns={columns}
 rows={ReportedDatas}
 rowHeight={70}
-sx={{border:"none"}}
+sx={{border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
 />
 
             </Card>

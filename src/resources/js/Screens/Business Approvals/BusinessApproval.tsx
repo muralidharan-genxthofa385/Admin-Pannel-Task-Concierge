@@ -165,7 +165,7 @@ const BusinessApproval:React.FC = () => {
   return (
     <>
     <div>
-<h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><BriefcaseBusiness/> Business Approval</h1>
+<h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><BriefcaseBusiness/> Business Approval</h1>
 
       <div className=' flex flex-col gap-10'>
  <div className=' grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3 grid'>
@@ -190,7 +190,7 @@ const BusinessApproval:React.FC = () => {
   rowCount={totalCount}
   loading={loading}
   getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
-  sx={{ border: 0, width: "100%" }}
+    sx={{width:"100%",border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
 />
 
     </Card>

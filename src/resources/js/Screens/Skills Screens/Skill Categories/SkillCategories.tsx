@@ -271,7 +271,7 @@ getCatBYID()
   return (
     <>
     <div className='flex flex-col gap-10'>
-    <h2 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings2Icon/> Skill Categories</h2>
+    <h2 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Settings2Icon/> Skill Categories</h2>
     
           <div className=' flex flex-col gap-10'>
 {/* <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-0'>
@@ -324,7 +324,7 @@ getCatBYID()
  rowCount={totalcount}
 //   loading={loading}
   // getRowId={(row) => row.id || `${row.email}-${row.phone}`}  
-  sx={{ border: 0, width: "100%" }}
+  sx={{ border: 0, width: "100%",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
 />
 </Card>
 

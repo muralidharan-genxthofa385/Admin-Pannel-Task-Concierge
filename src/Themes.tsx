@@ -112,7 +112,12 @@ textFieldStyle:{
       fontFamily: "Sora, sans-serif",
     },
   },
-}
+},
+  background_blur:{
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',   
+  backdropFilter: 'blur(8px)',             
+  WebkitBackdropFilter: 'blur(8px)',
+    }
 
 
 };

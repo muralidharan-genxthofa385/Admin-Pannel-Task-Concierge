@@ -209,7 +209,7 @@ columns={columns}
 rows={skillCat}
 loading={loader}
  className='rounded border-0'
-  sx={{border:"none"}}
+  sx={{border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
     pageSizeOptions={[5, 10, 15]}
 
 />

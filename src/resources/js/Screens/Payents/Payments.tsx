@@ -5,7 +5,8 @@ import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox'
 import { Money } from '@mui/icons-material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { themes } from '@/Themes'
-import { Ellipsis } from 'lucide-react'
+import { Ellipsis, PoundSterling } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 
 interface revenueDataType {
@@ -139,20 +140,23 @@ valueGetter: (_value, row) => row.customer?.name || '—',
   }
 ];
 
+const navigate=useNavigate()
 
     return (
     <>
-    <Box>
+          <div className='flex flex-col gap-6'>
+      <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3' onClick={()=>navigate(-1)}><PoundSterling/>Payments</h1>
+
+    <Box className='flex flex-col gap-6'>
+
  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
     <HighlightStatsBox icon={Money} title='Total Revenue' count={ `£ ${totalRevenue.total_payments.toFixed(1)}`} />
      <HighlightStatsBox icon={Money} title='Total Admin Fee' count={ `£ ${totalRevenue.total_admin_fees.toFixed(1)}`} />
 
  </div>
 
- <Card className='rounded-xs p-3 w-full'>
-  <div className='w-full pt-1 pb-1'>
+ <div className='w-full pt-1 pb-1'>
 <div className='flex flex-col gap-4 w-[100%]'>
-  <Typography sx={{...themes.mediumSizedFont}}>{"Filter"}</Typography>
   <div className='flex gap-6 flex-wrap md:flex-none lg:flex-nowrap' >
       <TextField className=' w-full md:w-3/4 flex' value={params.service_name} onChange={(e)=>setParams(prev=>({...prev,service_name:e.target.value}))} label="Search by service" />
       <FormControl className='w-full  sm:w-full md:w-1/4 lg:w-1/4' >
@@ -162,19 +166,19 @@ valueGetter: (_value, row) => row.customer?.name || '—',
        onChange={(e)=>setParams(prev=>({...prev,is_paid:e.target.value}))}
       label="Payment Status"
       >
-        <MenuItem  value={1}  >Paid</MenuItem>
-                <MenuItem value={0}>UnPaid</MenuItem>
-
+        <MenuItem  value={1}>Paid</MenuItem>
+        <MenuItem value={0}>UnPaid</MenuItem>
       </Select>
       </FormControl>
   </div>
   </div>
   </div>
+ <Card sx={{borderRadius:"20px"}} className=' p-3 w-full'>
 
     <DataGrid 
     rows={revenuedata}
     columns={columns}
-    sx={{border:"none",borderRadius:"20px"}}
+    sx={{border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
     getRowId={(row) => row.booking_id}
   paginationModel={PaginationModel}
   onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
@@ -182,23 +186,15 @@ valueGetter: (_value, row) => row.customer?.name || '—',
     paginationMode="server"
     rowCount={total}
     loading={loader}
+    
     />
-    {/* <Box>
-      <Button
-      onClick={()=>setParams(Prev=>({...Prev,page:params.page-1}))}
-      ><ChevronLeft/> </Button>
-            <Button
-            onClick={()=>setParams(Prev=>({...Prev,page:params.page+1}))}
-            ><ChevronRight/> </Button>
-
-    </Box> */}
 
  </Card>
 
 
     </Box>
 
-
+</div>
 
     </>
   )

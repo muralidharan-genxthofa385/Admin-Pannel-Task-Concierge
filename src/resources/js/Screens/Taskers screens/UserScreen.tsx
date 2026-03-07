@@ -202,7 +202,7 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
   return (
     <>
     <div>
-      <h1 className='sm:text-2xl md:text-2xl flex items-center gap-3'><User className='w-6 h-6'/> View Users !</h1>
+      <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><User className='w-6 h-6'/> View Users !</h1>
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
@@ -255,7 +255,7 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
   rowCount={totalCount}
   loading={loading}
   getRowId={(row) => row.id || `${row.email}-${row.phone}`}  // fallback ID
-  sx={{ border: 0, width: "100%" }}
+  sx={{ border: 0, width: "100%",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} }}
 />
 
     </Card>

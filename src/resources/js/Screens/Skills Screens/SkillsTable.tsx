@@ -269,7 +269,7 @@ fetchallSkills()
   return (
      <>
     <div className='flex flex-col gap-10'>
-<h2 className='sm:text-2xl md:text-2xl flex items-center gap-3'><Brain/> Skills</h2>
+<h2 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Brain/> Skills</h2>
 
       <div className=' flex flex-col gap-10'>
 
@@ -352,7 +352,7 @@ fetchallSkills()
 rowCount={totalCount}
   loading={loading}
   getRowId={(row) => row.id || `${row.email}-${row.phone}`}  
-  sx={{ border: 0, width: "100%" }}
+  sx={{ border: 0, width: "100%",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} }}
 />
 </Card>
 
