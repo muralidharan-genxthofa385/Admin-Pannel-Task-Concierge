@@ -1,8 +1,7 @@
-// import HighlightStatsBox from '@/resources/js/Reuseable Components/HighlightStatsBox'
 import { Card } from '@/components/ui/card';
 import { deleteRequest, getRequest, postRequest, PutRequest } from '@/Service/Apiservice';
 import { themes } from '@/Themes';
-import { Box, Button, FormControl, InputLabel, Menu, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, Menu, MenuItem, Modal, Select, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { EditIcon, Ellipsis, PencilIcon, Plus, Settings2Icon, X } from 'lucide-react'
 
@@ -36,12 +35,43 @@ interface catToedit{
                 name_cy: string,
         description_en: string,
                 description_cy: string,
-                  is_active:boolean|null
-
+                  is_active:boolean|null,
+                  certificate_required:boolean|null,
 }
 
 
 const SkillCategories:React.FC = () => {
+
+
+
+
+  const toggleStyle = {
+    
+    display: "flex",
+    justifyContent: "space-between",
+    borderRadius: "30px",
+    backgroundColor: "var(--color-light)",
+    padding: "4px",
+    "& .MuiToggleButton-root": {
+      border: "none",
+      borderRadius: "20px",
+      textTransform: "none",
+      fontWeight: 600,
+      color: "black",
+      width:"50%",
+      px: 3,
+      "&.Mui-selected": {
+        backgroundColor: "white",
+        color: "black",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      },
+      "&:hover": {
+        backgroundColor: "white",
+      },
+    },
+  }
+
+
 
 
     const [skilllCategories,setSkillCategories]=useState<Category[]>([])
@@ -57,7 +87,8 @@ const SkillCategories:React.FC = () => {
       name_cy:"",
       description_en:"",
       description_cy:"",
-      isActive:true
+      isActive:true,
+certificate_required: false as boolean | null,
     })
 
     const [categoryToEdit,setCategoryToEdit]=useState<catToedit>({
@@ -65,7 +96,9 @@ const SkillCategories:React.FC = () => {
       name_cy:"",
       description_en:"",
       description_cy:"",
-      is_active:null
+      is_active:null,
+      certificate_required: false as boolean | null,
+
 
     })
 
@@ -118,7 +151,8 @@ setCategoryToEdit({
   name_cy:response.name_cy,
   description_cy:response.description_cy,
   description_en:response.description_en,
-  is_active:response.is_active
+  is_active:response.is_active,
+  certificate_required:response?.certificate_required
 
 })
 
@@ -137,7 +171,8 @@ const payload={
   name_en:createNewCatPayload.name_en,
   name_cy:createNewCatPayload.name_cy,
   description_en:createNewCatPayload.description_en,
-  description_cy:createNewCatPayload.description_cy
+  description_cy:createNewCatPayload.description_cy,
+  certificate_required:createNewCatPayload.certificate_required
 
 }
       try{
@@ -152,6 +187,7 @@ toast.success('Category added successfully')
       }
       finally{
         setLoader(false)
+        setCreateNewCatPayload(prev=> ({...prev,certificate_required:false,name_en:"",name_cy:"",description_cy:"",description_en:"",isActive:true}))
       }
 
     }
@@ -370,6 +406,16 @@ getCatBYID()
                           onChange={(e)=>setCreateNewCatPayload(prev=>({...prev,description_cy:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
+                          {/* <FormControlLabel control={<Checkbox value={createNewCatPayload.certificate_required} checked={} />}  /> */}
+                        <Box display={"flex"} flexDirection={"column"} gap={2} >
+                          <Typography sx={{...themes.lightFont}}>Need to collect certificate from the users for this skill?</Typography>
+                          <ToggleButtonGroup
+                          sx={{...toggleStyle,width:"50%"}}
+                          exclusive value={createNewCatPayload.certificate_required} onChange={(_event,newValue:boolean|null)=>setCreateNewCatPayload(prev=>({...prev,certificate_required:newValue}))} >
+                            <ToggleButton value={true} >Yes</ToggleButton>
+                            <ToggleButton value={false}>no</ToggleButton>
+                          </ToggleButtonGroup>
+                          </Box>
 
                           <Button type='submit' sx={{...themes.ButtonStyle}} disabled={loader}>{loader? "Loading...":"Submit"}</Button>
 
@@ -439,6 +485,18 @@ getCatBYID()
 
                           </Select>
 </FormControl>
+
+ <Box display={"flex"} flexDirection={"column"} gap={2} >
+                          <Typography sx={{...themes.lightFont}}>Need to collect certificate from the users for this skill?</Typography>
+                          <ToggleButtonGroup
+                          sx={{...toggleStyle,width:"50%"}}
+                          exclusive value={categoryToEdit.certificate_required} onChange={(_event,newValue:boolean|null)=>setCategoryToEdit(prev=>({...prev,certificate_required:newValue}))} >
+                            <ToggleButton value={true} >Yes</ToggleButton>
+                            <ToggleButton value={false}>no</ToggleButton>
+                          </ToggleButtonGroup>
+                          </Box>
+
+
                           <Button type='submit' sx={{...themes.ButtonStyle}} disabled={loader}>{loader? "Loading...":"Edit"}</Button>
 
           </form>

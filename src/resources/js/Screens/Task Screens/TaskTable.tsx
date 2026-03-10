@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 // import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import { Collapse } from '@mui/material';
 
 interface task_type{
   id:number
@@ -63,7 +64,7 @@ const TaskTable:React.FC = () => {
  const [params, setParams] = useState({
   search: '',
   status: '',
-  service_id: 0,
+  service_id: 0 as number,
   sort_by: 'created_at',
   sort_order: 'desc',
   per_page: 15,
@@ -176,7 +177,7 @@ function formatTaskTiming(hours:any) {
 
  <h1 style={{fontWeight:600}} className='sm:text-2xl font-medium md:text-2xl flex items-center gap-3'><ToolCase className='w-6 h-6'/> View Tasks !</h1>
 
- <div className=' flex flex-col gap-10'>
+ <div className=' flex flex-col gap-5'>
 
  <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-4'>
     <HighlightStatsBox icon={Calendar1Icon} title='Scheduled' color='var(--color-grey)' count={ taskDetails.filter(d=>d.status=="accepted").length}  />
@@ -186,7 +187,7 @@ function formatTaskTiming(hours:any) {
 
  </div>
 
- <div className='flex flex-col   lg:flex-row  justify-between '>
+ <div className='flex flex-col flex-wrap gap-2  lg:flex-row  justify-between '>
   <TextField  value={params.search} 
   onChange={(e)=>setParams(prev=>({...prev,search:e.target.value}))}
   label="Search by Name" sx={{...themes.textFieldStyle,width:{xs:"100%",md:"68%"}}}  />
@@ -197,7 +198,6 @@ function formatTaskTiming(hours:any) {
             onChange={(e)=>setParams(prev=>({...prev,status:e.target.value}))}
             >
               
-              <MenuItem className='flex gap-2' value={""}>Clear <X className='w-4 h-4' /></MenuItem>
               <MenuItem value={'pending'}>Pending</MenuItem>
               <MenuItem value={'accepted'}>Accepted</MenuItem>
               <MenuItem value={'in_progress'}>In Progress</MenuItem>
@@ -220,6 +220,14 @@ function formatTaskTiming(hours:any) {
           </FormControl>
 
 </div>
+ <Collapse in={ Boolean(params.search)|| Boolean(params.status)|| Boolean(params.service_id)} timeout={200} >
+  <Button sx={{...themes.ButtonStyle,display:params.search||params.status||params.service_id?"flex":"none",width:"10%"}}
+  onClick={()=>{
+    setParams(prev=>({...prev,search:"",service_id:0,status:""}))
+  }}
+  >Clear <X/> </Button>
+  </Collapse>
+
 
  <div>
     <Card className='md:w-full w-[100%] h-119'>
