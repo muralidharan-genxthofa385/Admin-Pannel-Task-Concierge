@@ -407,15 +407,7 @@ getCatBYID()
                           sx={themes.textFieldStyle}
                           />
                           {/* <FormControlLabel control={<Checkbox value={createNewCatPayload.certificate_required} checked={} />}  /> */}
-                        <Box display={"flex"} flexDirection={"column"} gap={2} >
-                          <Typography sx={{...themes.lightFont}}>Need to collect certificate from the users for this skill?</Typography>
-                          <ToggleButtonGroup
-                          sx={{...toggleStyle,width:"50%"}}
-                          exclusive value={createNewCatPayload.certificate_required} onChange={(_event,newValue:boolean|null)=>setCreateNewCatPayload(prev=>({...prev,certificate_required:newValue}))} >
-                            <ToggleButton value={true} >Yes</ToggleButton>
-                            <ToggleButton value={false}>no</ToggleButton>
-                          </ToggleButtonGroup>
-                          </Box>
+                      
 
                           <Button type='submit' sx={{...themes.ButtonStyle}} disabled={loader}>{loader? "Loading...":"Submit"}</Button>
 

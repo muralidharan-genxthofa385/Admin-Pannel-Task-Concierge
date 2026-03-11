@@ -17,6 +17,7 @@ import { Card } from '@/components/ui/card';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import { toast } from 'react-toastify';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 
 interface skillprop{
@@ -41,6 +42,7 @@ interface createPAyloadType{
   name_cy:string,
   description_en:string
   description_cy:string
+  certification_required:boolean|null
 
 }
 interface SkillCategories{
@@ -55,11 +57,38 @@ interface skilltoEdit{
                 name_cy: string,
         description_en: string,
                 description_cy: string,
-        skill_category:{name:string}
+        skill_category:{name:string},
+          certification_required:boolean|null
+
 }
 
 const SkillsTable:React.FC = () => {
 
+    const toggleStyle = {
+    
+    display: "flex",
+    justifyContent: "space-between",
+    borderRadius: "30px",
+    backgroundColor: "var(--color-light)",
+    padding: "4px",
+    "& .MuiToggleButton-root": {
+      border: "none",
+      borderRadius: "20px",
+      textTransform: "none",
+      fontWeight: 600,
+      color: "black",
+      width:"50%",
+      px: 3,
+      "&.Mui-selected": {
+        backgroundColor: "white",
+        color: "black",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      },
+      "&:hover": {
+        backgroundColor: "white",
+      },
+    },
+  }
 
  
 
@@ -79,13 +108,14 @@ const SkillsTable:React.FC = () => {
     const [addskillLoader,setAddskillLoader]=useState(false)
     const [editSkillOpen,setEditSkillOpen]=useState(false)
     const [totalCount, setTotalCount] = useState(0);
-      const [skillToEdit,setSkilltoEdit]=useState<skilltoEdit>({ id:null, skill_category_id: null,name_en: "",name_cy: "", description_en: "",description_cy:"",is_active:null,skill_category:{name:""}})
+      const [skillToEdit,setSkilltoEdit]=useState<skilltoEdit>({ id:null, certification_required:false, skill_category_id: null,name_en: "",name_cy: "", description_en: "",description_cy:"",is_active:null,skill_category:{name:""}})
     const [createSkillPayload,setCreateskillPayload]=useState<createPAyloadType>({
       id:null,
       name_en:"",
       name_cy:"",
       description_en:"",
-      description_cy:""
+      description_cy:"",
+      certification_required:false
 
     })
     console.log(createSkillPayload)
@@ -121,7 +151,8 @@ const SkillsTable:React.FC = () => {
           description_cy:response.description_cy,
           description_en:response.description_en,
           is_active:response.is_active,
-          skill_category:{name:response.skill_category.name}
+          skill_category:{name:response.skill_category.name},
+          certification_required:response.certification_required,
           })
             console.log("individual skill",skillToEdit)
           }
@@ -166,7 +197,8 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
       name_en:createSkillPayload.name_en,
       name_cy:createSkillPayload.name_cy,
       description_en:createSkillPayload.description_en,
-      description_cy:createSkillPayload.description_cy
+      description_cy:createSkillPayload.description_cy,
+      certification_required:createSkillPayload.certification_required
 
     }
     postRequest(`/skills`,payload)
@@ -179,7 +211,8 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
       name_en:"",
       name_cy:"",
       description_en:"",
-      description_cy:""
+      description_cy:"",
+      certification_required:false
       }))
     })
   }
@@ -414,6 +447,15 @@ rowCount={totalCount}
                           onChange={(e)=>setCreateskillPayload(prev=>({...prev,description_cy:e.target.value}))}
                           sx={themes.textFieldStyle}
                           />
+                            <Box display={"flex"} flexDirection={"column"} gap={2} >
+                          <Typography sx={{...themes.lightFont}}>Need to collect certificate from the users for this skill?</Typography>
+                          <ToggleButtonGroup
+                          sx={{...toggleStyle,width:"50%"}}
+                          exclusive value={createSkillPayload.certification_required} onChange={(_event,newValue:boolean|null)=>setCreateskillPayload(prev=>({...prev,certification_required:newValue}))} >
+                            <ToggleButton value={true} >Yes</ToggleButton>
+                            <ToggleButton value={false}>no</ToggleButton>
+                          </ToggleButtonGroup>
+                          </Box>
 
                           <Button type='submit' sx={{...themes.ButtonStyle}} disabled={addskillLoader}>{addskillLoader? "Loading...":"Submit"}</Button>
 
@@ -499,6 +541,17 @@ rowCount={totalCount}
 
                           </Select>
 </FormControl>
+
+   <Box display={"flex"} flexDirection={"column"} gap={2} >
+                          <Typography sx={{...themes.lightFont}}>Need to collect certificate from the users for this skill?</Typography>
+                          <ToggleButtonGroup
+                          sx={{...toggleStyle,width:"50%"}}
+                          exclusive value={skillToEdit.certification_required} onChange={(_event,newValue:boolean|null)=>setSkilltoEdit(prev=>({...prev,certification_required:newValue}))} >
+                            <ToggleButton value={true} >Yes</ToggleButton>
+                            <ToggleButton value={false}>no</ToggleButton>
+                          </ToggleButtonGroup>
+                          </Box>
+
                           <Button type='submit' sx={{...themes.ButtonStyle}} disabled={addskillLoader}>{addskillLoader? "Loading...":"Edit"}</Button>
 
           </form>

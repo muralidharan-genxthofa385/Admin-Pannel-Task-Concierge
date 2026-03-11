@@ -4,7 +4,7 @@ import { themes } from '@/Themes';
 import  noProfile from '../../../../assets/images/noProfilepic.svg'
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import { ChevronLeft,CircleDot, ClipboardClock, Mail, Phone, Star } from 'lucide-react';
+import { ChevronLeft,CircleDot, ClipboardClock, Mail, MapPin, Phone, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { formatUtcTimeToLocal } from '@/utils/timeutils';
@@ -197,9 +197,23 @@ console.log("taskdetails",taskstatus)
     </Card>
 
     <Card className=' w-full lg:w-[28%]'>
-                <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Tasker Info</Typography>
+                <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Description</Typography>
 
-                {!taskDetails?.selected_taskers?<>
+             <div className='p-8 flex flex-col gap-8'>
+
+          {taskDetails?.notes}
+
+        </div>
+    </Card>
+    </div>
+
+
+<div className='w-full flex flex-col lg:flex-row gap-3 lg:justify-between'>
+
+    <Card className=' w-full lg:w-[67%] h-max'>
+        <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Assigned Taskers</Typography>
+        
+             {!taskDetails?.selected_taskers?<>
                 
                 <div className='w-full flex flex-col items-center gap-3'>
                   <ClipboardClock className='w-30 h-30 font-light text-[var(--color-grey)]'/>
@@ -220,26 +234,15 @@ Tasker not assigned yet
         <Typography sx={{...themes.mediumSizedFont}}>{tasker.name}</Typography>
         <Typography className='text-yellow-400 flex gap-2 items-center'><Star/> 4.9</Typography>
      </div>
-</div>
-<div className='p-5 flex flex-col gap-3'>
+     <div className='p-5 flex gap-3'>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/>+ {tasker.phone}</Typography>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {tasker.email}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><MapPin/> {tasker.location}</Typography>
 
 </div>
+</div>
+
 </div>)}</>)}
-    </Card>
-    </div>
-
-
-<div className='w-full flex flex-col lg:flex-row gap-3 lg:justify-between'>
-
-    <Card className=' w-full lg:w-[67%] h-max'>
-        <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Description</Typography>
-        <div className='p-8 flex flex-col gap-8'>
-
-          {taskDetails?.notes}
-
-        </div>
 
     </Card>
 
