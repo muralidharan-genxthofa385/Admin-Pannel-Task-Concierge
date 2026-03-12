@@ -106,7 +106,7 @@ const [params, setParams] = useState({
 
 const fetchallcustomers=()=>{
   setLoading(true)
- getRequest(`admin/residents?search=${params.search}&sort_by=${params.sort_by}&sort_order=${params.sort_order}&per_page=${params.per_page}&page=${params.page}`)
+ getRequest(`admin/residents?search=${params.search}&pause_account=${params.pause_account}&sort_by=${params.sort_by}&sort_order=${params.sort_order}&per_page=${params.per_page}&page=${params.page}`)
 .then((res)=>{
 setCustomerData(res.data.data)
 setCustomercount(res.counts)
