@@ -1,7 +1,7 @@
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Bolt, Ellipsis,  Eye,  LucideActivitySquare, Pencil,  Trash2,  UserRoundMinusIcon, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -70,7 +70,6 @@ const CustomersScreen:React.FC = () => {
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
   
-  const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 15,});
 const [totalCount,setTotalCount]=useState(0)
    const [customercount,setCustomercount]=useState<taskerCount|null>(null)
@@ -84,6 +83,7 @@ const [params, setParams] = useState({
     sort_order: "asc",
     per_page: 10,
     page: 1,
+     pause_account:'' as boolean |''
   })
   
  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -129,20 +129,20 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
   },[PaginationModel])
 
 
-const handleStatusChange = (event: SelectChangeEvent) => {
-  const value = event.target.value;
+// const handleStatusChange = (event: SelectChangeEvent) => {
+//   const value = event.target.value;
 
-  if (value === "true") {
-    setStatusFilter(true);
-    setParams(prev => ({ ...prev, is_available: true }));
-  } else if (value === "false") {
-    setStatusFilter(false);
-    setParams(prev => ({ ...prev, is_available: false }));
-  } else if (value === "All") {
-    setStatusFilter(null);
-    setParams(prev => ({ ...prev, is_available: false }));
-  }
-};
+//   if (value === "true") {
+//     setStatusFilter(true);
+//     setParams(prev => ({ ...prev, is_available: true }));
+//   } else if (value === "false") {
+//     setStatusFilter(false);
+//     setParams(prev => ({ ...prev, is_available: false }));
+//   } else if (value === "All") {
+//     setStatusFilter(null);
+//     setParams(prev => ({ ...prev, is_available: false }));
+//   }
+// };
 
 const deleteCustomer=(taskerid:number)=>{
 
@@ -233,12 +233,16 @@ toast.success('Customer Deleted Successfully')
 <FormControl className='w-1/4'>
   <InputLabel>Search By Status</InputLabel>
   <Select 
-  onChange={handleStatusChange} 
-  value={statusFilter===null?"All":statusFilter.toString()}
+  onChange={
+    (e)=>{
+      const val=e.target.value
+      setParams(prev=>({...prev,pause_account:val===""?"":val=="true"}))}
+  } 
+  value={params.pause_account==""?"":String(params.pause_account)}
   label='Search By Status' className='w-full'>
 <MenuItem value="All">All</MenuItem>
-<MenuItem value="true">Active</MenuItem>
-<MenuItem value="false">Inactive</MenuItem>
+<MenuItem value="false">Active</MenuItem>
+<MenuItem value="true">Inactive</MenuItem>
 </Select>
  </FormControl>
 

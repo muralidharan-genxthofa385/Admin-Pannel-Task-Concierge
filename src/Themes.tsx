@@ -2,7 +2,7 @@
 export const themes = {
   largeHeading: {
     fontWeight: 600,
-    fontSize: {xs:'24px',md:"32px"},
+    fontSize: {xs:'24px',md:"21px"},
     color: "var(--color-black)",
         fontFamily: "Sora, sans-serif",
 

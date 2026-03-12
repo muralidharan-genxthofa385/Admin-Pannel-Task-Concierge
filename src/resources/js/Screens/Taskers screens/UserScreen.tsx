@@ -1,7 +1,7 @@
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Bolt, Ellipsis,  Eye,  Flame, Pencil,Trash, User, UserRoundMinusIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -59,7 +59,7 @@ const [params, setParams] = useState({
     search: "",
     // min_rating: 0,
     // max_rating: 5,
-    pause_account: null as boolean | null,
+    pause_account: '' as boolean | '',
     is_verified: false,
     sort_by: "",
     sort_order: "asc",
@@ -101,16 +101,6 @@ fetchAll_taskers()
 setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.pageSize}))
   },[PaginationModel])
 
-const handleStatusChange = (e: SelectChangeEvent) => {
-  const value = e.target.value;
-  if (value === "All") {
-    setParams(prev => ({ ...prev, pause_account: null }));
-  } else if (value === "Active") {
-    setParams(prev => ({ ...prev, pause_account: false }));
-  } else if (value === "Inactive") {
-    setParams(prev => ({ ...prev, pause_account: true }));
-  }
-};
 
 const deleteTasker=(taskerid:number)=>{
 
@@ -219,18 +209,15 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
 <FormControl className='w-full md:w-1/4'>
   <InputLabel>Search By Status</InputLabel>
   <Select 
-  onChange={handleStatusChange} 
+  onChange={(e)=>{
+    const val=e.target.value
+    setParams(prev=>({...prev,pause_account:val==""?"":val=="true"}))}} 
  value={
-      params.pause_account === null
-        ? "All"
-        : params.pause_account
-        ? "Inactive"
-        : "Active"
-    }
+      params.pause_account===""?"":String(params.pause_account)}
   label='Search By Status' className='w-full md:w-full'>
-<MenuItem value="All">All</MenuItem>
-<MenuItem value="Active">Active</MenuItem>
-<MenuItem value="Inactive">Inactive</MenuItem>
+    <MenuItem value="">All</MenuItem>
+<MenuItem value="false">Active</MenuItem>
+<MenuItem value="true">Inactive</MenuItem>
 </Select>
  </FormControl>
 

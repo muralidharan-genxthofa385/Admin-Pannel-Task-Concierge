@@ -21,6 +21,8 @@ interface bookingdetailstype {
   created_at:string
   notes:string,
   start_date:string
+  booking_lat:string,
+  booking_lng:string,
   customer:{
   name: string,
     profile_pic_url: string,
@@ -122,9 +124,12 @@ console.log("taskdetails",taskstatus)
 
    <div className='w-full flex flex-col   lg:flex-row  gap-3 lg:justify-between'>
 
-    <Card className=' w-full sm:w-full lg:w-[67%] h-max '>
+    <Card className=' w-full sm:w-full lg:w-[70%] h-max '>
         <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Task Details</Typography>
-        <div className='p-8 flex flex-col gap-8'>
+      <div className='w-full md:flex lg:flex items-center justify-between '>
+
+
+        <div className='p-8 flex flex-col gap-5 w-[50%] flex-wrap'>
 
             <div className='flex items-center justify-between'>
             <div>
@@ -169,11 +174,11 @@ console.log("taskdetails",taskstatus)
 
              </div>
             </div>
-            <div className='w-[40%]'>
+            <div >
                 <Typography sx={{...themes.lightFont}}>Task Date</Typography>
             <>   {taskDetails?.start_date?
-             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.start_date} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>:
-             <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.scheduled_dates[0]} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>
+             <Typography sx={{...themes.mediumSizedFont}} >{taskDetails?.start_date} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>:
+             <Typography sx={{...themes.mediumSizedFont}} >{taskDetails?.scheduled_dates[0]} ,at :{formatUtcTimeToLocal(taskDetails?.scheduled_time)}</Typography>
              }
 
             </>
@@ -184,14 +189,27 @@ console.log("taskdetails",taskstatus)
 
             <div>
                 <Typography sx={{...themes.lightFont}}>Service Name</Typography>
-               <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}}> {taskDetails?.service.name_en}</Typography>
+               <Typography sx={{...themes.mediumSizedFont}}> {taskDetails?.service.name_en}</Typography>
             </div>
-            <div className='w-[40%]'>
+            <div >
                 <Typography sx={{...themes.lightFont}}>Created Date</Typography>
-               <Typography sx={{...themes.mediumSizedFont,fontSize:"18px"}} >{taskDetails?.created_at.slice(0,10)||""} ,at :{formatUtcTimeToLocal(taskDetails?.created_at.slice(12,19)||"")}</Typography>
+               <Typography sx={{...themes.mediumSizedFont}} >{taskDetails?.created_at.slice(0,10)||""} ,at :{formatUtcTimeToLocal(taskDetails?.created_at.slice(12,19)||"")}</Typography>
             </div>
             </div>
 
+        </div>
+
+        <div className='w-[49%] flex items-end pr-8 flex-col'>
+                    <Typography sx={{...themes.mediumSizedFont,textAlign:"left",pb:1}}>Task Location</Typography>
+
+         <Card className='p-1'>
+          <Box
+          component={'iframe'}
+          src={`https://www.google.com/maps?q=${taskDetails?.booking_lat},${taskDetails?.booking_lng}&z=15&output=embed`}
+          />
+          </Card>
+
+        </div>
         </div>
 
     </Card>
@@ -210,7 +228,7 @@ console.log("taskdetails",taskstatus)
 
 <div className='w-full flex flex-col lg:flex-row gap-3 lg:justify-between'>
 
-    <Card className=' w-full lg:w-[67%] h-max'>
+    <Card className=' w-full lg:w-[70%] h-max'>
         <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Assigned Taskers</Typography>
         
              {!taskDetails?.selected_taskers?<>

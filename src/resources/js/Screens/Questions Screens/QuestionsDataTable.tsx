@@ -19,7 +19,7 @@ import Modal from '@mui/material/Modal'
 interface questions {
   id: number
   input_type: string,
-  options_json: string[],
+  options_json_en: string[],
   question_text_en: string,
   service: {
     category: { name_en: string },
@@ -129,11 +129,11 @@ const QuestionsDataTable: React.FC = () => {
     { field: 'service', headerName: "Service Name", width: 230, renderCell: (params) => (<span>{params.row.service?.name_en || 'N/A'}</span>), },
     { field: 'category', headerName: "Category", width: 140, renderCell: (params) => (<span>{params.row.service?.category?.name_en}</span>) },
     { field: 'question_type', headerName: "Question Type", width: 200 },
-    { field: 'question_text_en', headerName: "Question", width: 500 },
+    { field: 'question_text_en', headerName: "Question", width: 400 },
     {
-      field: 'options_json', headerName: "Options", width: 400,
+      field: 'options_json_en', headerName: "Options", width: 400,
       renderCell: (params) => {
-        const options = params.row.options_json;
+        const options = params.row.options_json_en;
 
         if (Array.isArray(options)) {
           return <span>{options.join(', ') || '-'}</span>;
@@ -208,7 +208,7 @@ const QuestionsDataTable: React.FC = () => {
         <div className='flex md:gap-4 xs:gap-10 md:flex-row flex-col w-full  flex-wrap'>
           <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: { md: "70%", xs: "100%" } }} />
 
-          <FormControl sx={{ ...themes.textFieldStyle, width: { md: "11%", xs: "100%" }, mt: { xs: 3, md: 0 } }} >
+          <FormControl sx={{ ...themes.textFieldStyle, width: { md: "14%", xs: "100%" }, mt: { xs: 3, md: 0 } }} >
             <InputLabel>filter by category</InputLabel>
             <Select label='filter by category' value={params.category_id}
               onChange={(e) => setparams(prev => ({ ...prev, category_id: Number(e.target.value), page: 0 }))}
@@ -219,7 +219,7 @@ const QuestionsDataTable: React.FC = () => {
               <MenuItem value={3}>Business & Events</MenuItem>
             </Select>
           </FormControl>
-          <Button sx={{ ...themes.OutlinedButtonStyle, mt: { xs: 3, md: 0 }, fontWeight: 400, padding: "0rem 1.5rem" }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
+          <Button sx={{ ...themes.OutlinedButtonStyle, mt: { xs: 3, md: 0 }, fontWeight: 400, padding: "0rem 1.5rem",width:"14%" }} onClick={() => window.location.href = '/questions/creation'}>+ Create</Button>
         </div>
 
         <div>
