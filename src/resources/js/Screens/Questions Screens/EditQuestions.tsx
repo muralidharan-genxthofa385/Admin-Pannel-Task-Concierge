@@ -1,7 +1,7 @@
 import { EditQuestion, getAllServicess, getQuestionByID, getQuestionByServiceID } from '@/Service/Questions_page_service/Questions_page_service'
 import { themes } from '@/Themes'
 import TextField from '@mui/material/TextField'
-import { ChevronLeft, ChevronRight, Save, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Save, Trash, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -12,6 +12,7 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Typography } from '@mui/material'
 
 
 interface servicedata{
@@ -22,7 +23,8 @@ interface servicedata{
 interface questions {
   id: number
   input_type: string,
-  options_json: string[],
+  options_json_en: string[],
+  options_json_cy:[],
   question_text_en: string,
     question_text_cy: string,
 
@@ -43,16 +45,20 @@ const EditQuestions:React.FC = () => {
     
       const [_Servicedata, setServicedata] = useState<servicedata[]>([])
       const [selectedService,setSelectedService]=useState<servicedata|null>(null)
-      const [question_text,setQuestion_text]=useState('')
+      // const [question_text,setQuestion_text]=useState('')
       const [radioOptiontext,setradioOptiontext]=useState('')
       const [checkboxOptiontext,setCheckboxOptiontext]=useState('')
+      const [radioOptiontext_cy,setradioOptiontext_cy]=useState('')
+      const [checkboxOptiontext_cy,setCheckboxOptiontext_cy]=useState('')
       const [_serviceQuestion,setServiceQuestion]=useState<questions[]>([])
 
       const [dataQuestionByID,setDataQuestionByID]=useState({
         setvice_id:selectedService,
-        question_text_en:question_text,
+        question_text_en:'',
+        question_text_cy:'',
         input_type:'text',
-        options_json:[] as string[],
+        options_json_en:[] as string[],
+                options_json_cy:[] as string[],
         is_required:false,
         service_name:""
       })
@@ -88,8 +94,11 @@ try{
     const Q=res.data
     setDataQuestionByID(prev=>({...prev,
           question_text_en:Q.question_text_en, 
+          question_text_cy:Q.question_text_cy,
         input_type:Q.input_type||"text", 
-         options_json:Q.options_json||[], is_required:Q.is_required,
+         options_json_en:Q.options_json_en||[],
+        options_json_cy:Q.options_json_cy||[],
+         is_required:Q.is_required,
         service_name:Q.service_name
         }))
           console.log("ind question :",Q)
@@ -103,26 +112,35 @@ fetchQuestionByid()
     },[id])
 
     
-const addOption = (text: string) => {
-  if (!text) return;
-  setDataQuestionByID(prev => ({
-    ...prev,
-    options_json: [...prev.options_json, text]
-  }));
-};
+// const addOption = (text: string) => {
+//   if (!text) return;
+//   setDataQuestionByID(prev => ({
+//     ...prev,
+//     options_json_en: [...prev.options_json_en, text],
+//    options_json_cy: [...prev.options_json_cy, text]
+//   }));
+// };
 
 const handleAddOption = () => {
   if (radioOptiontext || checkboxOptiontext) {
-    addOption(radioOptiontext || checkboxOptiontext);
+    const enText=radioOptiontext||checkboxOptiontext;
+    const cyText=radioOptiontext_cy||checkboxOptiontext_cy
+    setDataQuestionByID(prev=>({...prev,options_json_en:[...prev.options_json_en,enText],
+      options_json_cy:[...prev.options_json_cy,cyText]
+    }))
     setradioOptiontext('');
     setCheckboxOptiontext('');
+     setradioOptiontext_cy('');
+    setCheckboxOptiontext_cy('');
   }
 };
 
     const deleteOption = (index: number) => {
   setDataQuestionByID(prev => ({
     ...prev,
-    options_json: prev.options_json.filter((_, i) => i !== index)
+    options_json_en: prev.options_json_en.filter((_, i) => i !== index),
+        options_json_cy: prev.options_json_cy.filter((_, i) => i !== index)
+
   }));
 };
 
@@ -148,13 +166,16 @@ useEffect(()=>{fetchQuestionsbyId()},[])
       toast.error('please select a service to continue')
     }else if(!dataQuestionByID.input_type){
         toast.error('please select a Question Type to continue')
+    }else{
+
     }
-    else if(!dataQuestionByID.is_required){  toast.error('please select if the question is Required or Not')}
       const payload={
         setvice_id:dataQuestionByID.setvice_id,
         question_text_en: dataQuestionByID.question_text_en,
+        question_text_cy:dataQuestionByID.question_text_cy,
       input_type: dataQuestionByID.input_type,
-options_json:dataQuestionByID.options_json,
+options_json_en:dataQuestionByID.options_json_en,
+options_json_cy:dataQuestionByID.options_json_cy,
       is_required: dataQuestionByID.is_required
     
       }
@@ -162,9 +183,9 @@ options_json:dataQuestionByID.options_json,
     
       await EditQuestion(Number(id),payload)
       try{
-    toast.success('Question Created Successfully')
+    toast.success('Question Edited Successfully')
         setSelectedService(null)
-    setQuestion_text('')
+    
      navigate(-1)
       }
       catch{
@@ -183,14 +204,14 @@ options_json:dataQuestionByID.options_json,
 
 
 <div className='flex flex-col gap-10 '>
-  <div><h1 className='sm:text-2xl md:text-2xl flex items-center gap-3 cursor-pointer w-max' onClick={()=>navigate(-1)}><ChevronLeft className='w-6 h-6'/>Edit Questions</h1></div>
+  <div><h1 className='sm:text-xl font-bold md:text-xl  flex items-center gap-3 cursor-pointer w-max' onClick={()=>navigate(-1)}><ChevronLeft className='w-6 h-6'/>Edit Questions</h1></div>
 
  
 
 <Card className='flex flex-col gap-10 shadow rounded-2xl p-6'>
 
   <div className='flex flex-col gap-3'>
-    <h1 className='text-2xl flex gap-1 items-center'>1<ChevronRight className='text-[var(--color-purple)]'/>Service Name</h1>
+    <h1 className='text-xl font-bold flex gap-1 items-center'>1<ChevronRight className='text-[var(--color-purple)]'/>Service Name</h1>
 
 
   <TextField sx={themes.textFieldStyle} value={dataQuestionByID.service_name} label="Service Name" />
@@ -198,15 +219,27 @@ options_json:dataQuestionByID.options_json,
 
 </div>
 <div>
-   <h1 className='text-2xl flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Edit your Question</h1>
+   <h1 className='text-xl font-bold  flex gap-1 items-center'>2<ChevronRight className='text-[var(--color-purple)]'/> Edit your Question</h1>
+  <div className='flex w-full justify-between'>
+   <Card className='w-[49%]'>
+    <Typography sx={{...themes.mediumSizedFont,pl:3}}>Question(en)</Typography>
    <TextField  label="" sx={{...themes.inputFeildActions.active}}
    value={dataQuestionByID.question_text_en} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text_en:e.target.value}))}
    inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} variant="standard" fullWidth />
+</Card>
 
+ <Card className='w-[49%]'>
+      <Typography sx={{...themes.mediumSizedFont,pl:3}}>Question(cy)</Typography>
+    <TextField  label="" sx={{...themes.inputFeildActions.active}}
+   value={dataQuestionByID.question_text_cy} onChange={(e)=>setDataQuestionByID(prev=>({...prev,question_text_cy:e.target.value}))}
+   inputProps={{sx:{pl:4}}}  InputLabelProps={{ sx: themes.inputFeildActions.inActive}} variant="standard" fullWidth />
+</Card>
+
+</div>
 </div>
 
 <div>
-    <h1 className='text-2xl flex gap-1 items-center'>3<ChevronRight className='text-[var(--color-purple)]'/> Select your Question Type</h1>
+    <h1 className='text-xl font-bold flex gap-1 items-center'>3<ChevronRight className='text-[var(--color-purple)]'/> Select your Question Type</h1>
     
       <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="text" name="radio-buttons-group" 
       value={dataQuestionByID.input_type} 
@@ -221,36 +254,85 @@ options_json:dataQuestionByID.options_json,
  
   {dataQuestionByID.input_type !== "text" && (
   <div className="flex flex-col gap-3">
-    <h1 className='text-2xl flex gap-1 items-center'>
+    <h1 className='text-xl font-bold flex gap-1 items-center'>
       4<ChevronRight className='text-[var(--color-purple)]'/>Create your Question's Options
     </h1>
-
-    {dataQuestionByID.options_json.map((option, index) => (
+<div className='flex'>
+  <div className='flex flex-col'>  {dataQuestionByID.options_json_en.map((option, index) => (
       <h1 key={index} className="flex items-center">
         {dataQuestionByID.input_type === "radio" 
           ? <Radio defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />
           : <Checkbox defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />}
-        {option}
+       <TextField variant='standard' value={option} onChange={(e)=>
+        setDataQuestionByID(prev => ({
+          ...prev,
+          options_json_en: prev.options_json_en.map((opt, i) =>
+            i === index ? e.target.value : opt
+          )
+        }))
+        } />
+        <Trash2
+          className='pl-1 cursor-pointer text-red-500'
+          onClick={() => deleteOption(index)}
+        />
+      </h1>
+    ))}</div>
+
+   <div className='flex flex-col'>  {dataQuestionByID.options_json_cy.map((option, index) => (
+      <h1 key={index} className="flex items-center">
+        {dataQuestionByID.input_type === "radio" 
+          ? <Radio defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />
+          : <Checkbox defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />}
+       <TextField variant='standard' value={option} onChange={(e)=>
+        setDataQuestionByID(prev => ({
+          ...prev,
+          options_json_cy: prev.options_json_cy.map((opt, i) =>
+            i === index ? e.target.value : opt
+          )
+        }))
+        } />
         <Trash2
           className='pl-1 cursor-pointer text-red-500'
           onClick={() => deleteOption(index)}
         />
       </h1>
     ))}
+</div>
 
+    </div>
+
+<div className='flex' >
     <h1 className="flex items-center">
       {dataQuestionByID.input_type === "radio" 
         ? <Radio defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />
         : <Checkbox defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />}
       <TextField
         variant='standard'
+        placeholder='option(en)'
         value={radioOptiontext || checkboxOptiontext}
         onChange={(e) => {
           if (dataQuestionByID.input_type === "radio") setradioOptiontext(e.target.value)
           else setCheckboxOptiontext(e.target.value)
         }}
+      /><Trash style={{visibility:"hidden"}} />
+    </h1>
+
+ <h1 className="flex items-center">
+      {dataQuestionByID.input_type === "radio" 
+        ? <Radio defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />
+        : <Checkbox defaultChecked sx={{ ...radiostyles.checkboxStyle, scale: 0.9 }} />}
+      <TextField
+        variant='standard'
+         placeholder='option(cy)'
+        value={radioOptiontext_cy || checkboxOptiontext_cy}
+        onChange={(e) => {
+          if (dataQuestionByID.input_type === "radio") setradioOptiontext_cy(e.target.value)
+          else setCheckboxOptiontext_cy(e.target.value)
+        }}
       />
     </h1>
+
+    </div>
 
     <Button
       sx={{ ...themes.OutlinedButtonStyle, mt: 2 }}
@@ -263,7 +345,7 @@ options_json:dataQuestionByID.options_json,
 
 
 <div className='flex flex-col gap-3'>
- <h1 className='text-2xl flex gap-1 items-center'>{dataQuestionByID.input_type=="text"?4:5}<ChevronRight className='text-[var(--color-purple)]'/> Is your Question is Madnatory and to be filled ?</h1>
+ <h1 className='text-xl font-bold flex gap-1 items-center'>{dataQuestionByID.input_type=="text"?4:5}<ChevronRight className='text-[var(--color-purple)]'/> Is your Question is Madnatory and to be filled ?</h1>
    <FormControl onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
 setDataQuestionByID(prev=>({...prev,is_required:e.target.value==='true'}))
    }}>
