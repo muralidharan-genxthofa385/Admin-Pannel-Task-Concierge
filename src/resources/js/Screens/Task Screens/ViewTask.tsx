@@ -199,14 +199,20 @@ console.log("taskdetails",taskstatus)
 
         </div>
 
-        <div className='w-[49%] flex items-end pr-8 flex-col'>
-                    <Typography sx={{...themes.mediumSizedFont,textAlign:"left",pb:1}}>Task Location</Typography>
+        <div className='w-[45%] flex items-end pr-8 flex-col'>
+                    {/* <Typography sx={{...themes.mediumSizedFont,textAlign:"left",pb:1}}>Task Location</Typography> */}
 
-         <Card className='p-1'>
-          <Box
+         <Card className='p-1 w-full'>
+                <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2 flex items-center gap-1'>Description</Typography>
+          {/* <Box
           component={'iframe'}
           src={`https://www.google.com/maps?q=${taskDetails?.booking_lat},${taskDetails?.booking_lng}&z=15&output=embed`}
-          />
+          /> */}
+          <div className='p-8 flex flex-col gap-8'>
+
+          {taskDetails?.notes}
+
+        </div>
           </Card>
 
         </div>
@@ -215,13 +221,13 @@ console.log("taskdetails",taskstatus)
     </Card>
 
     <Card className=' w-full lg:w-[28%]'>
-                <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Description</Typography>
-
-             <div className='p-8 flex flex-col gap-8'>
-
-          {taskDetails?.notes}
-
-        </div>
+                <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2 flex items-center gap-1'><MapPin/> Task Location</Typography>
+   <Box
+   sx={{width:"100%",height:"100%",p:"0% 3%",borderRadius:"2rem"}}
+          component={'iframe'}
+          src={`https://www.google.com/maps?q=${taskDetails?.booking_lat},${taskDetails?.booking_lng}&z=15&output=embed`}
+          />
+             
     </Card>
     </div>
 
@@ -253,9 +259,9 @@ Tasker not assigned yet
         <Typography className='text-yellow-400 flex gap-2 items-center'><Star/> 4.9</Typography>
      </div>
      <div className='p-5 flex gap-3'>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/>+ {tasker.phone}</Typography>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {tasker.email}</Typography>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><MapPin/> {tasker.location}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-2 items-center'><Phone/>+ {tasker.phone}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-2 items-center'><Mail/> {tasker.email}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-2 items-center'><MapPin/> {tasker.location}</Typography>
 
 </div>
 </div>
@@ -264,7 +270,7 @@ Tasker not assigned yet
 
     </Card>
 
-    <Card className=' w-full lg:w-[28%]'>
+    <Card className=' w-full lg:w-[28%] h-max'>
                 <Typography sx={{...themes.largeHeading}} className='pl-10 p-3 border-b-2'>Customer Info</Typography>
 
                 <div className='p-4'>
@@ -279,7 +285,7 @@ Tasker not assigned yet
      </div>
 </div>
 <div className='p-5 flex flex-col gap-3'>
-<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/> {taskDetails?.customer?.phone}</Typography>
+<Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Phone/>+{taskDetails?.customer?.phone}</Typography>
 <Typography sx={{...themes.mediumSizedFont,fontWeight:400,fontSize:"18px"}} className='flex gap-3 items-center'><Mail/> {taskDetails?.customer?.email}</Typography>
 </div>
 </div>

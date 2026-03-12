@@ -312,6 +312,7 @@ const loadDocument = async () => {
       <Typography color="text.secondary">Loading certificate...</Typography>
     ) : docUrl ? (
       <Box
+      onClick={()=>{setRenderCertificate(true)}}
         component="img"
         src={docUrl}
         alt="Student document / certificate"
