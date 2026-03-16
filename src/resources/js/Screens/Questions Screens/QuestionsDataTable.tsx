@@ -205,7 +205,7 @@ const QuestionsDataTable: React.FC = () => {
     <>
       <div className='flex flex-col gap-10'>
         <h1 style={{ fontWeight: 600 }} className='sm:text-2xl md:text-2xl flex items-center gap-3'><SquarePen className='w-6 h-6' /> Service Questions</h1>
-        <div className='flex md:gap-4 xs:gap-10 md:flex-row flex-col w-full  flex-wrap'>
+        <div className='flex md:gap-4 xs:gap-10 md:flex-row flex-col w-full  flex-wrap md:flex-nowrap lg:flex-nowrap '>
           <TextField {...params} label="Search by Questions" value={params.search} onChange={(e) => setparams(prev => ({ ...prev, search: e.target.value }))} sx={{ ...themes.textFieldStyle, width: { md: "70%", xs: "100%" } }} />
 
           <FormControl sx={{ ...themes.textFieldStyle, width: { md: "14%", xs: "100%" }, mt: { xs: 3, md: 0 } }} >
@@ -242,8 +242,6 @@ const QuestionsDataTable: React.FC = () => {
                 }));
               }}
             />
-
-
           </Card>
         </div>
 
