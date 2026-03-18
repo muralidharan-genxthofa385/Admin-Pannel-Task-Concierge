@@ -42,7 +42,8 @@ const BusinessUserEdit:React.FC = () => {
       street: "",
       appartment: "",
       pincode: "",
-      entity_name: ""
+      entity_name: "",
+      houseCode:''
     });
     
         
@@ -65,7 +66,8 @@ const BusinessUserEdit:React.FC = () => {
             street: business.street || "",
             appartment: business.apartment || "",
             pincode: business.postcode || "",
-            entity_name:business.entity_name
+            entity_name:business.entity_name,
+            houseCode:business.companies_house_code
           });
         })
         .catch((err) => {
@@ -196,9 +198,9 @@ const BusinessUserEdit:React.FC = () => {
                     <Card>
                         <h1 className='p-4 border-b-2 text-2xl font-semibold'>ConfidentialInformation</h1>
                         <div className='p-5'>
-                            <TextField fullWidth label="National Insurance Number" sx={themes.textFieldStyle}
-                                value={customerDetails.national_insurance_number}
-                                onChange={(e) => setCustomerdetails(prev => ({ ...prev, national_insurance_number: e.target.value }))}
+                            <TextField fullWidth label="Company's House Code" sx={themes.textFieldStyle}
+                                value={customerDetails.houseCode}
+                               
 
                             />
 

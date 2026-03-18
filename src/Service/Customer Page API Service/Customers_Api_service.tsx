@@ -13,8 +13,8 @@ export const GetAllCustomers=(
     return getRequest(`admin/customers?search=${search}&sort_by=${sort_by}&sort_order=${sort_order}&per_page=${per_page}&page=${page}`)
 }
 
-export const getCustomerById=(id:number)=>{
-    return getRequest(`/admin/residents/${id}`)
+export const getCustomerById=(id:number,task_page:any,task_per_page:any)=>{
+    return getRequest(`/admin/residents/${id}?task_page:${task_page}&task_per_page:${task_per_page}`)
 }
 
 export const delete_Customer=(id:number)=>{

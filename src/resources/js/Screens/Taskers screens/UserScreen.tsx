@@ -119,7 +119,7 @@ toast.success('Tasker Deleted Successfully')
   const columns: GridColDef[] = [
   { field: 'first_name', headerName: 'Name', width: 180,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
   { field: 'email', headerName: 'EMail', width: 260 },
-  {field:"phone",headerName:'Phone',width:240},
+  {field:"phone",headerName:'Phone',width:240,renderCell:(p)=>(<>+ {p.row.phone}</>)},
 {
   field: "skills",
   headerName: "Skills",

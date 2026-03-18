@@ -25,12 +25,7 @@ interface TaskerDetails {
     student_document_url:string
     student_document:string
   };
-  pagination:{
-    current_page: number,
-last_page: number
-per_page: number
-total: number
-  }
+  
   task_history:{
  tasks: {
      customer:{
@@ -43,6 +38,12 @@ total: number
     is_paid:boolean
     scheduled_dates:string[]
   }[]
+  pagination:{
+    current_page: number,
+last_page: number
+per_page: number
+total: number
+  }
   }
  
   services_done: ServiceDone[];
@@ -75,7 +76,7 @@ const fetchtasker=async()=>{
             
             console.log("response :",res)
             setUserdetails(res.data)
-            setTotalCount(res.data.pagination?.total)
+            setTotalCount(res.data.task_history?.pagination?.total ?? 0);
            await getRequest(`/admin/documents/onboarding/${res.data.tasker.student_document}`)
 
         }
@@ -88,23 +89,21 @@ const fetchtasker=async()=>{
     }
 
 useEffect(()=>{
-    
 fetchtasker()
-
 
 },[id,PaginationModel.page,PaginationModel.pageSize])
 
 
 
-useEffect(() => { 
-  setPaginationModel((prev) => ({ 
-    ...prev, 
-    page:  userDetails?.pagination?.current_page 
-             ? userDetails.pagination.current_page - 1 
-             : 0,
-    pageSize: userDetails?.pagination?.per_page ?? 10,
-  }));
-}, [userDetails]);  
+// useEffect(() => { 
+//   setPaginationModel((prev) => ({ 
+//     ...prev, 
+//     page:  userDetails?.task_history?.pagination?.current_page 
+//              ? userDetails?.task_history?.pagination?.current_page - 1 
+//              : 0,
+//     pageSize: userDetails?.task_history?.pagination?.per_page ?? 10,
+//   }));
+// }, [userDetails]);  
 
 
 const columns: GridColDef[] = [

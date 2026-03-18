@@ -52,7 +52,7 @@ const CustomerEdit:React.FC = () => {
       console.log("cust:", res.data);
 
       const customer = res.data;
-      const business = customer.business_details?.[0] || {};
+      const business =customer.task_history?.tasks[0]?.customer?.primary_business_details
 
       setCustomerdetails({
         firsname: customer.first_name || "",

@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 
 
 interface customerdetails {
@@ -25,8 +27,15 @@ interface customerdetails {
     service:{
         name:string
     }
+    is_paid:boolean
     scheduled_dates:string[]
   }[]
+  pagination:{
+    current_page: number,
+last_page: number
+per_page: number
+total: number
+  }
   }
 
 bookings:bookings,
@@ -43,27 +52,112 @@ const ViewCustomer:React.FC = () => {
 const {id}=useParams()
 const [userDetails,setUserdetails]=useState<customerdetails|null>(null)
 const [counts,setCounts]=useState<bookings|null>()
+const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
+const [totalCount,setTotalCount]=useState(0)
+const [loading,setLoading]=useState(false)
+
 
 
 useEffect(()=>{
     const fetchtasker=async()=>{
+        setLoading(true)
         try{
-            const res=await getCustomerById(Number(id))
+             const backendPage = PaginationModel.page + 1;
+            const res=await getCustomerById(Number(id),backendPage,PaginationModel.pageSize)
             console.log("response :",res)
             setUserdetails(res.data)
             setCounts(res.data.bookings)
+            setTotalCount(res?.data?.task_history.pagination?.total??0)
             console.log('bookings : ',counts)
 
         }
-        catch{
-
+        catch(err){
+console.log(err)
+        }
+        finally{
+            setLoading(false)
         }
     }
 fetchtasker()
 
 
-},[id])
+},[id,PaginationModel.page,PaginationModel.pageSize])
 
+
+
+
+const columns: GridColDef[] = [
+  {
+    field: 'service',
+    headerName: 'Service',
+    width: 180,
+    valueGetter: (_value, row) => row.service?.name_en || row.service?.name || '—',
+  },
+  {
+    field:'customer',
+    headerName:"Customer Name",
+    width:200,
+    valueGetter:(_value,row)=>row.customer?.name || '—'
+
+
+  },
+  {
+    field: 'scheduled_dates',
+    headerName: 'Scheduled Dates',
+    width: 220,
+    valueGetter: (_value, row) => {
+      if (!row.scheduled_dates || row.scheduled_dates.length === 0) return '—';
+      if (row.scheduled_dates.length === 1) return row.scheduled_dates[0];
+      return `${row.scheduled_dates[0]} → ${row.scheduled_dates.at(-1)}`;
+    },
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 140,
+    renderCell: (params) => (
+      <span className={`capitalize px-2 py-1 rounded text-sm ${
+        params.value === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+        params.value === 'completed'   ? 'bg-green-100 text-green-800' :
+        params.value === 'cancelled'   ? 'bg-red-100 text-red-800' :
+        'bg-gray-100 text-gray-800'
+      }`}>
+        {params.value || '—'}
+      </span>
+    ),
+  },
+  {
+    field: 'total_cost',
+    headerName: 'Amount',
+    width: 120,
+    valueFormatter: (value) => value ? `£${Number(value).toFixed(2)}` : '—',
+  },
+  {
+field:"is_paid",headerName:"Payment Status",width:150,
+renderCell: (params) => {
+  return (
+    <Box
+      component="span"
+      className={`capitalize px-2 py-1 rounded text-sm font-medium w-[100%] ${
+        params.value === true
+          ? "bg-green-100 text-green-800"
+          : "bg-red-100 text-red-800"
+      }`}
+    >
+      {params.value === true ? "Paid" : "Unpaid"}
+    </Box>
+  );
+},
+
+
+  },
+  {
+    field: 'created_at',
+    headerName: 'Created at',
+    width: 160,
+    valueFormatter: (value) => value ? new Date(value).toLocaleDateString() : '—',
+  },
+];
 
 
 
@@ -71,7 +165,7 @@ fetchtasker()
   return (
     <>
     <Typography className='flex items-center w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:25,color:"var(--color-purple)"}}>
-            <ChevronLeft className='w-8 h-8' />{userDetails?.name||"na"}</Typography>
+            <ChevronLeft className='w-8 h-8' />{userDetails?.name||"NA"}</Typography>
             <div className=' flex flex-col gap-11'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
                     <HighlightStatsBox icon={Wallet} count={0} title='Revenue' />
@@ -160,6 +254,32 @@ fetchtasker()
         No Task History Recorded
     </Typography>
     </div>} */}
+
+<DataGrid
+  rows={userDetails?.task_history?.tasks || []}
+  columns={columns}
+  paginationMode="server"
+  pagination                 
+  paginationModel={PaginationModel}
+  onPaginationModelChange={setPaginationModel}
+  rowCount={totalCount}      
+  loading={loading}
+  pageSizeOptions={[5, 10, 15, 20, 25]}
+  getRowId={(row) => row.id ?? crypto.randomUUID()}
+  disableRowSelectionOnClick
+  autoHeight                
+  sx={{
+    border: 0,
+    minHeight: 400,  
+    '& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',} ,        
+    '& .MuiDataGrid-footerContainer': {
+      borderTop: '1px solid #e0e0e0',
+      minHeight: '52px !important',
+      display: 'flex !important',
+    },
+  }}
+/> 
+
 
                 </Card>
 

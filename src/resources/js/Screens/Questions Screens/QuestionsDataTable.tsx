@@ -41,13 +41,9 @@ const QuestionsDataTable: React.FC = () => {
     sort_order: "",
     per_page: 10,
     page: 0
-
   })
 
   const [openmodal, setOpenmodal] = React.useState(false);
-
-
-
   const [questions, setQuestions] = useState<questions[]>()
   const [totalCount, setTotalCount] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
