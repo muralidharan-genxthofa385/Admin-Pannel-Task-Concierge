@@ -4,6 +4,7 @@ import headderTCLOGO from '../../../../assets/images/taskconciegeLogo.svg';
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { themes } from '@/Themes';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 type layoutProps = {
   children: React.ReactNode;
@@ -32,6 +33,9 @@ function DashboardLayout({ children }: layoutProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </SidebarTrigger>
+            <div className="hidden md:flex flex-1 items-center">
+    <Breadcrumbs />
+  </div>
 
             <div className="md:hidden flex-1 flex justify-center">
               <img
