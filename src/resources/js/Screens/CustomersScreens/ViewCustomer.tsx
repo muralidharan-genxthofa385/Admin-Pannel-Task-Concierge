@@ -1,13 +1,17 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar,  CheckCircle,  ChevronLeft,  History,  Mail, PhoneCallIcon, Scale, Wallet } from 'lucide-react';
+import {  CheckCircle,  History,  Mail, PhoneCallIcon, Search, } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCustomerById } from '@/Service/Customer Page API Service/Customers_Api_service';
-import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
+import {  Box, TextField } from '@mui/material';
+import InfoBox from '../../Reuseable Components/InfoBox';
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 interface customerdetails {
@@ -164,15 +168,24 @@ renderCell: (params) => {
 
   return (
     <>
-    <Typography className='flex items-center w-max cursor-pointer' onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:25,color:"var(--color-purple)"}}>
-            <ChevronLeft className='w-8 h-8' />{userDetails?.name||"NA"}</Typography>
-            <div className=' flex flex-col gap-11'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-6'>
+            <div className=' flex flex-col gap-9'>
+                <div>
+                 <Typography className='flex items-center gap-3 w-max cursor-pointer'
+                  onClick={()=>navigate(-1)} sx={{...themes.mediumSizedFont,fontSize:"2rem",color:"var(--color-black)"}}>
+        {userDetails?.name||"NA"} <Box component={'span'} sx={{border:"1px solid var(--color-grey)",fontSize:"11px",p:0.5,borderRadius:"3rem"}} >{userDetails?.pause_account?"Inactive":"Active"}</Box></Typography>
+            
+                <div className='flex items-center gap-2'>
+                  <InfoBox head='Status' content={userDetails?.pause_account?"Inactive":"Active"} />
+                   <InfoBox head='Member Since' content={dayjs(userDetails?.email_verified_at).format('DD-MM-YYYY')} />
+                    {/* <InfoBox head='Status' content={userDetails?.pause_account?"Inactive":"Active"} /> */}
+                </div>
+                </div>
+                    {/* <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 '>
                     <HighlightStatsBox icon={Wallet} count={0} title='Revenue' />
                     <HighlightStatsBox icon={Activity} count={`${!userDetails?.pause_account?"active":"Inactive"}`} title='Status' />
                     <HighlightStatsBox icon={Scale} count={userDetails?.bookings?.completed.length} title='Completed_Tasks' />
                     <HighlightStatsBox icon={Calendar} count={`${userDetails?.email_verified_at?userDetails?.email_verified_at.slice(0,10):"N/A"}`} title={`Member_Since`} />
-                </div>
+                </div> */}
 
                 <div className='w-full flex flex-col gap-10 justify-between md:flex-row '>
                     <Card className='w-[100%] md:w-[49%] p-10'>
@@ -212,6 +225,7 @@ renderCell: (params) => {
 
 
                         <div className='pt-3'>
+                          
 {userDetails?.bookings?.completed.length==0?
 
 <>{userDetails?.bookings.completed.map((_data)=><div className='flex w-full justify-between items-center'>
@@ -254,6 +268,21 @@ renderCell: (params) => {
         No Task History Recorded
     </Typography>
     </div>} */}
+<div className='flex items-center gap-3.5 w-full'>
+ <div className='relative w-[40%]'>
+  <Search className='absolute top-[22%] left-[0.6%] text-[var(--color-inputborder)]'  size={20}/>
+  <TextField 
+  size='small'
+  placeholder='Search services name ext...'
+  sx={{...themes.textFieldStyle,width:"100%","& .MuiOutlinedInput-root":{borderRadius:"10px",pl:2.3,...themes.lightFont,color:'black'}}}
+  />
+  </div>
+   <LocalizationProvider dateAdapter={AdapterDayjs} >
+        <DatePicker label="Search by date"   />
+    
+    </LocalizationProvider>
+
+</div>
 
 <DataGrid
   rows={userDetails?.task_history?.tasks || []}

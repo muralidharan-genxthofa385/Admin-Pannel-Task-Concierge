@@ -9,7 +9,7 @@ export const themes = {
   },
   lightFont:{
     fontWeight: 400,
-    fontSize: {xs:"14px",md:"16px"},
+    fontSize: {xs:"14px",md:"14px"},
     color: "var(--color-grey)",
         fontFamily: "Sora, sans-serif",
 
@@ -25,7 +25,7 @@ ButtonStyle:{
   backgroundColor:'var(--color-purple)',
   color:"var(--color-white)",
       fontWeight: 600,
-fontSize:'18px',
+fontSize:'16px',
     fontFamily: "Sora, sans-serif",
 
 borderRadius:"10px",

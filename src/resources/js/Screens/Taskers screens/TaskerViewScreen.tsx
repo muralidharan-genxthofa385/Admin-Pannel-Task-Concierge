@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { themes } from '@/Themes';
 import Typography from '@mui/material/Typography';
-import { Activity, Calendar, ChevronLeft, Eye, History, Mail, PhoneCallIcon, Scale, Star, Wallet } from 'lucide-react';
+import { Activity, Calendar, ChevronLeft,  History, Mail, PhoneCallIcon, Scale, Star, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTaskerById } from '@/Service/Taskers_Page_api_service/TaskerspageApi_service';
@@ -323,6 +323,7 @@ const loadDocument = async () => {
           borderRadius: 1,
           boxShadow: 1,
           backgroundColor: "#f9fafb",
+          cursor:"pointer"
         }}
         onError={() => setDocError("Image failed to display (corrupt or wrong format?)")}
       />
@@ -330,7 +331,6 @@ const loadDocument = async () => {
       <Typography color="text.secondary">No document available</Typography>
     )}
   </Box>
-  <Eye style={{color:"var(--color-purple)",cursor:"pointer"}} onClick={()=>{setRenderCertificate(true)}}/>
 </Card>
                 </div>
                

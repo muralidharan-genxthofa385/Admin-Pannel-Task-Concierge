@@ -8,7 +8,9 @@
   --color-red:#B20000;
   --color-green:#2B9348;
   --color-text:#343A40;
-  --color-dark-text:"#505962";
+   --color-inputbg:#d7d5e036;
+   --color-inputborder:rgb(230, 229, 229);
+    --color-dark:"#505962";
   
 }
 
