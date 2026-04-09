@@ -15,6 +15,7 @@ import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 import { toast } from 'react-toastify';
 import  Chip from '@mui/material/Chip';
 import { deleteRequest, getRequest } from '@/Service/Apiservice';
+import ReuseableDeleteConfirmation from '../../Reuseable Components/ReuseableDeleteConfirmation';
 
 
 interface Customer {
@@ -46,7 +47,7 @@ const BusinessUserTable:React.FC = () => {
 
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
-  
+     const [openDelete, setOpenDelete] = React.useState(false);
   const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 15,});
 const [totalCount,setTotalCount]=useState(0)
@@ -124,6 +125,7 @@ toast.success('Customer Deleted Successfully')
   .catch((err)=>{
     console.log(err)
   })
+  .finally(()=>setOpenDelete(false))
 }
 
 
@@ -175,7 +177,11 @@ toast.success('Customer Deleted Successfully')
           handleClose}}
            className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View</MenuItem>
  <MenuItem onClick={()=>{navigate(`/business/user/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
-        <MenuItem onClick={()=>{deleteCustomer(d.row.id);handleClose();}} className='flex gap-2'><Trash2 className='text-[var(--color-red)]' /> Delete</MenuItem>
+        <MenuItem onClick={()=>{
+          
+          setSelectedRowid(d.row.id)
+          setOpenDelete(true)
+          ;handleClose();}} className='flex gap-2'><Trash2 className='text-[var(--color-red)]' /> Delete</MenuItem>
       </Menu>
     </div>
   )
@@ -240,6 +246,12 @@ toast.success('Customer Deleted Successfully')
 </div>{/**----- Data Table Section------ */}
 
       </div>
+
+      <ReuseableDeleteConfirmation 
+handleClose={()=>setOpenDelete(false)}
+ open={openDelete}
+ deleteFun={()=>deleteCustomer(selectedrowid??0)}
+      />
       </div>
   )
 }

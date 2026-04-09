@@ -37,7 +37,6 @@ interface Report {
 
 const ReportedUsersTable:React.FC = () => {
 
-
   const navigate=useNavigate()
     const [ReportedDatas,setReportedDatas]=useState<Report[]>([])
       const [openEditModal, setOpenEditModal] = useState(false)
@@ -54,8 +53,6 @@ const ReportedUsersTable:React.FC = () => {
     setAnchorEl(null);
     // setOpenEditModal(false)
   };
-    
-
 
     useEffect(()=>{
 getRequest('/user/reports')
@@ -66,7 +63,6 @@ getRequest('/user/reports')
     },[])
 
     const getUserBYID=(userID:any)=>{
-
         getRequest(`/user/reports/${userID}`)
         .then((res)=>{
           setViewReport(res.data)
@@ -75,7 +71,7 @@ getRequest('/user/reports')
     }
 
     const unblockUser=(userId:any)=>{
-        
+  
         postRequest(`admin/users/${userId}/unblock`,null)
         .then((res)=>{
             console.log('>>>>>>>>> user,',res)
@@ -84,7 +80,6 @@ getRequest('/user/reports')
         .catch((err)=>{
             console.log(err)
             toast.error('failed to unblock user ,please try again')
-
         })
     }
     const columns:GridColDef[]=[
@@ -239,24 +234,15 @@ sx={{border:"none",'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold',}}}
 
               </Box>
              </Card>
-             
-
             
-
-             
-
-          
-  
-
-            
-            <Box sx={{display:"flex",flexDirection:{md:"row",xs:"column"},gap:2}}>
-              <Button type='submit' sx={themes.ButtonStyle} onClick={()=>{unblockUser(ViewReport?.reported_user.id);setOpenEditModal(false)}}>
+            <Box sx={{display:"flex",flexDirection:{md:"row",xs:"column"},gap:2,justifyContent:"center"}}>
+              <Button type='submit' sx={{...themes.ButtonStyle,width:{md:"30%",xs:"100%"}}} onClick={()=>{unblockUser(ViewReport?.reported_user.id);setOpenEditModal(false)}}>
                 Unblock User
               </Button>
 
                <Button 
                onClick={()=>{ setOpenEditModal(false); }}
-               sx={{textTransform:"none",border:"1px solid var(--color-red)",color:"var(--color-red)",borderRadius:"8px"}}>
+               sx={{textTransform:"none",border:"1px solid var(--color-red)",color:"var(--color-red)",borderRadius:"8px",width:{md:"30%",xs:"100%"}}}>
                 Keep Restricted
               </Button>
 

@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 import { toast } from 'react-toastify';
 import Chip from '@mui/material/Chip';
+import ReuseableDeleteConfirmation from '../../Reuseable Components/ReuseableDeleteConfirmation';
 
 
 interface taskerData{
@@ -48,6 +49,7 @@ function UserScreen() {
   const [taskerData,setTaskerData]=useState<taskerData[]>([])
   // const [namesearch,setNamesearch]=useState('')
   // const [Skillsearch,setSkillsearch]=useState('')
+   const [openDelete, setOpenDelete] = React.useState(false);
   const [SelectedJobFil, setSelectedJobFil] = useState('')
   // const [statusFilter,setStatusFilter]=useState<boolean|null>(null)
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 10,});
@@ -113,8 +115,11 @@ toast.success('Tasker Deleted Successfully')
   .catch((err)=>{
     console.log(err)
   })
+  .finally(()=>setOpenDelete(false))
 }
 
+
+console.log(openDelete)
 
   const columns: GridColDef[] = [
   { field: 'first_name', headerName: 'Name', width: 180,renderCell:(p)=>(<>{p.row.first_name} {p.row.last_name}</>) },
@@ -179,7 +184,10 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
           handleClose()}}
            className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View </MenuItem>
         <MenuItem onClick={()=>{navigate(`/taskers/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
-        <MenuItem onClick={()=>{deleteTasker(d.row.id);handleClose();}} className='flex gap-2'><Trash className='text-[var(--color-red)]' /> Delete</MenuItem>
+        <MenuItem onClick={()=>{
+          // deleteTasker(d.row.id);
+          setSelectedRowid(d.row.id)
+        setOpenDelete(true);handleClose()}} className='flex gap-2'><Trash className='text-[var(--color-red)]' /> Delete</MenuItem>
 
       </Menu>
     </div>
@@ -250,6 +258,13 @@ const dob= params.row.user_details?.date_of_birth?params.row.user_details?.date_
 
       </div>
       </div>
+
+      <ReuseableDeleteConfirmation
+      open={openDelete}
+      handleClose={()=>setOpenDelete(false)}
+      deleteFun={()=>deleteTasker(selectedrowid||0)}
+      
+      />
     </>
   )
 }

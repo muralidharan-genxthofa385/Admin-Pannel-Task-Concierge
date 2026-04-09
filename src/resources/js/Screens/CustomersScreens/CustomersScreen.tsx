@@ -13,10 +13,11 @@ import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import HighlightStatsBox from '../../Reuseable Components/HighlightStatsBox';
 import { delete_Customer } from '@/Service/Customer Page API Service/Customers_Api_service';
-import { toast } from 'react-toastify';
 import  Chip from '@mui/material/Chip';
 import { getRequest } from '@/Service/Apiservice';
 import { getDashboarDetails } from '@/Service/Dashboard Services/DashboardServices';
+import ReuseableDeleteConfirmation from '../../Reuseable Components/ReuseableDeleteConfirmation';
+import { toast } from 'react-toastify';
 
 
 interface Customer {
@@ -69,6 +70,8 @@ const CustomersScreen:React.FC = () => {
 
   const [loading,setLoading]=useState(false)
   const [customerData,setCustomerData]=useState<Customer[]>([])
+       const [openDelete, setOpenDelete] = React.useState(false);
+       const [deleteId,setDeleteId]=useState(0)
   
 const [PaginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({page: 0,  pageSize: 15,});
 const [totalCount,setTotalCount]=useState(0)
@@ -91,6 +94,7 @@ const [params, setParams] = useState({
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>,rowId:number) => {
     setAnchorEl(event.currentTarget);
     setSelectedRowid(rowId)
+    setDeleteId(rowId);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -110,7 +114,7 @@ const fetchallcustomers=()=>{
 .then((res)=>{
 setCustomerData(res.data.data)
 setCustomercount(res.counts)
-setTotalCount(res.meta.total)
+setTotalCount(res?.meta?.total)
 console.log(res)
 console.log('count :')
 
@@ -146,6 +150,7 @@ setParams(prev=>({...prev,page:PaginationModel.page+1,per_page:PaginationModel.p
 
 const deleteCustomer=(taskerid:number)=>{
 
+
   delete_Customer(taskerid)
   .then(()=>{
   fetchallcustomers()
@@ -155,6 +160,7 @@ toast.success('Customer Deleted Successfully')
   .catch((err)=>{
     console.log(err)
   })
+.finally(()=>setOpenDelete(false))
 }
 
 
@@ -178,46 +184,75 @@ toast.success('Customer Deleted Successfully')
     renderCell:(p)=>(<div className='flex items-center justify-center p-1'><img className='w-10 h-10 rounded-full' src={p.row.profile_pic_url} /></div>)
   },
 
-{field:'actions',headerName:"Actions",width:100,
-  renderCell:(d)=>(
- <div>
+{field: 'actions', headerName: "Actions", width: 100,
+  renderCell: (params) => (
+    <div>
       <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={(e)=>handleClick(e,d.row.id)}
-      ><Ellipsis/> </Button>
+        onClick={(e) => {
+          handleClick(e, params.row.id);   
+          setDeleteId(params.row.id);
+        }}
+      >
+        <Ellipsis />
+      </Button>
+
       <Menu
         id="basic-menu"
-         PaperProps={{ sx: { boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)',borderRadius: '10px', }, }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        slotProps={{
-          list: {
-            'aria-labelledby': 'basic-button',
+        PaperProps={{
+          sx: { 
+            boxShadow: '0.3px 1px 3px rgba(0,0,0,0.1)', 
+            borderRadius: '10px' 
           },
         }}
       >
-        <MenuItem  onClick={()=>{
-          navigate(`/customers/view/${selectedrowid}`)
-          handleClose}}
-           className='flex gap-2'><Eye className='text-[var(--color-purple)]'/> View</MenuItem>
- <MenuItem onClick={()=>{navigate(`/customers/edit/${selectedrowid}`);handleClose()}} className='flex gap-2'><Pencil className='text-[var(--color-purple)]' /> Edit</MenuItem>
-        <MenuItem onClick={()=>{deleteCustomer(d.row.id);handleClose();}} className='flex gap-2'><Trash2 className='text-[var(--color-red)]' /> Delete</MenuItem>
+        <MenuItem 
+          onClick={() => {
+            navigate(`/customers/view/${selectedrowid}`);
+            handleClose();
+          }} 
+          className='flex gap-2'
+        >
+          <Eye className='text-[var(--color-purple)]'/> View
+        </MenuItem>
+
+        <MenuItem 
+          onClick={() => {
+            navigate(`/customers/edit/${selectedrowid}`);
+            handleClose();
+          }} 
+          className='flex gap-2'
+        >
+          <Pencil className='text-[var(--color-purple)]' /> Edit
+        </MenuItem>
+
+        <MenuItem 
+          onClick={() => {
+            setDeleteId(selectedrowid!);
+            setOpenDelete(true);
+            handleClose();
+          }} 
+          className='flex gap-2'
+        >
+          <Trash2 className='text-[var(--color-red)]' /> Delete
+        </MenuItem>
       </Menu>
     </div>
   )
 }
-
 ];
 
 
   return (
     <>
  <div>
-      <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Customers !</h1>
+      <h1 style={{fontWeight:600}} className='sm:text-2xl md:text-2xl flex items-center gap-3'><Users className='w-6 h-6'/> View Residents !</h1>
       <div className=' flex flex-col gap-10'>
 
         <div className='grid grid-cos-1 sm:grid-cols-1 gap-5 pt-6 lg:grid-cols-3'>
@@ -274,6 +309,13 @@ toast.success('Customer Deleted Successfully')
 
       </div>
       </div>
+
+<ReuseableDeleteConfirmation 
+handleClose={()=>setOpenDelete(false)}
+ open={openDelete}
+ deleteFun={()=>deleteCustomer(deleteId??0)}
+/>
+
     </>
   )
 }
